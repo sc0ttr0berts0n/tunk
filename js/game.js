@@ -35,7 +35,7 @@ class Game {
             const wedges = this.turret.getFullWedges();
             if (wedges.length > 0) {
                 const wedge = wedges[Math.floor(Math.random() * wedges.length)];
-                wedge.takeDamage();
+                wedge.setHealth();
             }
         }
     }

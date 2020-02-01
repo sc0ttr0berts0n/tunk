@@ -30,7 +30,7 @@ class Wedge {
         this.el.y = this.pos.y;
         this.el.anchor.set(0.5);
         this.initLetters();
-        this.initWithRandomDamage();
+        // this.initWithRandomDamage();
         this.initHealthBar();
     }
     update() {
@@ -52,11 +52,7 @@ class Wedge {
         this.health = Math.random() < 0.25 ? this.maxHealth : this.health;
     }
     initHealthBar() {
-        if (this.health === this.maxHealth) {
-            this.healthBar.beginFill(0xff5050, 0);
-        } else {
-            this.healthBar.beginFill(0x39a237);
-        }
+        this.healthBar.beginFill(0x39a237);
         this.healthBar.drawRect(0, 0, 64, 10);
         this.healthBar.y = this.healthBarYOffset;
         this.healthBar.x = -(64 / 2);
@@ -76,8 +72,8 @@ class Wedge {
                 ? this.damagedTexture
                 : this.fullTexture;
     }
-    takeDamage() {
-        this.health = 0;
+    setHealth(amt = 0) {
+        this.health = amt;
     }
     checkRepairing() {
         if (
