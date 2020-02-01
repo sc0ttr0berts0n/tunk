@@ -4,13 +4,11 @@ class Wedge {
         this.turret = turret;
         this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
         this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
-        this.el =
-            Math.random() >= 0.25
-                ? new PIXI.Sprite(this.fullTexture)
-                : new PIXI.Sprite(this.damagedTexture);
+        this.el = new PIXI.Sprite(this.fullTexture);
         this.id = id;
         this.wedgeCount = wedgeCount;
-        this.damaged = true;
+        this.maxHealth = 60;
+        this.health = this.maxHealth;
         this.letter = String.fromCharCode(65 + this.id);
 
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
@@ -30,13 +28,15 @@ class Wedge {
         this.el.y = this.pos.y;
         this.el.anchor.set(0.5);
         this.initLetters();
+        this.health = Math.floor(Math.random() * this.maxHealth);
+        this.health = Math.random() < 0.25 ? this.maxHealth : this.health;
     }
     update() {
         if (this.game.frameCount % (60 * 5) === 0) {
-            const texture =
-                Math.random() >= 0.25 ? this.fullTexture : this.damagedTexture;
-            this.el.texture = texture;
+            // this.health = Math.floor(Math.random() * this.maxHealth);
+            // this.health = Math.random() > 0.75 ? this.maxHealth : this.health;
         }
+        this.checkForDamage();
     }
     initLetters() {
         const letterStyle = new PIXI.TextStyle();
@@ -46,5 +46,20 @@ class Wedge {
         letter.anchor.set(0.5);
         letter.y = this.letterYOffset;
         this.el.addChild(letter);
+    }
+    checkForDamage() {
+        this.el.texture =
+            this.health < this.maxHealth
+                ? this.damagedTexture
+                : this.fullTexture;
+    }
+    takeDamage() {
+        this.health = 0;
+    }
+    addHealth(n) {
+        this.health += n;
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth;
+        }
     }
 }
