@@ -20,6 +20,7 @@ class Game {
         if (this.turret.wedges) {
             this.turret.wedges.forEach(wedge => wedge.update());
         }
+        this.player.update();
     }
 }
 
