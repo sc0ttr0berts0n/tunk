@@ -1,7 +1,7 @@
 class KeyboardObserver {
     constructor() {
         this.key = null;
-        this.code = NaN;
+        this.code = null;
         this.init();
     }
     init() {

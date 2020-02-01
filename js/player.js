@@ -3,18 +3,18 @@ class Player {
         this.game = game;
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.pos = { x: 0, y: 0 };
-        this.targetPos = this.pos;
+        this.targetPos = { x: 0, y: 0 };
         this.alive = true;
-        this.speed = 2;
+        this.speed = 15;
         this.init();
     }
     init() {
         this.game.turret.el.addChild(this.el);
         this.el.scale.set(0.3, 0.3);
         this.el.anchor.set(0.5);
-        this.targetPos = this.game.turret.wedges[3].playerPos;
     }
     update() {
+        this.findDestination();
         this.movedaboi();
         this.el.x = this.pos.x;
         this.el.y = this.pos.y;
@@ -38,5 +38,10 @@ class Player {
             this.pos.x += movex;
             this.pos.y += movey;
         }
+    }
+    findDestination() {
+        const wedgeIndex = this.game.kb.code - 65;
+        const wedgePos = this.game.turret.wedges[wedgeIndex].playerPos;
+        this.targetPos = wedgePos;
     }
 }
