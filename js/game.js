@@ -9,6 +9,7 @@ class Game {
         });
         this.turret = new Turret(this, 26);
         this.player = new Player(this);
+        this.kb = new KeyboardObserver();
         this.frameCount = 0;
         this.init();
     }
