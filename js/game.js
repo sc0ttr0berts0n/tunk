@@ -12,6 +12,7 @@ class Game {
         this.turret = new Turret(this, 26);
         this.player = new Player(this);
         this.kb = new KeyboardObserver();
+        this.damageChance = 0.0125;
         this.frameCount = 0;
         this.init();
     }
@@ -21,11 +22,22 @@ class Game {
         // console.log('update ran');
         this.frameCount++;
 
+        this.attemptDamage();
+
         this.turret.update();
         if (this.turret.wedges) {
             this.turret.wedges.forEach(wedge => wedge.update());
         }
         this.player.update();
+    }
+    attemptDamage() {
+        if (Math.random() < this.damageChance) {
+            const wedges = this.turret.getFullWedges();
+            if (wedges.length > 0) {
+                const wedge = wedges[Math.floor(Math.random() * wedges.length)];
+                wedge.takeDamage();
+            }
+        }
     }
 }
 
