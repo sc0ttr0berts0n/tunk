@@ -41,7 +41,9 @@ class Player {
     }
     findDestination() {
         const wedgeIndex = this.game.kb.code - 65;
-        const wedgePos = this.game.turret.wedges[wedgeIndex].playerPos;
-        this.targetPos = wedgePos;
+        const targetWedge = this.game.turret.wedges[wedgeIndex];
+        if (targetWedge) {
+            this.targetPos = targetWedge.playerPos;
+        }
     }
 }
