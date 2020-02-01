@@ -40,7 +40,7 @@ class Wedge {
     }
     initLetters() {
         const letterStyle = new PIXI.TextStyle();
-        letterStyle.fill = 'rgba(0,0,0,0.2)';
+        letterStyle.fill = 'rgba(255,255,255,0.8)';
         letterStyle.fontFamily = 'Arial';
         const letter = new PIXI.Text(this.letter, letterStyle);
         letter.anchor.set(0.5);
