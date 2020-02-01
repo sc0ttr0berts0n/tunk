@@ -17,4 +17,5 @@ class Turret {
         this.el.y = window.innerHeight / 2;
         this.game.app.stage.addChild(this.el);
     }
+    update() {}
 }
