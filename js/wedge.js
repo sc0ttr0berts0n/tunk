@@ -31,10 +31,6 @@ class Wedge {
         // this.initWithRandomDamage();
     }
     update() {
-        if (this.game.frameCount % (60 * 5) === 0) {
-            // this.health = Math.floor(Math.random() * this.maxHealth);
-            // this.health = Math.random() > 0.75 ? this.maxHealth : this.health;
-        }
         this.checkForDamage();
     }
     initLetters() {
