@@ -11,7 +11,7 @@ class Player {
     }
     init() {
         this.game.turret.el.addChild(this.el);
-        this.el.scale.set(0.3, 0.3);
+        this.el.scale.set(0.75, 0.75);
         this.el.anchor.set(0.5);
     }
     update() {
