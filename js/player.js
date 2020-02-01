@@ -5,13 +5,14 @@ class Player {
         this.pos = { x: 0, y: 0 };
         this.targetPos = this.pos;
         this.alive = true;
-        this.speed = 0.5;
+        this.speed = 2;
         this.init();
     }
     init() {
         this.game.turret.el.addChild(this.el);
         this.el.scale.set(0.3, 0.3);
-        this.targetPos = { x: -100, y: 200 };
+        this.el.anchor.set(0.5);
+        this.targetPos = this.game.turret.wedges[3].playerPos;
     }
     update() {
         this.movedaboi();
