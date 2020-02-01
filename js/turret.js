@@ -10,7 +10,7 @@ class Turret {
         this.init();
     }
     init() {
-        this.el.beginFill(0x9966ff);
+        this.el.beginFill(0xbbaabb);
         this.el.drawCircle(0, 0, this.radius * 2);
         this.el.endFill();
         this.el.x = window.innerWidth / 2;
