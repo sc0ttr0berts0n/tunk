@@ -7,6 +7,8 @@ class Game {
             height: window.innerHeight,
             transparent: true
         });
+        // this.app.stage.filters = [new PIXI.filters.PixelateFilter()];
+        // this.app.stage.filters[0].size = [1, 8];
         this.turret = new Turret(this, 26);
         this.player = new Player(this);
         this.kb = new KeyboardObserver();
