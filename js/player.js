@@ -4,6 +4,7 @@ class Player {
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.pos = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
+        this.targetWedge = null;
         this.alive = true;
         this.speed = 15;
         this.init();
@@ -44,6 +45,7 @@ class Player {
         const targetWedge = this.game.turret.wedges[wedgeIndex];
         if (targetWedge) {
             this.targetPos = targetWedge.playerPos;
+            this.targetWedge = targetWedge;
         }
     }
 }
