@@ -17,6 +17,9 @@ class Game {
     update() {
         // console.log('update ran');
         this.turret.update();
+        if (this.turret.wedges) {
+            this.turret.wedges.forEach(wedge => wedge.update());
+        }
     }
 }
 
