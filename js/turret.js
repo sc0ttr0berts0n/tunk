@@ -19,9 +19,9 @@ class Turret {
     }
     update() {}
     getFullWedges() {
-        return this.wedges.filter(wedge => wedge.damaged === false);
+        return this.wedges.filter(wedge => wedge.health >= wedge.maxHealth);
     }
     getDamagedWedges() {
-        return this.wedges.filter(wedge => wedge.damaged === true);
+        return this.wedges.filter(wedge => wedge.health < wedge.maxHealth);
     }
 }
