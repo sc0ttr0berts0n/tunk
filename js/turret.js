@@ -3,9 +3,10 @@ class Turret {
         this.game = game;
         this.wedgeCount = wedgeCount;
         this.radius = 128;
-
+        this.wedges = [...new Array(wedgeCount)].map(
+            (el, index) => new Wedge(this.game, index)
+        );
         this.el = new PIXI.Graphics();
-        // this.wedges = Array(wedgeCount).fill(0);
         this.init();
     }
     init() {
