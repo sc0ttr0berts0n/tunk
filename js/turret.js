@@ -18,4 +18,10 @@ class Turret {
         this.game.app.stage.addChild(this.el);
     }
     update() {}
+    getFullWedges() {
+        return this.wedges.filter(wedge => wedge.damaged === false);
+    }
+    getDamagedWedges() {
+        return this.wedges.filter(wedge => wedge.damaged === true);
+    }
 }
