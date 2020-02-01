@@ -16,6 +16,8 @@ class Game {
     init() {}
     update() {
         // console.log('update ran');
+        this.frameCount++;
+
         this.turret.update();
         if (this.turret.wedges) {
             this.turret.wedges.forEach(wedge => wedge.update());
