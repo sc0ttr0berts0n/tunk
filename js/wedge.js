@@ -5,6 +5,7 @@ class Wedge {
         this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
         this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
         this.el = new PIXI.Sprite(this.fullTexture);
+        this.healthBar = new PIXI.Graphics();
         this.id = id;
         this.wedgeCount = wedgeCount;
         this.maxHealth = 60;
@@ -17,7 +18,8 @@ class Wedge {
             y: Math.sin(this.rot) * this.turret.radius * 2
         };
         this.playerPos = { x: this.pos.x * 0.88, y: this.pos.y * 0.88 };
-        this.letterYOffset = -35;
+        this.healthBarYOffset = -26;
+        this.letterYOffset = -50;
         this.init();
     }
     init() {
@@ -28,10 +30,13 @@ class Wedge {
         this.el.y = this.pos.y;
         this.el.anchor.set(0.5);
         this.initLetters();
-        // this.initWithRandomDamage();
+        this.initWithRandomDamage();
+        this.initHealthBar();
     }
     update() {
         this.checkForDamage();
+        this.updateHealthBar();
+        this.checkRepairing();
     }
     initLetters() {
         const letterStyle = new PIXI.TextStyle();
@@ -46,6 +51,25 @@ class Wedge {
         this.health = Math.floor(Math.random() * this.maxHealth);
         this.health = Math.random() < 0.25 ? this.maxHealth : this.health;
     }
+    initHealthBar() {
+        if (this.health === this.maxHealth) {
+            this.healthBar.beginFill(0xff5050, 0);
+        } else {
+            this.healthBar.beginFill(0x39a237);
+        }
+        this.healthBar.drawRect(0, 0, 64, 10);
+        this.healthBar.y = this.healthBarYOffset;
+        this.healthBar.x = -(64 / 2);
+        this.el.addChild(this.healthBar);
+    }
+    updateHealthBar() {
+        this.healthBar.scale.x = this.health / this.maxHealth;
+        if (this.health === this.maxHealth) {
+            this.healthBar.visible = false;
+        } else {
+            this.healthBar.visible = true;
+        }
+    }
     checkForDamage() {
         this.el.texture =
             this.health < this.maxHealth
@@ -54,6 +78,14 @@ class Wedge {
     }
     takeDamage() {
         this.health = 0;
+    }
+    checkRepairing() {
+        if (
+            this.game.player.pos.x === this.playerPos.x &&
+            this.game.player.pos.y === this.playerPos.y
+        ) {
+            this.addHealth(1);
+        }
     }
     addHealth(n) {
         this.health += n;
