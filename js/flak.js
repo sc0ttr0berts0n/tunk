@@ -34,6 +34,8 @@ class Flak {
         if (hypot < 40) {
             console.log('collided');
             console.log(this.game.score);
+            console.log(this.container.rotation);
+            this.game.player.bloodRot = this.container.rotation + Math.PI;
             this.game.player.alive = false;
         }
     }

@@ -55,16 +55,16 @@ class Game {
 
             this.attemptDamage();
 
-            if (this.score >= 5 || this.frameCount >= 600) {
+            if (this.score >= 3 || this.frameCount >= 600) {
                 this.shootHoles();
             }
 
             this.turret.update();
 
-            this.player.update();
             this.cannonUpdate();
             this.scoreUpdate();
         }
+        this.player.update();
         if (this.turret.wedges) {
             this.turret.wedges.forEach(wedge => wedge.update());
         }

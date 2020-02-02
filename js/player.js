@@ -2,6 +2,10 @@ class Player {
     constructor(game) {
         this.game = game;
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
+        this.bloodEl = new PIXI.Sprite(
+            PIXI.Texture.from('assets/da-blood.png')
+        );
+        this.bloodRot = 0;
         this.pos = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
         this.targetWedge = null;
@@ -13,12 +17,21 @@ class Player {
         this.game.turret.el.addChild(this.el);
         this.el.scale.set(0.75, 0.75);
         this.el.anchor.set(0.5);
+        this.el.addChild(this.bloodEl);
+        this.bloodEl.anchor.set(0.45, 0.9);
+        this.bloodEl.visible = false;
     }
     update() {
-        this.findDestination();
-        this.movedaboi();
+        if (this.alive) {
+            this.findDestination();
+            this.movedaboi();
+        }
         this.el.x = this.pos.x;
         this.el.y = this.pos.y;
+        this.bloodEl.rotation = this.bloodRot;
+        if (!this.alive) {
+            this.bloodEl.visible = true;
+        }
     }
     movedaboi() {
         const distx = this.targetPos.x - this.pos.x;
