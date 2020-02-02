@@ -115,11 +115,15 @@ class Wedge {
         this.health = amt;
     }
     checkRepairing() {
+        const lastHealth = this.health;
         if (
             this.game.player.pos.x === this.playerPos.x &&
             this.game.player.pos.y === this.playerPos.y
         ) {
             this.addHealth(1);
+        }
+        if (lastHealth === 59) {
+            this.game.score++;
         }
     }
     addHealth(n) {

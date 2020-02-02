@@ -16,6 +16,8 @@ class Game {
         this.cannonTargetX = window.innerWidth / 2 + 100;
         this.cannonTargetY = window.innerHeight / 2 - 100;
         this.nextShot = 0;
+        this.score = 0;
+        this.scoreValue = null;
         this.background = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-map.png')
         );
@@ -41,6 +43,7 @@ class Game {
         this.cannon.x = this.cannonTargetX;
         this.cannon.y = this.cannonTargetY;
         this.cannon.rotation = -0.25 * Math.PI;
+        this.scoreInit();
     }
     update() {
         // console.log('update ran');
@@ -61,6 +64,7 @@ class Game {
 
         this.player.update();
         this.cannonUpdate();
+        this.scoreUpdate();
     }
     cannonUpdate() {
         const factor = 0.06;
@@ -106,6 +110,25 @@ class Game {
                 }, 1000);
             }
         }
+    }
+    scoreUpdate() {
+        if (this.scoreValue) {
+            this.scoreValue.text = this.score;
+        }
+    }
+    scoreInit() {
+        const scoreStyle = new PIXI.TextStyle();
+        scoreStyle.fill = '#F13409';
+        scoreStyle.fontFamily = 'Arial';
+        scoreStyle.fontSize = 48;
+        scoreStyle.fontWeight = 'bold';
+        scoreStyle.stroke = '#000000';
+        scoreStyle.strokeThickness = 10;
+        this.scoreValue = new PIXI.Text(this.score, scoreStyle);
+        this.scoreValue.anchor.set(0.5);
+        this.scoreValue.y = window.innerHeight / 2 + 400;
+        this.scoreValue.x = window.innerWidth / 2;
+        this.app.stage.addChild(this.scoreValue);
     }
 }
 
