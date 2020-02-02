@@ -31,6 +31,12 @@ class Turret {
         return this.wedges.filter(wedge => wedge.health >= wedge.maxHealth);
     }
     getDamagedWedges() {
-        return this.wedges.filter(wedge => wedge.health < wedge.maxHealth);
+        return this.wedges.filter(wedge => {
+            return (
+                wedge.health < wedge.maxHealth &&
+                this.game.player.pos.x !== wedge.pos.x &&
+                this.game.player.pos.y !== wedge.pos.y
+            );
+        });
     }
 }
