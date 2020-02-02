@@ -56,7 +56,10 @@ class Game {
             this.updateTurret();
 
             this.attemptDamage();
-            this.shootHoles();
+
+            if (this.score >= 5 || this.frameCount >= 600) {
+                this.shootHoles();
+            }
 
             this.turret.update();
 
