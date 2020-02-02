@@ -29,7 +29,7 @@ class Player {
         }
         this.el.x = this.pos.x;
         this.el.y = this.pos.y;
-        this.bloodEl.rotation = this.bloodRot;
+        this.bloodEl.rotation = this.bloodRot + -this.el.rotation;
         if (!this.alive) {
             this.bloodEl.visible = true;
         }
@@ -57,7 +57,6 @@ class Player {
         }
         if (angle !== 0) {
             this.el.rotation = angle + 0.5 * Math.PI;
-            console.log(angle);
         }
     }
     findDestination() {

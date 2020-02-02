@@ -32,9 +32,6 @@ class Flak {
         const yDist = player.ty - flak.ty;
         const hypot = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
         if (hypot < 40) {
-            console.log('collided');
-            console.log(this.game.score);
-            console.log(this.container.rotation);
             this.game.player.bloodRot = this.container.rotation + Math.PI;
             this.game.player.alive = false;
         }
