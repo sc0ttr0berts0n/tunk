@@ -4,6 +4,12 @@ class Wedge {
         this.turret = turret;
         this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
         this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
+        this.cautionFloorExpand = new PIXI.Sprite(
+            PIXI.Texture.from('assets/floor-warning-01.png')
+        );
+        this.cautionFloorBoundary = new PIXI.Sprite(
+            PIXI.Texture.from('assets/floor-warning-02.png')
+        );
         this.el = new PIXI.Sprite(this.fullTexture);
         this.outsideLight = new PIXI.Sprite(
             PIXI.Texture.from('assets/crack-light.png')
@@ -35,20 +41,48 @@ class Wedge {
         this.initLetters();
         // this.initWithRandomDamage();
         this.initHealthBar();
+        this.cautionFloorInit();
         this.outsideLightInit();
     }
     update() {
         this.checkForDamage();
         this.updateHealthBar();
         this.checkRepairing();
-        this.outsideLightCheck();
+        this.damageCheck();
     }
+    cautionFloorInit() {
+        this.cautionFloorExpand.anchor.set(0.5, 0.5);
+        this.cautionFloorExpand.scale.y = 0.9;
+        this.cautionFloorExpand.scale.x = 0;
+        this.cautionFloorExpand.blendMode = PIXI.BLEND_MODES.ADD;
+        this.cautionFloorExpand.visible = false;
+        this.cautionFloorExpand.alpha = 1;
+        this.cautionFloorExpand.y += 240;
+        this.el.addChild(this.cautionFloorExpand);
 
-    outsideLightCheck() {
+        this.cautionFloorBoundary.anchor.set(0.5, 0.5);
+        this.cautionFloorBoundary.scale.y = 0.9;
+        this.cautionFloorBoundary.scale.x = 0.89;
+        this.cautionFloorBoundary.blendMode = PIXI.BLEND_MODES.ADD;
+        this.cautionFloorBoundary.visible = false;
+        this.cautionFloorBoundary.alpha = 1;
+        this.cautionFloorBoundary.y += 240;
+        this.el.addChild(this.cautionFloorBoundary);
+    }
+    damageCheck() {
         if (this.health < 60) {
             this.outsideLight.visible = true;
+            this.cautionFloorExpand.visible = true;
+            this.cautionFloorBoundary.visible = true;
+            if (this.cautionFloorExpand.scale.x < 0.9) {
+                this.cautionFloorExpand.scale.x += 0.02;
+            } else if (this.cautionFloorExpand.scale.x >= 0.89) {
+                this.cautionFloorExpand.alpha = Math.random() * 0.5 + 0.5;
+            }
         } else {
             this.outsideLight.visible = false;
+            this.cautionFloorExpand.visible = false;
+            this.cautionFloorBoundary.visible = false;
         }
 
         if (this.outsideLight.alpha <= 0.4) {
