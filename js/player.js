@@ -3,6 +3,7 @@ class Player {
         this.game = game;
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.pos = { x: 0, y: 0 };
+        this.orientation = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
         this.targetWedge = null;
         this.alive = true;
@@ -23,6 +24,8 @@ class Player {
     movedaboi() {
         const distx = this.targetPos.x - this.pos.x;
         const disty = this.targetPos.y - this.pos.y;
+        const angle = Math.atan2(disty, distx);
+
         const movex =
             (distx / Math.sqrt(Math.pow(distx, 2) + Math.pow(disty, 2))) *
             this.speed;
@@ -38,6 +41,10 @@ class Player {
         } else {
             this.pos.x += movex;
             this.pos.y += movey;
+        }
+        if (angle !== 0) {
+            this.el.rotation = angle + 0.5 * Math.PI;
+            console.log(angle);
         }
     }
     findDestination() {
