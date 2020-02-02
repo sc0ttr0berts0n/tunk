@@ -5,6 +5,9 @@ class Wedge {
         this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
         this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
         this.el = new PIXI.Sprite(this.fullTexture);
+        this.outsideLight = new PIXI.Sprite(
+            PIXI.Texture.from('assets/crack-light.png')
+        );
         this.healthBar = new PIXI.Graphics();
         this.id = id;
         this.wedgeCount = wedgeCount;
@@ -32,12 +35,45 @@ class Wedge {
         this.initLetters();
         // this.initWithRandomDamage();
         this.initHealthBar();
+        this.outsideLightInit();
     }
     update() {
         this.checkForDamage();
         this.updateHealthBar();
         this.checkRepairing();
+        this.outsideLightCheck();
     }
+
+    outsideLightCheck() {
+        if (this.health < 60) {
+            this.outsideLight.visible = true;
+        } else {
+            this.outsideLight.visible = false;
+        }
+
+        if (this.outsideLight.alpha <= 0.4) {
+            this.outsideLight.alpha = 0.41;
+        } else if (this.outsideLight.alpha >= 0.6) {
+            this.outsideLight.alpha = 0.59;
+        } else {
+            this.outsideLight.alpha += Math.sign(Math.random() - 0.5) * 0.005;
+        }
+    }
+
+    outsideLightInit() {
+        const lightScale = Math.random() * 0.7 + 0.3;
+        this.outsideLight.anchor.set(0.5, 0);
+        this.outsideLight.y += 15;
+        this.outsideLight.scale.x =
+            Math.random() > 0.5 ? lightScale : -lightScale;
+        this.outsideLight.scale.y = lightScale;
+        // this.outsideLight.tint = 0xf7f2f0;
+        this.outsideLight.blendMode = PIXI.BLEND_MODES.ADD;
+        this.outsideLight.alpha = 0.5;
+        this.outsideLight.visible = false;
+        this.el.addChild(this.outsideLight);
+    }
+
     initLetters() {
         const letterStyle = new PIXI.TextStyle();
         letterStyle.fill = '#ffffff';
