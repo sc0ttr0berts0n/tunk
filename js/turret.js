@@ -1,14 +1,13 @@
 class Turret {
     constructor(game, wedgeCount) {
         this.game = game;
-        // this.el = new PIXI.Graphics();
         this.headEl = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-turret.png')
         );
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-floor.png'));
 
         this.wedgeCount = wedgeCount;
-        this.radius = 128;
+        this.radius = 256;
         this.wedges = [...new Array(wedgeCount)].map(
             (el, index) => new Wedge(game, this, index, wedgeCount)
         );
