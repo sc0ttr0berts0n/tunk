@@ -28,7 +28,8 @@ class Game {
         this.turret = new Turret(this, 26);
         this.player = new Player(this);
         this.kb = new KeyboardObserver();
-        this.damageChance = 0.0125;
+        this.damageChance = 0.00625;
+        this.shootHoleChance = 0.00625;
         this.frameCount = 0;
     }
 
@@ -52,6 +53,7 @@ class Game {
         this.updateTurret();
 
         this.attemptDamage();
+        this.shootHoles();
 
         this.turret.update();
         if (this.turret.wedges) {
@@ -107,6 +109,27 @@ class Game {
                 );
                 setTimeout(() => {
                     wedge.setHealth();
+                }, 1000);
+            }
+        }
+    }
+    shootHoles() {
+        if (Math.random() < this.damageChance) {
+            const wedges = this.turret.getDamagedWedges();
+            if (wedges.length > 0) {
+                const wedge = wedges[Math.floor(Math.random() * wedges.length)];
+                const wedgeCount = wedge.wedgeCount;
+                const oppositeWedgeId =
+                    (wedge.id + wedgeCount / 2) % wedgeCount;
+                const oppositeWedge = this.turret.wedges[oppositeWedgeId];
+
+                const killDist =
+                    oppositeWedge.health < wedge.maxHealth
+                        ? this.turret.radius * 3
+                        : this.turret.radius;
+                this.flaks.push(new Flak(this, wedge.rot, 55, killDist));
+                setTimeout(() => {
+                    oppositeWedge.setHealth();
                 }, 1000);
             }
         }
