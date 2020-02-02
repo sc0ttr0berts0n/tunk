@@ -28,8 +28,8 @@ class Game {
         this.turret = new Turret(this, 26);
         this.player = new Player(this);
         this.kb = new KeyboardObserver();
-        this.damageChance = 0.00625;
-        this.shootHoleChance = 0.00625;
+        this.damageChance = 0.0125;
+        this.shootHoleChance = 0.0125;
         this.frameCount = 0;
     }
 
@@ -47,26 +47,28 @@ class Game {
         this.scoreInit();
     }
     update() {
-        // console.log('update ran');
-        this.frameCount++;
+        if (this.player.alive) {
+            // console.log('update ran');
+            this.frameCount++;
 
-        this.updateTurret();
+            this.updateTurret();
 
-        this.attemptDamage();
-        this.shootHoles();
+            this.attemptDamage();
+            this.shootHoles();
 
-        this.turret.update();
-        if (this.turret.wedges) {
-            this.turret.wedges.forEach(wedge => wedge.update());
+            this.turret.update();
+            if (this.turret.wedges) {
+                this.turret.wedges.forEach(wedge => wedge.update());
+            }
+            if (this.flaks.length > 0) {
+                this.flaks.forEach(flak => flak.update());
+                this.flaks = this.flaks.filter(flak => !flak.isDead);
+            }
+
+            this.player.update();
+            this.cannonUpdate();
+            this.scoreUpdate();
         }
-        if (this.flaks.length > 0) {
-            this.flaks.forEach(flak => flak.update());
-            this.flaks = this.flaks.filter(flak => !flak.isDead);
-        }
-
-        this.player.update();
-        this.cannonUpdate();
-        this.scoreUpdate();
     }
     cannonUpdate() {
         const factor = 0.06;

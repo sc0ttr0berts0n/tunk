@@ -33,6 +33,8 @@ class Flak {
         const hypot = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
         if (hypot < 40) {
             console.log('collided');
+            console.log(this.game.score);
+            this.game.player.alive = false;
         }
     }
 }
