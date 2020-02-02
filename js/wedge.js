@@ -130,7 +130,7 @@ class Wedge {
         this.health = Math.random() < 0.25 ? this.maxHealth : this.health;
     }
     initHealthBar() {
-        this.healthBar.beginFill(0x39a237);
+        this.healthBar.beginFill(0xff0050);
         this.healthBar.drawRect(0, 0, 64, 10);
         this.healthBar.y = this.healthBarYOffset;
         this.healthBar.x = -(64 / 2);
