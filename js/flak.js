@@ -26,6 +26,13 @@ class Flak {
             this.container.visible = false;
         }
         this.el.y += this.speed;
-        // this.container.rotation += 0.1;
+        const player = this.game.player.el.worldTransform;
+        const flak = this.el.worldTransform;
+        const xDist = player.tx - flak.tx;
+        const yDist = player.ty - flak.ty;
+        const hypot = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+        if (hypot < 40) {
+            console.log('collided');
+        }
     }
 }
