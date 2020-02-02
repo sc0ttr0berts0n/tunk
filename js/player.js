@@ -7,6 +7,7 @@ class Player {
         this.targetWedge = null;
         this.alive = true;
         this.speed = 15;
+        this.invincible = false;
         this.init();
     }
     init() {
@@ -41,11 +42,37 @@ class Player {
         }
     }
     findDestination() {
-        const wedgeIndex = this.game.kb.code - 65;
-        const targetWedge = this.game.turret.wedges[wedgeIndex];
-        if (targetWedge) {
-            this.targetPos = targetWedge.playerPos;
-            this.targetWedge = targetWedge;
+        if (this.game.kb.code != 0){
+            var wedgeIndex;
+            if (this.targetWedge){
+                wedgeIndex = this.targetWedge.id;
+                if (this.game.kb.code == 37){ // Left arrow
+                    if (wedgeIndex > 0){
+                        wedgeIndex -= 1;
+                    }else{
+                        wedgeIndex = this.game.turret.wedgeCount-1;
+                    }
+                }else if (this.game.kb.code == 39){ // Right arrow
+                    if (wedgeIndex < this.game.turret.wedgeCount-1){
+                        wedgeIndex += 1;
+                    }else{
+                        wedgeIndex = 0;
+                    }
+                }else{ // Any letter keypress
+                    wedgeIndex = this.game.kb.code - 65;
+                }
+            }else{ // Any letter keypress
+                wedgeIndex = this.game.kb.code - 65;
+            }
+            
+            const targetWedge = this.game.turret.wedges[wedgeIndex];
+            
+            if (targetWedge) {
+                console.log(targetWedge.id);
+                this.targetPos = targetWedge.playerPos;
+                this.targetWedge = targetWedge;
+                this.game.kb.code = 0;
+            }
         }
     }
 }

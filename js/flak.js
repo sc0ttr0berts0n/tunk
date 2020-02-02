@@ -34,7 +34,9 @@ class Flak {
         if (hypot < 40) {
             console.log('collided');
             console.log(this.game.score);
-            this.game.player.alive = false;
+            if (!this.game.player.invincible){
+                this.game.player.alive = false;
+            }
         }
     }
 }
