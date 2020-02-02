@@ -41,6 +41,8 @@ class Wedge {
     initLetters() {
         const letterStyle = new PIXI.TextStyle();
         letterStyle.fill = '#ffffff';
+        letterStyle.stroke = '#282228';
+        letterStyle.strokeThickness = 10;
         letterStyle.fontFamily = 'Arial';
         letterStyle.fontWeight = 'bold';
         const letter = new PIXI.Text(this.letter, letterStyle);
