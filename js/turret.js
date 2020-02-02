@@ -2,6 +2,9 @@ class Turret {
     constructor(game, wedgeCount) {
         this.game = game;
         // this.el = new PIXI.Graphics();
+        this.headEl = new PIXI.Sprite(
+            PIXI.Texture.from('assets/da-turret.png')
+        );
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-floor.png'));
 
         this.wedgeCount = wedgeCount;
@@ -12,9 +15,13 @@ class Turret {
         this.init();
     }
     init() {
-        // this.el.beginFill(0xbbaabb);
-        // this.el.drawCircle(0, 0, this.radius * 2);
-        // this.el.endFill();
+        this.headEl.x = window.innerWidth / 2;
+        this.headEl.y = window.innerHeight / 2;
+        this.headEl.anchor.set(0.5);
+        this.headEl.scale.set(1.15);
+        this.headEl.rotation = -0.25 * Math.PI;
+        this.game.app.stage.addChild(this.headEl);
+
         this.el.anchor.set(0.5);
         this.el.x = window.innerWidth / 2;
         this.el.y = window.innerHeight / 2;
