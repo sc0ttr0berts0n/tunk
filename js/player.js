@@ -16,6 +16,7 @@ class Player {
         this.invincible = false;
         this.maxHealth = 100;
         this.health = this.maxHealth;
+        this.healthRestore = 0.10;
         this.healthBar = new PIXI.Graphics();
         this.healthBarYOffset = -26;
         this.init();
@@ -46,6 +47,12 @@ class Player {
         this.bloodEl.rotation = this.bloodRot + -this.el.rotation;
         if (!this.alive) {
             this.bloodEl.visible = true;
+        }
+        if (this.targetPos == this.startingPos){
+            this.health += this.healthRestore;
+            if (this.health > this.maxHealth){
+                this.health = this.maxHealth;
+            }
         }
         this.updateHealthBar();
     }
