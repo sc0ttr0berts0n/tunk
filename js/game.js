@@ -128,8 +128,12 @@ class Game {
                         ? this.turret.radius * 3
                         : this.turret.radius;
                 this.flaks.push(new Flak(this, wedge.rot, 55, killDist));
+                console.log('firing!');
+                wedge.willBeShot = true;
+
                 setTimeout(() => {
                     oppositeWedge.setHealth();
+                    wedge.willBeShot = false;
                 }, 1000);
             }
         }
