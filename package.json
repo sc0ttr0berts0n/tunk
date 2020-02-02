@@ -1,0 +1,14 @@
+{
+  "name": "turret-repair-app",
+  "version": "0.0.1",
+  "description": "Electron version of Turret Repair",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^7.1.3"
+  }
+}
