@@ -29,6 +29,7 @@ class Wedge {
         this.playerPos = { x: this.pos.x * 0.88, y: this.pos.y * 0.88 };
         this.healthBarYOffset = -26;
         this.letterYOffset = -50;
+        this.willBeShot = false;
         this.init();
     }
     init() {
@@ -72,6 +73,10 @@ class Wedge {
     damageCheck() {
         if (this.health < 60) {
             this.outsideLight.visible = true;
+        } else {
+            this.outsideLight.visible = false;
+        }
+        if (this.willBeShot) {
             this.cautionFloorExpand.visible = true;
             this.cautionFloorBoundary.visible = true;
             if (this.cautionFloorExpand.scale.x < 0.9) {
@@ -80,9 +85,9 @@ class Wedge {
                 this.cautionFloorExpand.alpha = Math.random() * 0.5 + 0.5;
             }
         } else {
-            this.outsideLight.visible = false;
             this.cautionFloorExpand.visible = false;
             this.cautionFloorBoundary.visible = false;
+            this.cautionFloorExpand.scale.x = 0;
         }
 
         if (this.outsideLight.alpha <= 0.4) {
