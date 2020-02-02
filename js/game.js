@@ -57,17 +57,17 @@ class Game {
             this.shootHoles();
 
             this.turret.update();
-            if (this.turret.wedges) {
-                this.turret.wedges.forEach(wedge => wedge.update());
-            }
-            if (this.flaks.length > 0) {
-                this.flaks.forEach(flak => flak.update());
-                this.flaks = this.flaks.filter(flak => !flak.isDead);
-            }
 
             this.player.update();
             this.cannonUpdate();
             this.scoreUpdate();
+        }
+        if (this.turret.wedges) {
+            this.turret.wedges.forEach(wedge => wedge.update());
+        }
+        if (this.flaks.length > 0) {
+            this.flaks.forEach(flak => flak.update());
+            this.flaks = this.flaks.filter(flak => !flak.isDead);
         }
     }
     cannonUpdate() {
