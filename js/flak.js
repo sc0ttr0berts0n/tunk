@@ -8,6 +8,7 @@ class Flak {
         this.yOff = -ticksUntilImpact * speed;
         this.speed = speed;
         this.isDead = false;
+        this.hitDamage = 20;  // Deducts from player.health on collision.
         this.init();
     }
     init() {
@@ -34,7 +35,9 @@ class Flak {
         if (hypot < 40) {
             console.log('collided');
             console.log(this.game.score);
-            if (!this.game.player.invincible){
+            this.game.player.health -= this.hitDamage;
+            if (!this.game.player.invincible && this.game.player.health <= 0){
+                this.game.player.bloodRot = this.container.rotation + Math.PI;
                 this.game.player.alive = false;
             }
         }
