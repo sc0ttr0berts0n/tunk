@@ -41,8 +41,10 @@ class Turret {
         this.openingUpdate();
     }
     openingUpdate() {
-        if (this.game.frameCount >= 120) {
-            this.headElOpening.alpha -= 0.01;
+        if (this.game.frameCount >= 60) {
+            if (this.game.frameCount % 60 === 0) {
+                this.headElOpening.alpha -= 0.34;
+            }
         }
     }
     getFullWedges() {
