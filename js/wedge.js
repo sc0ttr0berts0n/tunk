@@ -30,6 +30,7 @@ class Wedge {
         this.healthBarYOffset = -26;
         this.letterYOffset = -50;
         this.willBeShot = false;
+        this.scoreCheck = true;
         this.init();
     }
     init() {
@@ -145,20 +146,23 @@ class Wedge {
             this.health < this.maxHealth
                 ? this.damagedTexture
                 : this.fullTexture;
+        if (this.el.texture === this.damagedTexture) {
+            this.scoreCheck = false;
+        }
+        if (this.el.texture === this.fullTexture && this.scoreCheck === false) {
+            this.game.score++;
+            this.scoreCheck = true;
+        }
     }
     setHealth(amt = 0) {
         this.health = amt;
     }
     checkRepairing() {
-        const lastHealth = this.health;
         if (
             this.game.player.pos.x === this.playerPos.x &&
             this.game.player.pos.y === this.playerPos.y
         ) {
             this.addHealth(1);
-        }
-        if (lastHealth === 59) {
-            this.game.score++;
         }
     }
     addHealth(n) {
