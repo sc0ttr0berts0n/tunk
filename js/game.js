@@ -162,7 +162,7 @@ class Game {
         }
     }
     attemptDamage() {
-        if (this.frameCount >= 180) {
+        if (this.frameCount >= 400) {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
