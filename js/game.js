@@ -165,16 +165,19 @@ class Game {
         }
     }
     attemptDamage() {
-        if (Math.random() < this.damageChance) {
-            const wedges = this.turret.getFullWedges();
-            if (wedges.length > 0) {
-                const wedge = wedges[Math.floor(Math.random() * wedges.length)];
-                this.flaks.push(
-                    new Flak(this, wedge.rot, 65, -this.turret.radius)
-                );
-                setTimeout(() => {
-                    wedge.setHealth();
-                }, 1000);
+        if (this.frameCount >= 180) {
+            if (Math.random() < this.damageChance) {
+                const wedges = this.turret.getFullWedges();
+                if (wedges.length > 0) {
+                    const wedge =
+                        wedges[Math.floor(Math.random() * wedges.length)];
+                    this.flaks.push(
+                        new Flak(this, wedge.rot, 65, -this.turret.radius)
+                    );
+                    setTimeout(() => {
+                        wedge.setHealth();
+                    }, 1000);
+                }
             }
         }
     }
