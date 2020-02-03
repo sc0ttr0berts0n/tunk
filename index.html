@@ -6,10 +6,70 @@
             * {
                 margin: 0;
                 padding: 0;
+                font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+                font-size: 24px;
+                color: white;
+            }
+            body,
+            html {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+            }
+            .help-button {
+                position: absolute;
+                bottom: 5vmin;
+                top: auto;
+                left: 5vmin;
+                display: block;
+            }
+            .help-close {
+                position: absolute;
+                top: 5vmin;
+            }
+            .help-window {
+                /* display: none; */
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #282228;
+                opacity: 0.95;
+                margin: 5vmin;
+                border-radius: 8px;
+                padding: 5vmin;
+                padding-top: 20vmin;
+                line-height: 1.6;
+            }
+            .button {
+                border-radius: 8px;
+                background-color: #5e8089;
+                padding: 0.5rem 1rem;
+                display: inline;
+                cursor: pointer;
+                text-transform: uppercase;
+            }
+            .button:hover {
+                background-color: #648892;
             }
         </style>
     </head>
     <body>
+        <div class="help-button button">HELP</div>
+        <div class="help-window" style="display: none">
+            <div class="help-close button">close</div>
+            Repair the turret, dodge flak!<br />
+            Your score is how many wall segments you've repaired. <br />Press
+            the letter that corresponds to the wall segment to move your player
+            there.<br />Refresh to restart!<br />Adjust the zoom by using
+            <code>CTRL + +/-</code><br />
+            Thanks for playing! –Team Tunk
+        </div>
         <canvas id="game"></canvas>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pixi-filters@2.6.1/dist/pixi-filters.js"></script>
@@ -19,5 +79,17 @@
         <script src="js/wedge.js"></script>
         <script src="js/player.js"></script>
         <script src="js/game.js"></script>
+        <script>
+            // open / close the modals
+            const showHelpButton = document.querySelector('.help-button');
+            const closeHelpButton = document.querySelector('.help-close');
+            const helpPanel = document.querySelector('.help-window');
+            showHelpButton.addEventListener('click', () => {
+                helpPanel.style.display = 'block';
+            });
+            closeHelpButton.addEventListener('click', () => {
+                helpPanel.style.display = 'none';
+            });
+        </script>
     </body>
 </html>

@@ -121,6 +121,7 @@ class Wedge {
         letterStyle.fontFamily = 'Arial';
         letterStyle.fontWeight = 'bold';
         const letter = new PIXI.Text(this.letter, letterStyle);
+        letter.rotation = -this.el.rotation;
         letter.anchor.set(0.5);
         letter.y = this.letterYOffset;
         this.el.addChild(letter);
