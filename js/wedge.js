@@ -40,7 +40,6 @@ class Wedge {
         this.el.y = this.pos.y;
         this.el.anchor.set(0.5);
         this.initLetters();
-        // this.initWithRandomDamage();
         this.initHealthBar();
         this.cautionFloorInit();
         this.outsideLightInit();
@@ -125,10 +124,6 @@ class Wedge {
         letter.anchor.set(0.5);
         letter.y = this.letterYOffset;
         this.el.addChild(letter);
-    }
-    initWithRandomDamage() {
-        this.health = Math.floor(Math.random() * this.maxHealth);
-        this.health = Math.random() < 0.25 ? this.maxHealth : this.health;
     }
     initHealthBar() {
         this.healthBar.beginFill(0xff0050);

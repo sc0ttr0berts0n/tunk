@@ -20,8 +20,6 @@ class Game {
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
         this.flaks = [];
-        // this.app.stage.filters = [new PIXI.filters.PixelateFilter()];
-        // this.app.stage.filters[0].size = [1, 8];
         this.cannonTargetX = window.innerWidth / 2 + 100;
         this.cannonTargetY = window.innerHeight / 2 - 100;
         this.nextShot = 4;
@@ -53,14 +51,13 @@ class Game {
     }
     update() {
         if (this.player.alive) {
-            // console.log('update ran');
             this.frameCount++;
 
             this.updateTurret();
 
             this.attemptDamage();
 
-            if (this.score >= 3 || this.frameCount >= 600) {
+            if (this.score >= 3 || this.frameCount >= 6000) {
                 this.shootHoles();
             }
 
@@ -165,16 +162,19 @@ class Game {
         }
     }
     attemptDamage() {
-        if (Math.random() < this.damageChance) {
-            const wedges = this.turret.getFullWedges();
-            if (wedges.length > 0) {
-                const wedge = wedges[Math.floor(Math.random() * wedges.length)];
-                this.flaks.push(
-                    new Flak(this, wedge.rot, 65, -this.turret.radius)
-                );
-                setTimeout(() => {
-                    wedge.setHealth();
-                }, 1000);
+        if (this.frameCount >= 180) {
+            if (Math.random() < this.damageChance) {
+                const wedges = this.turret.getFullWedges();
+                if (wedges.length > 0) {
+                    const wedge =
+                        wedges[Math.floor(Math.random() * wedges.length)];
+                    this.flaks.push(
+                        new Flak(this, wedge.rot, 65, -this.turret.radius)
+                    );
+                    setTimeout(() => {
+                        wedge.setHealth();
+                    }, 1000);
+                }
             }
         }
     }
