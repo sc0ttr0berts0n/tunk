@@ -41,9 +41,9 @@ class Turret {
         this.openingUpdate();
     }
     openingUpdate() {
-        if (this.game.frameCount >= 120) {
+        if (this.game.frameCount >= 60) {
             if (this.game.frameCount % 60 === 0) {
-                this.headElOpening.alpha -= 0.2;
+                this.headElOpening.alpha -= 0.34;
             }
         }
     }
