@@ -21,7 +21,7 @@ class Game {
         );
         this.flaks = [];
         this.cannonTargetX = window.innerWidth / 2 + 100;
-        this.cannonTargetY = window.innerHeight / 2 - 100;
+        this.cannonTargetY = window.innerHeight / 2 - 120;
         this.nextShot = 4;
         this.score = 0;
         this.scoreValue = null;
