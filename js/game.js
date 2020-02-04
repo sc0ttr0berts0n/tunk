@@ -42,6 +42,7 @@ class Game {
         this.firstShot = false;
         this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
         this.colorMatrix2 = new PIXI.filters.ColorMatrixFilter();
+        this.colorMatrix3 = new PIXI.filters.ColorMatrixFilter();
 
         this.deadTime = 30;
     }
@@ -63,7 +64,7 @@ class Game {
 
             this.attemptDamage();
 
-            if (this.score >= 0 || this.frameCount >= 6000) {
+            if (this.score >= 3 || this.frameCount >= 3600) {
                 this.shootHoles();
             }
 
@@ -83,8 +84,7 @@ class Game {
         this.endGameUpdate();
     }
     endGameUpdate() {
-        if (!this.player.alive && this.deadTime < 70) {
-            console.log(this.deadTime);
+        if (!this.player.alive && this.deadTime <= 70) {
             this.deadTime++;
             this.turret.headContainer.filters = [this.colorMatrix];
             this.visualAssets.filters = [this.colorMatrix];
@@ -92,6 +92,13 @@ class Game {
             const greyScaleValue = 1 - this.deadTime * 0.01;
             this.colorMatrix.greyscale(greyScaleValue);
             this.colorMatrix2.saturate(this.deadTime * 0.01);
+        }
+        if (!this.player.alive && this.deadTime >= 70 && this.deadTime < 160) {
+            console.log(this.deadTime);
+            this.deadTime++;
+            this.app.stage.filters = [this.colorMatrix3];
+            const brightnessValue = 1.7 - this.deadTime * 0.01;
+            this.colorMatrix3.brightness(brightnessValue);
         }
     }
     cannonUpdate() {
