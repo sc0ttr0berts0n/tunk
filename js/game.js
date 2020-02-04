@@ -42,6 +42,7 @@ class Game {
         this.firstShot = false;
         this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
         this.colorMatrix2 = new PIXI.filters.ColorMatrixFilter();
+
         this.deadTime = 30;
     }
 
@@ -87,8 +88,10 @@ class Game {
             this.deadTime++;
             this.turret.headContainer.filters = [this.colorMatrix];
             this.visualAssets.filters = [this.colorMatrix];
+            this.player.playerContainer.filters = [this.colorMatrix2];
             const greyScaleValue = 1 - this.deadTime * 0.01;
             this.colorMatrix.greyscale(greyScaleValue);
+            this.colorMatrix2.saturate(this.deadTime * 0.01);
         }
     }
     cannonUpdate() {

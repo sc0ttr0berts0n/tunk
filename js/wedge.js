@@ -10,6 +10,7 @@ class Wedge {
         this.cautionFloorBoundary = new PIXI.Sprite(
             PIXI.Texture.from('assets/floor-warning-02.png')
         );
+        this.wedgeContainer = new PIXI.Container();
         this.el = new PIXI.Sprite(this.fullTexture);
         this.outsideLight = new PIXI.Sprite(
             PIXI.Texture.from('assets/crack-light.png')
@@ -31,10 +32,12 @@ class Wedge {
         this.letterYOffset = -50;
         this.willBeShot = false;
         this.scoreCheck = true;
+        this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
         this.init();
     }
     init() {
-        this.turret.el.addChild(this.el);
+        this.turret.el.addChild(this.wedgeContainer);
+        this.wedgeContainer.addChild(this.el);
         this.el.rotation = this.rot + 0.5 * Math.PI; // for exact placement
         this.el.scale.set(1.05);
         this.el.x = this.pos.x;
