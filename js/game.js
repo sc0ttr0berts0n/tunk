@@ -7,6 +7,7 @@ class Game {
             height: window.innerHeight,
             transparent: true
         });
+        this.visualAssets = new PIXI.Container();
         this.cannon = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel.png')
         );
@@ -45,7 +46,8 @@ class Game {
     }
 
     init() {
-        this.app.stage.addChild(this.background);
+        this.app.stage.addChild(this.visualAssets);
+        this.visualAssets.addChild(this.background);
         this.background.x = window.innerWidth / 2;
         this.background.y = window.innerHeight / 2;
         this.background.anchor.set(0.5, 0.5);
@@ -83,7 +85,8 @@ class Game {
         if (!this.player.alive && this.deadTime < 70) {
             console.log(this.deadTime);
             this.deadTime++;
-            this.app.stage.filters = [this.colorMatrix];
+            this.turret.headContainer.filters = [this.colorMatrix];
+            this.visualAssets.filters = [this.colorMatrix];
             const greyScaleValue = 1 - this.deadTime * 0.01;
             this.colorMatrix.greyscale(greyScaleValue);
         }
@@ -126,7 +129,7 @@ class Game {
         }
     }
     cannonInit() {
-        this.app.stage.addChild(this.cannonBarrelSmoke);
+        this.visualAssets.addChild(this.cannonBarrelSmoke);
         this.cannonBarrelSmoke.anchor.set(0, 0.5);
         this.cannonBarrelSmoke.x = this.cannonTargetX + 50;
         this.cannonBarrelSmoke.y = this.cannonTargetY - 50;
@@ -135,7 +138,7 @@ class Game {
         this.cannonBarrelSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
         // this.cannonBarrelSmoke.alpha = 0;
 
-        this.app.stage.addChild(this.cannonSmoke);
+        this.visualAssets.addChild(this.cannonSmoke);
         this.cannonSmoke.anchor.set(0, 0.5);
         this.cannonSmoke.x = this.cannonTargetX + 285;
         this.cannonSmoke.y = this.cannonTargetY - 285;
@@ -144,14 +147,14 @@ class Game {
         this.cannonSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
         this.cannonSmoke.alpha = 0;
 
-        this.app.stage.addChild(this.cannonFire);
+        this.visualAssets.addChild(this.cannonFire);
         this.cannonFire.anchor.set(0, 0.5);
         this.cannonFire.x = this.cannonTargetX + 285;
         this.cannonFire.y = this.cannonTargetY - 285;
         this.cannonFire.rotation = -0.25 * Math.PI;
         this.cannonFire.alpha = 0;
 
-        this.app.stage.addChild(this.cannon);
+        this.visualAssets.addChild(this.cannon);
         this.cannon.anchor.set(0, 0.5);
         this.cannon.x = this.cannonTargetX;
         this.cannon.y = this.cannonTargetY;
