@@ -2,6 +2,7 @@ class Player {
     constructor(game) {
         this.game = game;
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
+        this.bloodContainer = new PIXI.Container();
         this.bloodEl = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
         );
@@ -18,7 +19,8 @@ class Player {
         this.game.turret.el.addChild(this.el);
         this.el.scale.set(0.75, 0.75);
         this.el.anchor.set(0.5);
-        this.el.addChild(this.bloodEl);
+        this.el.addChild(this.bloodContainer);
+        this.bloodContainer.addChild(this.bloodEl);
         this.bloodEl.anchor.set(0.45, 0.9);
         this.bloodEl.visible = false;
     }
