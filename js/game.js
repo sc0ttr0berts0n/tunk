@@ -39,6 +39,9 @@ class Game {
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
         this.firstShot = false;
+        this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
+        this.colorMatrix2 = new PIXI.filters.ColorMatrixFilter();
+        this.deadTime = 0;
     }
 
     init() {
@@ -73,6 +76,14 @@ class Game {
         if (this.flaks.length > 0) {
             this.flaks.forEach(flak => flak.update());
             this.flaks = this.flaks.filter(flak => !flak.isDead);
+        }
+        this.endGameUpdate();
+    }
+    endGameUpdate() {
+        if (!this.player.alive && this.deadTime < 5) {
+            this.deadTime++;
+            this.app.stage.filters = [this.colorMatrix];
+            this.colorMatrix.greyscale(0.9);
         }
     }
     cannonUpdate() {
