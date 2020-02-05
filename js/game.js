@@ -187,7 +187,7 @@ class Game {
     shootHoles() {
         if (Math.random() < this.damageChance) {
             const wedges = this.turret.getDamagedWedges();
-            if (wedges.length > 0) {
+            if (wedges.length > 1) {
                 const wedge = wedges[Math.floor(Math.random() * wedges.length)];
                 const wedgeCount = wedge.wedgeCount;
                 const oppositeWedgeId =
