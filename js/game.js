@@ -169,7 +169,13 @@ class Game {
                     const wedge =
                         wedges[Math.floor(Math.random() * wedges.length)];
                     this.flaks.push(
-                        new Flak(this, wedge.rot, 65, -this.turret.radius)
+                        new Flak(
+                            this,
+                            wedge.rot,
+                            65,
+                            -this.turret.radius,
+                            false
+                        )
                     );
                     setTimeout(() => {
                         wedge.setHealth();

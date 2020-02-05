@@ -1,5 +1,12 @@
 class Flak {
-    constructor(game, angle, ticksUntilImpact, killDistance, speed = 40) {
+    constructor(
+        game,
+        angle,
+        ticksUntilImpact,
+        killDistance,
+        isLethal = true,
+        speed = 40
+    ) {
         this.game = game;
         this.container = new PIXI.Sprite();
         this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-flak.png'));
@@ -8,6 +15,7 @@ class Flak {
         this.yOff = -ticksUntilImpact * speed;
         this.speed = speed;
         this.isDead = false;
+        this.isLethal = isLethal;
         this.init();
     }
     init() {
@@ -31,7 +39,7 @@ class Flak {
         const xDist = player.tx - flak.tx;
         const yDist = player.ty - flak.ty;
         const hypot = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-        if (hypot < 40) {
+        if (hypot < 40 && this.isLethal) {
             this.game.player.bloodRot = this.container.rotation + Math.PI;
             this.game.player.alive = false;
         }
