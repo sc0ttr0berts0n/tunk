@@ -24,6 +24,7 @@ class Flak {
         if (this.el.y > this.killDistance) {
             this.isDead = true;
             this.container.visible = false;
+            this.container.destroy();
         }
         this.el.y += this.speed;
         const player = this.game.player.el.worldTransform;
