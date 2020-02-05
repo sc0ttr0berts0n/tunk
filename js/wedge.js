@@ -162,7 +162,7 @@ class Wedge {
             this.game.player.pos.x === this.playerPos.x &&
             this.game.player.pos.y === this.playerPos.y
         ) {
-            this.addHealth(2);
+            this.addHealth(1);
         }
     }
     addHealth(n) {
