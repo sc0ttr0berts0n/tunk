@@ -166,10 +166,12 @@ class Game {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
-
                     // odds of doing damage depend on how many walls remain
                     // if less walls exist, there chances of damange diminish
-                    if (Math.random() < wedges.length / wedges[0].wedgeCount) {
+                    if (
+                        Math.random() <
+                        1 - wedges.length / wedges[0].wedgeCount
+                    ) {
                         return;
                     }
 
