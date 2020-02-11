@@ -55,7 +55,7 @@ class Game {
 
             this.updateTurret();
 
-            this.attemptDamage();
+            this.shootWalls();
 
             if (this.score >= 3 || this.frameCount >= 6000) {
                 this.shootHoles();
@@ -161,13 +161,23 @@ class Game {
                 this.frameCount + Math.random() * 120 + 60;
         }
     }
-    attemptDamage() {
+    shootWalls() {
         if (this.frameCount >= 180) {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
+
+                    // odds of doing damage depend on how many walls remain
+                    // if less walls exist, there chances of damange diminish
+                    if (Math.random() < wedges.length / wedges[0].wedgeCount) {
+                        return;
+                    }
+
+                    // choose a random wedge
                     const wedge =
                         wedges[Math.floor(Math.random() * wedges.length)];
+
+                    // init flak animation
                     this.flaks.push(
                         new Flak(
                             this,
@@ -177,6 +187,8 @@ class Game {
                             false
                         )
                     );
+
+                    // schedule damage to occur when the flak arrives
                     setTimeout(() => {
                         wedge.setHealth();
                     }, 1000);
