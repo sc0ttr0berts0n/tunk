@@ -7,6 +7,11 @@ class Game {
             height: window.innerHeight,
             transparent: true
         });
+        this.sounds = {
+            bgmMain: new Howl({
+                src: ['assets/audio/bgm-main.mp3']
+            })
+        };
         this.cannon = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel.png')
         );
@@ -48,6 +53,7 @@ class Game {
         this.background.anchor.set(0.5, 0.5);
         this.cannonInit();
         this.scoreInit();
+        this.sounds.bgmMain.play();
     }
     update() {
         if (this.player.alive) {
