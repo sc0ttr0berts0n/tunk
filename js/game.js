@@ -11,7 +11,8 @@ class Game {
             bgmMain: new Howl({
                 src: ['assets/audio/bgm-main.mp3'],
                 autoplay: true,
-                loop: true
+                loop: true,
+                volume: 1
             }),
             bgmIntense: new Howl({
                 src: ['assets/audio/bgm-intense.mp3'],
@@ -206,6 +207,14 @@ class Game {
                     // schedule damage to occur when the flak arrives
                     setTimeout(() => {
                         wedge.setHealth();
+                        new Howl({
+                            src: ['assets/audio/sfx-wall-breaking.mp3'],
+                            autoplay: true,
+                            onend: e => {
+                                console.log(e);
+                                console.log('done');
+                            }
+                        });
                     }, 1000);
                 }
             }
