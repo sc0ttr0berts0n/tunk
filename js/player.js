@@ -32,6 +32,7 @@ class Player {
         this.bloodEl.rotation = this.bloodRot + -this.el.rotation;
         if (!this.alive) {
             this.bloodEl.visible = true;
+            this.game.sounds.sfxMoving.stop();
         }
     }
     movedaboi() {
@@ -55,7 +56,9 @@ class Player {
         } else {
             this.pos.x += movex;
             this.pos.y += movey;
-            this.game.sounds.sfxMoving.play();
+            if (!this.game.sounds.sfxMoving.playing()) {
+                this.game.sounds.sfxMoving.play();
+            }
         }
         if (angle !== 0) {
             this.el.rotation = angle + 0.5 * Math.PI;
