@@ -51,9 +51,11 @@ class Player {
         ) {
             this.pos.x = this.targetPos.x;
             this.pos.y = this.targetPos.y;
+            this.game.sounds.sfxMoving.pause();
         } else {
             this.pos.x += movex;
             this.pos.y += movey;
+            this.game.sounds.sfxMoving.play();
         }
         if (angle !== 0) {
             this.el.rotation = angle + 0.5 * Math.PI;

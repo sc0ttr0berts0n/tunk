@@ -19,6 +19,11 @@ class Game {
                 autoplay: true,
                 loop: true,
                 volume: 1
+            }),
+            sfxMoving: new Howl({
+                src: ['assets/audio/sfx-moving.mp3'],
+                autoplay: false,
+                loop: true
             })
         };
         this.cannon = new PIXI.Sprite(
@@ -209,11 +214,7 @@ class Game {
                         wedge.setHealth();
                         new Howl({
                             src: ['assets/audio/sfx-wall-breaking.mp3'],
-                            autoplay: true,
-                            onend: e => {
-                                console.log(e);
-                                console.log('done');
-                            }
+                            autoplay: true
                         });
                     }, 1000);
                 }
