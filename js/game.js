@@ -9,7 +9,15 @@ class Game {
         });
         this.sounds = {
             bgmMain: new Howl({
-                src: ['assets/audio/bgm-main.mp3']
+                src: ['assets/audio/bgm-main.mp3'],
+                autoplay: true,
+                loop: true
+            }),
+            bgmIntense: new Howl({
+                src: ['assets/audio/bgm-intense.mp3'],
+                autoplay: true,
+                loop: true,
+                volume: 1
             })
         };
         this.cannon = new PIXI.Sprite(
@@ -53,7 +61,6 @@ class Game {
         this.background.anchor.set(0.5, 0.5);
         this.cannonInit();
         this.scoreInit();
-        this.sounds.bgmMain.play();
     }
     update() {
         if (this.player.alive) {

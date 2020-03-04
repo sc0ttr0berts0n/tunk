@@ -31,6 +31,16 @@
                 width: 100%;
                 height: 100%;
             }
+            .mute-button {
+                position: absolute;
+                bottom: 5vmin;
+                top: auto;
+                right: 5vmin;
+                display: block;
+            }
+            .mute-button::after {
+                content: '🔇';
+            }
             .help-button {
                 position: absolute;
                 bottom: 5vmin;
@@ -65,12 +75,19 @@
                 cursor: pointer;
                 text-transform: uppercase;
             }
+            .inactive {
+                opacity: 0.5;
+            }
+            .inactive::after {
+                content: '🔊'
+            }
             .button:hover {
                 background-color: #648892;
             }
         </style>
     </head>
     <body>
+        <div class="mute-button button"></div>
         <div class="help-button button">HELP</div>
         <div class="help-window" style="display: none">
             <div class="help-close button">close</div>
@@ -101,6 +118,20 @@
             closeHelpButton.addEventListener('click', () => {
                 helpPanel.style.display = 'none';
             });
+
+            // mute toggle
+            const muteButton = document.querySelector('.mute-button');
+            muteButton.addEventListener('click', e => {
+                const muted = e.target.classList.contains('inactive');
+                if (!muted) {
+                    e.target.classList.add('inactive');
+
+                } else {
+                    e.target.classList.remove('inactive');
+                }
+                Howler.mute(!muted);
+            }) ;
+
         </script>
     </body>
 </html>
