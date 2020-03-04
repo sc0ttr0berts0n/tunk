@@ -57,7 +57,7 @@ class Player {
             this.pos.x += movex;
             this.pos.y += movey;
             if (!this.game.sounds.sfxMoving.playing()) {
-                this.game.sounds.sfxMoving.play();
+                this.game.sounds.sfxMoving.loop();
             }
         }
         if (angle !== 0) {
