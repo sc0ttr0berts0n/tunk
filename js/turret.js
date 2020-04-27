@@ -17,20 +17,20 @@ class Turret {
         this.init();
     }
     init() {
-        this.headEl.x = window.innerWidth / 2;
-        this.headEl.y = window.innerHeight / 2;
+        this.headEl.x = this.game.app.renderer.width / 2;
+        this.headEl.y = this.game.app.renderer.height / 2;
         this.headEl.anchor.set(0.5);
         this.headEl.scale.set(1.15);
         this.headEl.rotation = -0.25 * Math.PI;
         this.game.app.stage.addChild(this.headEl);
 
         this.el.anchor.set(0.5);
-        this.el.x = window.innerWidth / 2;
-        this.el.y = window.innerHeight / 2;
+        this.el.x = this.game.app.renderer.width / 2;
+        this.el.y = this.game.app.renderer.height / 2;
         this.game.app.stage.addChild(this.el);
 
-        this.headElOpening.x = window.innerWidth / 2;
-        this.headElOpening.y = window.innerHeight / 2;
+        this.headElOpening.x = this.game.app.renderer.width / 2;
+        this.headElOpening.y = this.game.app.renderer.height / 2;
         this.headElOpening.anchor.set(0.5);
         this.headElOpening.scale.set(1.15);
         this.headElOpening.rotation = -0.25 * Math.PI;
@@ -48,10 +48,10 @@ class Turret {
         }
     }
     getFullWedges() {
-        return this.wedges.filter(wedge => wedge.health >= wedge.maxHealth);
+        return this.wedges.filter((wedge) => wedge.health >= wedge.maxHealth);
     }
     getDamagedWedges() {
-        return this.wedges.filter(wedge => {
+        return this.wedges.filter((wedge) => {
             return (
                 wedge.health < wedge.maxHealth &&
                 this.game.player.pos.x !== wedge.pos.x &&

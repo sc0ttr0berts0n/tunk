@@ -21,8 +21,8 @@ class Flak {
     init() {
         this.container.addChild(this.el);
         this.container.rotation = this.angle;
-        this.container.x = window.innerWidth / 2;
-        this.container.y = window.innerHeight / 2;
+        this.container.x = this.game.app.renderer.width / 2;
+        this.container.y = this.game.app.renderer.height / 2;
         this.el.rotation = Math.PI * 0.5;
         this.el.anchor.set(1, 0.5);
         this.el.y = this.yOff;
