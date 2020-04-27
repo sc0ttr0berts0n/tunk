@@ -190,7 +190,7 @@ class Game {
                         new Flak(
                             this,
                             wedge.rot,
-                            65,
+                            120,
                             -this.turret.radius,
                             false
                         )
@@ -199,7 +199,7 @@ class Game {
                     // schedule damage to occur when the flak arrives
                     setTimeout(() => {
                         wedge.setHealth();
-                    }, 600);
+                    }, 1000);
                 }
             }
         }
@@ -218,7 +218,7 @@ class Game {
                     oppositeWedge.health < wedge.maxHealth
                         ? this.turret.radius * 3
                         : this.turret.radius;
-                this.flaks.push(new Flak(this, wedge.rot, 55, killDist));
+                this.flaks.push(new Flak(this, wedge.rot, 130, killDist));
                 wedge.willBeShot = true;
 
                 setTimeout(() => {
