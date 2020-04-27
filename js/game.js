@@ -5,7 +5,7 @@ class Game {
             view: canvas,
             width: window.innerWidth,
             height: window.innerHeight,
-            transparent: true
+            transparent: true,
         });
         this.cannon = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel.png')
@@ -53,7 +53,7 @@ class Game {
     update() {
         if (this.player.alive) {
             this.frameCount++;
-            if(!this.mapRotation){
+            if (!this.reduceMotion) {
                 this.updateTurret();
             }
 
@@ -70,11 +70,11 @@ class Game {
         }
         this.player.update();
         if (this.turret.wedges) {
-            this.turret.wedges.forEach(wedge => wedge.update());
+            this.turret.wedges.forEach((wedge) => wedge.update());
         }
         if (this.flaks.length > 0) {
-            this.flaks.forEach(flak => flak.update());
-            this.flaks = this.flaks.filter(flak => !flak.isDead);
+            this.flaks.forEach((flak) => flak.update());
+            this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
     }
     cannonUpdate() {
