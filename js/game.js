@@ -48,6 +48,8 @@ class Game {
         this.background.anchor.set(0.5, 0.5);
         this.cannonInit();
         this.scoreInit();
+
+        this.app.ticker.add(() => this.update());
     }
     update() {
         if (this.player.alive) {
@@ -245,10 +247,3 @@ class Game {
 
 const canvas = document.getElementById('game');
 const game = new Game(canvas);
-
-const loop = () => {
-    requestAnimationFrame(loop);
-
-    game.update();
-};
-loop();
