@@ -39,6 +39,7 @@ class Game {
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
         this.firstShot = false;
+        this.reduceMotion = false;
     }
 
     init() {
@@ -52,8 +53,9 @@ class Game {
     update() {
         if (this.player.alive) {
             this.frameCount++;
-
-            this.updateTurret();
+            if(!this.mapRotation){
+                this.updateTurret();
+            }
 
             this.shootWalls();
 
