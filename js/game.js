@@ -1,11 +1,17 @@
 class Game {
     constructor(canvas) {
         this.canvas = canvas;
+        // this.app = new PIXI.Application({
+        //     view: canvas,
+        //     width: this.app.renderer.width,
+        //     height: this.app.renderer.height,
+        //     transparent: true,
+        // });
         this.app = new PIXI.Application({
             view: canvas,
-            width: window.innerWidth,
-            height: window.innerHeight,
-            transparent: true
+            width: 1024,
+            height: 1024,
+            transparent: true,
         });
         this.cannon = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel.png')
@@ -20,8 +26,8 @@ class Game {
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
         this.flaks = [];
-        this.cannonTargetX = window.innerWidth / 2 + 100;
-        this.cannonTargetY = window.innerHeight / 2 - 120;
+        this.cannonTargetX = this.app.renderer.width / 2 + 100;
+        this.cannonTargetY = this.app.renderer.height / 2 - 120;
         this.nextShot = 4;
         this.score = 0;
         this.scoreValue = null;
@@ -43,8 +49,8 @@ class Game {
 
     init() {
         this.app.stage.addChild(this.background);
-        this.background.x = window.innerWidth / 2;
-        this.background.y = window.innerHeight / 2;
+        this.background.x = this.app.renderer.width / 2;
+        this.background.y = this.app.renderer.height / 2;
         this.background.anchor.set(0.5, 0.5);
         this.cannonInit();
         this.scoreInit();
@@ -68,11 +74,11 @@ class Game {
         }
         this.player.update();
         if (this.turret.wedges) {
-            this.turret.wedges.forEach(wedge => wedge.update());
+            this.turret.wedges.forEach((wedge) => wedge.update());
         }
         if (this.flaks.length > 0) {
-            this.flaks.forEach(flak => flak.update());
-            this.flaks = this.flaks.filter(flak => !flak.isDead);
+            this.flaks.forEach((flak) => flak.update());
+            this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
     }
     cannonUpdate() {
@@ -193,7 +199,7 @@ class Game {
                     // schedule damage to occur when the flak arrives
                     setTimeout(() => {
                         wedge.setHealth();
-                    }, 1000);
+                    }, 600);
                 }
             }
         }
@@ -237,8 +243,8 @@ class Game {
         scoreStyle.strokeThickness = 10;
         this.scoreValue = new PIXI.Text(this.score, scoreStyle);
         this.scoreValue.anchor.set(0.5);
-        this.scoreValue.y = window.innerHeight / 2 + 400;
-        this.scoreValue.x = window.innerWidth / 2;
+        this.scoreValue.y = this.app.renderer.height / 2 + 400;
+        this.scoreValue.x = this.app.renderer.width / 2;
         this.app.stage.addChild(this.scoreValue);
     }
 }
