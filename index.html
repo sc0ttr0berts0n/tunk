@@ -179,9 +179,6 @@
                 <div class="options-window modal" style="display: none">
                     <div class="options-close button">close</div>
                     <div class="options-reduce-motion button toggle-button toggle-button__off">Reduce Motion</div>
-                    <div class="options-reduce-motion button toggle-button toggle-button__on">Test Option A</div>
-                    <div class="options-reduce-motion button toggle-button toggle-button__off">Test Option B</div>
-                    <div class="options-reduce-motion button toggle-button toggle-button__on">Test Option C</div>
                 </div>
             </div>
         </div>
@@ -202,6 +199,7 @@
             const closeOptionsButton = document.querySelector('.options-close');
             const optionsPanel = document.querySelector('.options-window');
             const toggleButton = document.querySelectorAll('.toggle-button');
+            const reduceMotionButton = document.querySelector('.options-reduce-motion');
 
             // modal open/close
             showHelpButton.addEventListener('click', () => {
@@ -220,6 +218,9 @@
             // visually toggle the toggle buttons
             toggleButton.forEach(button => {
                 button.addEventListener('click', e => {
+                    // temp gate to handle buttons that arent reduce motion
+                    if (e.target.classList.contains('options-reduce-motion')) return;
+
                     if (e.target.classList.contains('toggle-button__off')) {
                         e.target.classList.remove('toggle-button__off');
                         e.target.classList.add('toggle-button__on');
@@ -232,6 +233,17 @@
 
                     }
                 });
+            });
+
+            reduceMotionButton.addEventListener('click', e => {
+                game.reduceMotion = !game.reduceMotion
+                if (game.reduceMotion) {
+                    e.target.classList.remove('toggle-button__off');
+                    e.target.classList.add('toggle-button__on');
+                } else {
+                    e.target.classList.add('toggle-button__off');
+                    e.target.classList.remove('toggle-button__on');
+                }
             })
         </script>
     </body>
