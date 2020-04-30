@@ -65,9 +65,6 @@ class Game {
         // background
         this.app.stage.addChild(this.background);
 
-        // score
-        this.app.stage.addChild(this.scoreValue);
-
         // turret container
         this.app.stage.addChild(this.turret.container);
 
@@ -86,6 +83,9 @@ class Game {
         // player
         this.turret.floorEl.addChild(this.player.el);
         this.player.el.addChild(this.player.bloodEl);
+
+        // score
+        this.app.stage.addChild(this.scoreValue);
     }
 
     updateTurret() {
