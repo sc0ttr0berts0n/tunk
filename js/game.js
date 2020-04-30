@@ -39,9 +39,7 @@ class Game {
     update() {
         if (this.player.alive) {
             this.frameCount++;
-            if (!this.reduceMotion) {
-                this.updateTurret();
-            }
+            this.updateTurret();
 
             this.shootWalls();
 
@@ -74,10 +72,11 @@ class Game {
         this.app.stage.addChild(this.turret.container);
 
         // cannon
-        this.turret.container.addChild(this.cannon.cannonBarrelSmoke);
-        this.turret.container.addChild(this.cannon.cannonSmoke);
-        this.turret.container.addChild(this.cannon.cannonFire);
-        this.turret.container.addChild(this.cannon.barrel);
+        this.turret.container.addChild(this.cannon.container);
+        this.cannon.container.addChild(this.cannon.cannonBarrelSmoke);
+        this.cannon.container.addChild(this.cannon.cannonSmoke);
+        this.cannon.container.addChild(this.cannon.cannonFire);
+        this.cannon.container.addChild(this.cannon.barrel);
 
         // turret top layers
         this.turret.container.addChild(this.turret.bottomEl);
@@ -97,7 +96,13 @@ class Game {
         const offset = diff * factor;
 
         this.backgroundRot += offset;
-        this.background.rotation = this.backgroundRot;
+        if (!this.reduceMotion) {
+            this.background.rotation = this.backgroundRot;
+        } else {
+            this.turret.bottomEl.rotation = this.backgroundRot;
+            this.turret.headElOpening.rotation = this.backgroundRot;
+            this.cannon.container.rotation = this.backgroundRot;
+        }
 
         if (this.frameCount > this.backgroundNextMove) {
             this.backgroundTargetRot = Math.random() * (Math.PI * 4 - 2);

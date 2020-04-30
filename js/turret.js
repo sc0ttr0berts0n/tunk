@@ -35,7 +35,6 @@ class Turret {
     update() {
         this.openingUpdate();
         this.game.cannon.update();
-        // this.bottomEl.rotation += 0.001;
     }
     openingUpdate() {
         if (this.game.frameCount >= 60) {

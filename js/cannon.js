@@ -1,6 +1,7 @@
 class Cannon {
     constructor(Game) {
         this.game = Game;
+        this.container = new PIXI.Container();
         this.barrel = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel.png')
         );
