@@ -13,8 +13,8 @@ class Cannon {
         this.cannonBarrelSmoke = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
-        this.cannonTargetX = this.game.app.renderer.width / 2 + 100;
-        this.cannonTargetY = this.game.app.renderer.height / 2 - 120;
+        this.cannonTargetX = 120;
+        this.cannonTargetY = -10;
 
         this.nextShot = 4;
 
@@ -22,36 +22,32 @@ class Cannon {
     }
 
     init() {
-        this.game.app.stage.addChild(this.cannonBarrelSmoke);
         this.cannonBarrelSmoke.anchor.set(0, 0.5);
-        this.cannonBarrelSmoke.x = this.cannonTargetX + 50;
-        this.cannonBarrelSmoke.y = this.cannonTargetY - 50;
-        this.cannonBarrelSmoke.rotation = -0.25 * Math.PI;
+        this.cannonBarrelSmoke.x = this.cannonTargetX + 0;
+        this.cannonBarrelSmoke.y = this.cannonTargetY - 0;
+        this.cannonBarrelSmoke.rotation = 0 * Math.PI;
         this.cannonBarrelSmoke.scale.set(0.9);
         this.cannonBarrelSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
-        // this.cannonBarrelSmoke.alpha = 0;
 
-        this.game.app.stage.addChild(this.cannonSmoke);
         this.cannonSmoke.anchor.set(0, 0.5);
-        this.cannonSmoke.x = this.cannonTargetX + 285;
-        this.cannonSmoke.y = this.cannonTargetY - 285;
-        this.cannonSmoke.rotation = -0.25 * Math.PI;
+        this.cannonSmoke.x = this.cannonTargetX + 370;
+        this.cannonSmoke.y = this.cannonTargetY - 10;
+        this.cannonSmoke.rotation = 0 * Math.PI;
         this.cannonSmoke.scale.set(2);
         this.cannonSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
         this.cannonSmoke.alpha = 0;
 
-        this.game.app.stage.addChild(this.cannonFire);
         this.cannonFire.anchor.set(0, 0.5);
-        this.cannonFire.x = this.cannonTargetX + 285;
-        this.cannonFire.y = this.cannonTargetY - 285;
-        this.cannonFire.rotation = -0.25 * Math.PI;
+        this.cannonFire.x = this.cannonTargetX + 370;
+        this.cannonFire.y = this.cannonTargetY - 0;
+        this.cannonFire.rotation = 0 * Math.PI;
         this.cannonFire.alpha = 0;
 
-        this.game.app.stage.addChild(this.barrel);
         this.barrel.anchor.set(0, 0.5);
         this.barrel.x = this.cannonTargetX;
         this.barrel.y = this.cannonTargetY;
-        this.barrel.rotation = -0.25 * Math.PI;
+        this.barrel.scale.set(0.9);
+        this.barrel.rotation = 0 * Math.PI;
     }
 
     update() {
@@ -85,7 +81,6 @@ class Cannon {
 
         if (this.game.frameCount > this.nextShot) {
             this.barrel.x -= 140;
-            this.barrel.y += 140;
             this.cannonBarrelSmoke.alpha += 0.3;
             this.cannonBarrelSmoke.scale.set(0.9);
             this.nextShot = this.game.frameCount + Math.random() * 270 + 60;

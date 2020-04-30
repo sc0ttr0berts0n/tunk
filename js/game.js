@@ -16,10 +16,10 @@ class Game {
         this.backgroundRot = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
-        this.init();
-        this.cannon = new Cannon(this);
         this.turret = new Turret(this, 26);
+        this.cannon = new Cannon(this);
         this.player = new Player(this);
+        this.init();
         this.kb = new KeyboardObserver();
         this.damageChance = 0.0125;
         this.shootHoleChance = 0.0125;
@@ -29,12 +29,11 @@ class Game {
     }
 
     init() {
-        this.app.stage.addChild(this.background);
         this.background.x = this.app.renderer.width / 2;
         this.background.y = this.app.renderer.height / 2;
         this.background.anchor.set(0.5, 0.5);
         this.scoreInit();
-
+        this.placeAssets();
         this.app.ticker.add(() => this.update());
     }
     update() {
@@ -54,7 +53,6 @@ class Game {
 
             this.scoreUpdate();
         }
-        this.cannon.update();
         this.player.update();
         if (this.turret.wedges) {
             this.turret.wedges.forEach((wedge) => wedge.update());
@@ -63,6 +61,32 @@ class Game {
             this.flaks.forEach((flak) => flak.update());
             this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
+    }
+
+    placeAssets() {
+        // background
+        this.app.stage.addChild(this.background);
+
+        // score
+        this.app.stage.addChild(this.scoreValue);
+
+        // turret container
+        this.app.stage.addChild(this.turret.container);
+
+        // cannon
+        this.turret.container.addChild(this.cannon.cannonBarrelSmoke);
+        this.turret.container.addChild(this.cannon.cannonSmoke);
+        this.turret.container.addChild(this.cannon.cannonFire);
+        this.turret.container.addChild(this.cannon.barrel);
+
+        // turret top layers
+        this.turret.container.addChild(this.turret.bottomEl);
+        this.turret.container.addChild(this.turret.floorEl);
+        this.turret.container.addChild(this.turret.headElOpening);
+
+        // player
+        this.turret.floorEl.addChild(this.player.el);
+        this.player.el.addChild(this.player.bloodEl);
     }
 
     updateTurret() {
@@ -159,7 +183,6 @@ class Game {
         this.scoreValue.anchor.set(0.5);
         this.scoreValue.y = this.app.renderer.height / 2 + 400;
         this.scoreValue.x = this.app.renderer.width / 2;
-        this.app.stage.addChild(this.scoreValue);
     }
 }
 
