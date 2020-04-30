@@ -46,7 +46,7 @@ class Cannon {
         this.barrel.anchor.set(0, 0.5);
         this.barrel.x = this.cannonTargetX;
         this.barrel.y = this.cannonTargetY;
-        this.barrel.scale.set(0.9);
+        this.barrel.scale.set(0.85);
         this.barrel.rotation = 0 * Math.PI;
     }
 

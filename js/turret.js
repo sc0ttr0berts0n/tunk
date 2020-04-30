@@ -21,14 +21,9 @@ class Turret {
     init() {
         this.container.x = this.game.app.renderer.width / 2;
         this.container.y = this.game.app.renderer.height / 2;
-        this.container.scale.set(1.15);
         this.container.rotation = -0.25 * Math.PI;
 
-        // this.bottomEl.x = this.game.app.renderer.width / 2;
-        // this.bottomEl.y = this.game.app.renderer.height / 2;
         this.bottomEl.anchor.set(0.5);
-        // this.bottomEl.scale.set(1.15);
-        // this.bottomEl.rotation = -0.25 * Math.PI;
 
         this.floorEl.anchor.set(0.5);
         this.floorEl.rotation = 0.25 * Math.PI;
