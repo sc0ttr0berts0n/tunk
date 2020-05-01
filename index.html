@@ -30,32 +30,33 @@
                 bottom: 0;
                 width: 100%;
                 height: 100%;
+                background-color: #0b2830
             }
-            .help-button {
-                position: absolute;
-                bottom: 5vmin;
-                top: auto;
-                left: 5vmin;
-                display: block;
+            body {
+                background-image: url('./assets/web-bg.gif');
+                background-size: cover;
+                background-position: center;
             }
-            .help-close {
+            canvas {
+                width: 90vmin;
+                height: 90vmin;
                 position: absolute;
-                top: 5vmin;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border-radius: 2vmin;
+                border: 1vmin solid #000033;
+                background-color: #ccc;
+                box-shadow: 0 0 5vmin 3vmin rgba(238, 233, 213, 0.75);
             }
-            .help-window {
-                /* display: none; */
+            .canvas-ui {
+                z-index: 100;
+                width: 90vmin;
+                height: 90vmin;
                 position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #282228;
-                opacity: 0.95;
-                margin: 5vmin;
-                border-radius: 8px;
-                padding: 5vmin;
-                padding-top: 20vmin;
-                line-height: 1.6;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
             .button {
                 border-radius: 8px;
@@ -64,22 +65,121 @@
                 display: inline;
                 cursor: pointer;
                 text-transform: uppercase;
+                border-bottom: 4px solid #0e0b0e;
             }
             .button:hover {
                 background-color: #648892;
+                border-bottom-width: 0px;
+            }
+            .toggle-button {
+                display: inline-block;
+            }
+            .toggle-button__off {
+                background-color: transparent;
+                border: 2px solid #648892;
+                margin-top: 4px;
+            }
+            .toggle-button__off:hover {
+                background-color: rgba(100, 136, 146, 0.1);
+                border-bottom-width: 2px;
+
+            }
+            .toggle-button__on:hover {
+                transform: translateY(2px);
+                border-bottom-width: 2px;
+            }
+            .toggle-button__on:active {
+                border-bottom-width: 0;
+                transform: translateY(4px);
+            }
+            .help-button {
+                width: 5vmin;
+                height: 5vmin;
+                text-align: center;
+                line-height: 5vmin;
+                padding: 0;
+                border-radius: 50%;
+                position: absolute;
+                bottom: 1vmin;
+                top: auto;
+                left: 1vmin;
+                display: block;
+            }
+            .help-button:hover {
+                border-bottom-width: 2px;
+            }
+            .help-button:active {
+                border-bottom-width: 0;
+            }
+            .help-close {
+                position: absolute;
+                top: 5vmin;
+            }
+            .help-close:hover {
+                transform: translateY(4px);
+            }
+            .modal {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+                background-color: #282228;
+                opacity: 1;
+                margin: 7.5vmin;
+                border-radius: 8px;
+                padding: 5vmin;
+                padding-top: 20vmin;
+                line-height: 1.6;
+            }
+            .options-button {
+                width: 5vmin;
+                height: 5vmin;
+                text-align: center;
+                line-height: 5vmin;
+                padding: 0;
+                border-radius: 50%;
+                position: absolute;
+                bottom: 1vmin;
+                right: 1vmin;
+                top: auto;
+                display: block;
+            }
+            .options-button:hover {
+                border-bottom-width: 2px;
+            }
+            .options-button:active {
+                border-bottom-width: 0;
+            }
+            .options-close {
+                position: absolute;
+                top: 5vmin;
+                display: block;
+            }
+            .options-close:hover {
+                transform: translateY(4px);
             }
         </style>
     </head>
     <body>
-        <div class="help-button button">HELP</div>
-        <div class="help-window" style="display: none">
-            <div class="help-close button">close</div>
-            Repair the turret, dodge flak!<br />
-            Your score is how many wall segments you've repaired. <br />Press
-            the letter that corresponds to the wall segment to move your player
-            there.<br />Refresh to restart!<br />Adjust the zoom by using
-            <code>CTRL + +/-</code><br />
-            Thanks for playing! –Team Tunk
+        <div class="ui">
+            <div class="canvas-ui">
+                <div class="help-button button">❓</div>
+                <div class="help-window modal" style="display: none">
+                    <div class="help-close button">close</div>
+                    Repair the turret, dodge flak!<br />
+                    Your score is how many wall segments you've repaired. <br />Press
+                    the letter that corresponds to the wall segment to move your player
+                    there.<br />Refresh to restart!<br />
+                    Thanks for playing! –Team Tunk
+                </div>
+                <div class="options-button button">⚙️</div>
+                <div class="options-window modal" style="display: none">
+                    <div class="options-close button">close</div>
+                    <div class="options-reduce-motion button toggle-button toggle-button__off">Reduce Motion</div>
+                </div>
+            </div>
         </div>
         <canvas id="game"></canvas>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
@@ -88,18 +188,63 @@
         <script src="js/turret.js"></script>
         <script src="js/wedge.js"></script>
         <script src="js/player.js"></script>
+        <script src="js/cannon.js"></script>
         <script src="js/game.js"></script>
         <script>
-            // open / close the modals
+            // vars
             const showHelpButton = document.querySelector('.help-button');
             const closeHelpButton = document.querySelector('.help-close');
             const helpPanel = document.querySelector('.help-window');
+            const showOptionsButton = document.querySelector('.options-button');
+            const closeOptionsButton = document.querySelector('.options-close');
+            const optionsPanel = document.querySelector('.options-window');
+            const toggleButton = document.querySelectorAll('.toggle-button');
+            const reduceMotionButton = document.querySelector('.options-reduce-motion');
+
+            // modal open/close
             showHelpButton.addEventListener('click', () => {
                 helpPanel.style.display = 'block';
             });
             closeHelpButton.addEventListener('click', () => {
                 helpPanel.style.display = 'none';
             });
+            showOptionsButton.addEventListener('click', () => {
+                optionsPanel.style.display = 'block';
+            });
+            closeOptionsButton.addEventListener('click', () => {
+                optionsPanel.style.display = 'none';
+            });
+
+            // visually toggle the toggle buttons
+            toggleButton.forEach(button => {
+                button.addEventListener('click', e => {
+                    // temp gate to handle buttons that arent reduce motion
+                    if (e.target.classList.contains('options-reduce-motion')) return;
+
+                    if (e.target.classList.contains('toggle-button__off')) {
+                        e.target.classList.remove('toggle-button__off');
+                        e.target.classList.add('toggle-button__on');
+                        console.log('lol');
+
+                    } else {
+                        e.target.classList.add('toggle-button__off');
+                        e.target.classList.remove('toggle-button__on');
+                        console.log('jk');
+
+                    }
+                });
+            });
+
+            reduceMotionButton.addEventListener('click', e => {
+                game.reduceMotion = !game.reduceMotion
+                if (game.reduceMotion) {
+                    e.target.classList.remove('toggle-button__off');
+                    e.target.classList.add('toggle-button__on');
+                } else {
+                    e.target.classList.add('toggle-button__off');
+                    e.target.classList.remove('toggle-button__on');
+                }
+            })
         </script>
     </body>
 </html>

@@ -1,14 +1,16 @@
 class Turret {
     constructor(game, wedgeCount) {
         this.game = game;
-        this.headEl = new PIXI.Sprite(
+        this.container = new PIXI.Container();
+        this.bottomEl = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-turret.png')
         );
-        this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-floor.png'));
+        this.floorEl = new PIXI.Sprite(
+            PIXI.Texture.from('assets/da-floor.png')
+        );
         this.headElOpening = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-turret.png')
         );
-
         this.wedgeCount = wedgeCount;
         this.radius = 256;
         this.wedges = [...new Array(wedgeCount)].map(
@@ -17,28 +19,22 @@ class Turret {
         this.init();
     }
     init() {
-        this.headEl.x = window.innerWidth / 2;
-        this.headEl.y = window.innerHeight / 2;
-        this.headEl.anchor.set(0.5);
-        this.headEl.scale.set(1.15);
-        this.headEl.rotation = -0.25 * Math.PI;
-        this.game.app.stage.addChild(this.headEl);
+        this.container.x = this.game.app.renderer.width / 2;
+        this.container.y = this.game.app.renderer.height / 2;
+        this.container.rotation = -0.25 * Math.PI;
 
-        this.el.anchor.set(0.5);
-        this.el.x = window.innerWidth / 2;
-        this.el.y = window.innerHeight / 2;
-        this.game.app.stage.addChild(this.el);
+        this.bottomEl.anchor.set(0.5);
 
-        this.headElOpening.x = window.innerWidth / 2;
-        this.headElOpening.y = window.innerHeight / 2;
+        this.floorEl.anchor.set(0.5);
+        this.floorEl.rotation = 0.25 * Math.PI;
+        this.floorEl.scale.set(0.875);
+
         this.headElOpening.anchor.set(0.5);
-        this.headElOpening.scale.set(1.15);
-        this.headElOpening.rotation = -0.25 * Math.PI;
         this.headElOpening.alpha = 1;
-        this.game.app.stage.addChild(this.headElOpening);
     }
     update() {
         this.openingUpdate();
+        this.game.cannon.update();
     }
     openingUpdate() {
         if (this.game.frameCount >= 60) {
@@ -48,10 +44,10 @@ class Turret {
         }
     }
     getFullWedges() {
-        return this.wedges.filter(wedge => wedge.health >= wedge.maxHealth);
+        return this.wedges.filter((wedge) => wedge.health >= wedge.maxHealth);
     }
     getDamagedWedges() {
-        return this.wedges.filter(wedge => {
+        return this.wedges.filter((wedge) => {
             return (
                 wedge.health < wedge.maxHealth &&
                 this.game.player.pos.x !== wedge.pos.x &&

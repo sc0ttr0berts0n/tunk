@@ -24,7 +24,7 @@ class Wedge {
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
         this.pos = {
             x: Math.cos(this.rot) * this.turret.radius,
-            y: Math.sin(this.rot) * this.turret.radius
+            y: Math.sin(this.rot) * this.turret.radius,
         };
         this.playerPos = { x: this.pos.x * 0.88, y: this.pos.y * 0.88 };
         this.healthBarYOffset = -26;
@@ -34,7 +34,7 @@ class Wedge {
         this.init();
     }
     init() {
-        this.turret.el.addChild(this.el);
+        this.turret.floorEl.addChild(this.el);
         this.el.rotation = this.rot + 0.5 * Math.PI; // for exact placement
         this.el.scale.set(1.05);
         this.el.x = this.pos.x;

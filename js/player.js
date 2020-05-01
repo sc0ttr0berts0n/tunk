@@ -15,10 +15,8 @@ class Player {
         this.init();
     }
     init() {
-        this.game.turret.el.addChild(this.el);
         this.el.scale.set(0.75, 0.75);
         this.el.anchor.set(0.5);
-        this.el.addChild(this.bloodEl);
         this.bloodEl.anchor.set(0.45, 0.9);
         this.bloodEl.visible = false;
     }

@@ -3,26 +3,11 @@ class Game {
         this.canvas = canvas;
         this.app = new PIXI.Application({
             view: canvas,
-            width: window.innerWidth,
-            height: window.innerHeight,
-            transparent: true
+            width: 1024,
+            height: 1024,
+            transparent: true,
         });
-        this.cannon = new PIXI.Sprite(
-            PIXI.Texture.from('assets/turret-barrel.png')
-        );
-        this.cannonFire = new PIXI.Sprite(
-            PIXI.Texture.from('assets/turret-flash.png')
-        );
-        this.cannonSmoke = new PIXI.Sprite(
-            PIXI.Texture.from('assets/turret-smoke2.png')
-        );
-        this.cannonBarrelSmoke = new PIXI.Sprite(
-            PIXI.Texture.from('assets/turret-barrel-smoke.png')
-        );
         this.flaks = [];
-        this.cannonTargetX = window.innerWidth / 2 + 100;
-        this.cannonTargetY = window.innerHeight / 2 - 120;
-        this.nextShot = 4;
         this.score = 0;
         this.scoreValue = null;
         this.background = new PIXI.Sprite(
@@ -31,30 +16,29 @@ class Game {
         this.backgroundRot = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
-        this.init();
         this.turret = new Turret(this, 26);
+        this.cannon = new Cannon(this);
         this.player = new Player(this);
+        this.init();
         this.kb = new KeyboardObserver();
         this.damageChance = 0.0125;
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
         this.firstShot = false;
+        this.reduceMotion = false;
     }
 
     init() {
-        this.app.stage.addChild(this.background);
-        this.background.x = window.innerWidth / 2;
-        this.background.y = window.innerHeight / 2;
+        this.background.x = this.app.renderer.width / 2;
+        this.background.y = this.app.renderer.height / 2;
         this.background.anchor.set(0.5, 0.5);
-        this.cannonInit();
         this.scoreInit();
-
+        this.placeAssets();
         this.app.ticker.add(() => this.update());
     }
     update() {
         if (this.player.alive) {
             this.frameCount++;
-
             this.updateTurret();
 
             this.shootWalls();
@@ -65,86 +49,43 @@ class Game {
 
             this.turret.update();
 
-            this.cannonUpdate();
             this.scoreUpdate();
         }
         this.player.update();
         if (this.turret.wedges) {
-            this.turret.wedges.forEach(wedge => wedge.update());
+            this.turret.wedges.forEach((wedge) => wedge.update());
         }
         if (this.flaks.length > 0) {
-            this.flaks.forEach(flak => flak.update());
-            this.flaks = this.flaks.filter(flak => !flak.isDead);
+            this.flaks.forEach((flak) => flak.update());
+            this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
     }
-    cannonUpdate() {
-        if (this.frameCount > this.nextShot - 4) {
-            this.cannonFire.alpha = 1;
-            this.cannonSmoke.alpha += 0.3;
-            this.cannonSmoke.scale.set(2);
-            this.cannonBarrelSmoke.alpha += 0.3;
-            this.cannonBarrelSmoke.scale.set(2);
-        }
-        if (this.frameCount > this.nextShot - 1) {
-            this.cannonFire.alpha = 0;
-        }
-        if (this.cannonSmoke.alpha > 0) {
-            this.cannonSmoke.alpha -= 0.1;
-            this.cannonSmoke.scale.x += 0.05;
-            this.cannonSmoke.scale.y += 0.05;
-        }
-        if (this.cannonBarrelSmoke.alpha > 0) {
-            this.cannonBarrelSmoke.alpha -= 0.1;
-            this.cannonBarrelSmoke.scale.x += 0.05;
-            this.cannonBarrelSmoke.scale.y += 0.05;
-        }
-        const factor = 0.06;
-        const xDist = this.cannon.x - this.cannonTargetX;
-        const yDist = this.cannon.y - this.cannonTargetY;
-        const xOff = xDist * factor;
-        const yOff = yDist * factor;
-        this.cannon.x -= xOff;
-        this.cannon.y -= yOff;
 
-        if (this.frameCount > this.nextShot) {
-            game.cannon.x -= 140;
-            game.cannon.y += 140;
-            this.cannonBarrelSmoke.alpha += 0.3;
-            this.cannonBarrelSmoke.scale.set(0.9);
-            this.nextShot = this.frameCount + Math.random() * 270 + 60;
-        }
-    }
-    cannonInit() {
-        this.app.stage.addChild(this.cannonBarrelSmoke);
-        this.cannonBarrelSmoke.anchor.set(0, 0.5);
-        this.cannonBarrelSmoke.x = this.cannonTargetX + 50;
-        this.cannonBarrelSmoke.y = this.cannonTargetY - 50;
-        this.cannonBarrelSmoke.rotation = -0.25 * Math.PI;
-        this.cannonBarrelSmoke.scale.set(0.9);
-        this.cannonBarrelSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
-        // this.cannonBarrelSmoke.alpha = 0;
+    placeAssets() {
+        // background
+        this.app.stage.addChild(this.background);
 
-        this.app.stage.addChild(this.cannonSmoke);
-        this.cannonSmoke.anchor.set(0, 0.5);
-        this.cannonSmoke.x = this.cannonTargetX + 285;
-        this.cannonSmoke.y = this.cannonTargetY - 285;
-        this.cannonSmoke.rotation = -0.25 * Math.PI;
-        this.cannonSmoke.scale.set(2);
-        this.cannonSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
-        this.cannonSmoke.alpha = 0;
+        // turret container
+        this.app.stage.addChild(this.turret.container);
 
-        this.app.stage.addChild(this.cannonFire);
-        this.cannonFire.anchor.set(0, 0.5);
-        this.cannonFire.x = this.cannonTargetX + 285;
-        this.cannonFire.y = this.cannonTargetY - 285;
-        this.cannonFire.rotation = -0.25 * Math.PI;
-        this.cannonFire.alpha = 0;
+        // cannon
+        this.turret.container.addChild(this.cannon.container);
+        this.cannon.container.addChild(this.cannon.cannonBarrelSmoke);
+        this.cannon.container.addChild(this.cannon.cannonSmoke);
+        this.cannon.container.addChild(this.cannon.cannonFire);
+        this.cannon.container.addChild(this.cannon.barrel);
 
-        this.app.stage.addChild(this.cannon);
-        this.cannon.anchor.set(0, 0.5);
-        this.cannon.x = this.cannonTargetX;
-        this.cannon.y = this.cannonTargetY;
-        this.cannon.rotation = -0.25 * Math.PI;
+        // turret top layers
+        this.turret.container.addChild(this.turret.bottomEl);
+        this.turret.container.addChild(this.turret.floorEl);
+        this.turret.container.addChild(this.turret.headElOpening);
+
+        // player
+        this.turret.floorEl.addChild(this.player.el);
+        this.player.el.addChild(this.player.bloodEl);
+
+        // score
+        this.app.stage.addChild(this.scoreValue);
     }
 
     updateTurret() {
@@ -155,7 +96,13 @@ class Game {
         const offset = diff * factor;
 
         this.backgroundRot += offset;
-        this.background.rotation = this.backgroundRot;
+        if (!this.reduceMotion) {
+            this.background.rotation = this.backgroundRot;
+        } else {
+            this.turret.bottomEl.rotation = this.backgroundRot;
+            this.turret.headElOpening.rotation = this.backgroundRot;
+            this.cannon.container.rotation = this.backgroundRot;
+        }
 
         if (this.frameCount > this.backgroundNextMove) {
             this.backgroundTargetRot = Math.random() * (Math.PI * 4 - 2);
@@ -186,7 +133,7 @@ class Game {
                         new Flak(
                             this,
                             wedge.rot,
-                            65,
+                            120,
                             -this.turret.radius,
                             false
                         )
@@ -214,7 +161,7 @@ class Game {
                     oppositeWedge.health < wedge.maxHealth
                         ? this.turret.radius * 3
                         : this.turret.radius;
-                this.flaks.push(new Flak(this, wedge.rot, 55, killDist));
+                this.flaks.push(new Flak(this, wedge.rot, 130, killDist));
                 wedge.willBeShot = true;
 
                 setTimeout(() => {
@@ -239,9 +186,8 @@ class Game {
         scoreStyle.strokeThickness = 10;
         this.scoreValue = new PIXI.Text(this.score, scoreStyle);
         this.scoreValue.anchor.set(0.5);
-        this.scoreValue.y = window.innerHeight / 2 + 400;
-        this.scoreValue.x = window.innerWidth / 2;
-        this.app.stage.addChild(this.scoreValue);
+        this.scoreValue.y = this.app.renderer.height / 2 + 400;
+        this.scoreValue.x = this.app.renderer.width / 2;
     }
 }
 
