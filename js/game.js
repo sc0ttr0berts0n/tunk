@@ -6,6 +6,7 @@ class Game {
             width: 1024,
             height: 1024,
             transparent: true,
+            maxFPS: 30,
         });
         this.flaks = [];
         this.score = 0;
@@ -24,6 +25,7 @@ class Game {
         this.damageChance = 0.0125;
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
+        this.lastRestart = 0;
         this.firstShot = false;
         this.reduceMotion = false;
     }
@@ -34,9 +36,10 @@ class Game {
         this.background.anchor.set(0.5, 0.5);
         this.scoreInit();
         this.placeAssets();
-        this.app.ticker.add(() => this.update());
+        this.app.ticker.add((delta) => this.update(delta));
     }
-    update() {
+    update(delta) {
+        this.now = Date.now();
         if (this.player.alive) {
             this.frameCount++;
             this.updateTurret();
@@ -59,6 +62,17 @@ class Game {
             this.flaks.forEach((flak) => flak.update());
             this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
+    }
+    reinit() {
+        this.flaks.forEach((flak) => flak.reinit());
+        this.flaks = [];
+        this.turret.wedges.forEach((wedge) => wedge.reinit());
+        this.lastRestart = this.frameCount;
+        this.kb.reinit();
+        this.player.reinit();
+        this.turret.reinit();
+        this.score = 0;
+        this.scoreUpdate();
     }
 
     placeAssets() {
@@ -111,7 +125,7 @@ class Game {
         }
     }
     shootWalls() {
-        if (this.frameCount >= 180) {
+        if (this.frameCount - this.lastRestart >= 180) {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
@@ -129,20 +143,7 @@ class Game {
                         wedges[Math.floor(Math.random() * wedges.length)];
 
                     // init flak animation
-                    this.flaks.push(
-                        new Flak(
-                            this,
-                            wedge.rot,
-                            120,
-                            -this.turret.radius,
-                            false
-                        )
-                    );
-
-                    // schedule damage to occur when the flak arrives
-                    setTimeout(() => {
-                        wedge.setHealth();
-                    }, 1000);
+                    this.flaks.push(new Flak(this, wedge, wedge.rot, false));
                 }
             }
         }
@@ -156,18 +157,7 @@ class Game {
                 const oppositeWedgeId =
                     (wedge.id + wedgeCount / 2) % wedgeCount;
                 const oppositeWedge = this.turret.wedges[oppositeWedgeId];
-
-                const killDist =
-                    oppositeWedge.health < wedge.maxHealth
-                        ? this.turret.radius * 3
-                        : this.turret.radius;
-                this.flaks.push(new Flak(this, wedge.rot, 130, killDist));
-                wedge.willBeShot = true;
-
-                setTimeout(() => {
-                    oppositeWedge.setHealth();
-                    wedge.willBeShot = false;
-                }, 1000);
+                this.flaks.push(new Flak(this, oppositeWedge, wedge.rot));
             }
         }
     }

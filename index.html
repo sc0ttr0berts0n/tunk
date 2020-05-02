@@ -118,6 +118,25 @@
             .help-close:hover {
                 transform: translateY(4px);
             }
+            .restart-button {
+                width: 5vmin;
+                height: 5vmin;
+                text-align: center;
+                line-height: 5vmin;
+                padding: 0;
+                border-radius: 50%;
+                position: absolute;
+                top: 1vmin;
+                bottom: auto;
+                left: 1vmin;
+                display: block;
+            }
+            .restart-button:hover {
+                border-bottom-width: 2px;
+            }
+            .restart-button:active {
+                border-bottom-width: 0;
+            }
             .modal {
                 position: absolute;
                 top: 0;
@@ -179,6 +198,7 @@
                     <div class="options-close button">close</div>
                     <div class="options-reduce-motion button toggle-button toggle-button__off">Reduce Motion</div>
                 </div>
+                <div class="restart-button button">♻️</div>
             </div>
         </div>
         <canvas id="game"></canvas>
@@ -196,6 +216,7 @@
             const closeHelpButton = document.querySelector('.help-close');
             const helpPanel = document.querySelector('.help-window');
             const showOptionsButton = document.querySelector('.options-button');
+            const restartButton = document.querySelector('.restart-button');
             const closeOptionsButton = document.querySelector('.options-close');
             const optionsPanel = document.querySelector('.options-window');
             const toggleButton = document.querySelectorAll('.toggle-button');
@@ -245,6 +266,8 @@
                     e.target.classList.remove('toggle-button__on');
                 }
             })
+
+            restartButton.addEventListener('click', () => game.reinit());
         </script>
     </body>
 </html>
