@@ -2,15 +2,6 @@ class Turret {
     constructor(game, wedgeCount) {
         this.game = game;
         this.container = new PIXI.Container();
-        this.bottomEl = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-turret.png')
-        );
-        this.floorEl = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-floor.png')
-        );
-        this.headElOpening = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-turret.png')
-        );
         this.wedgeCount = wedgeCount;
         this.radius = 256;
         this.wedges = [...new Array(wedgeCount)].map(
@@ -23,14 +14,14 @@ class Turret {
         this.container.y = this.game.app.renderer.height / 2;
         this.container.rotation = -0.25 * Math.PI;
 
-        this.bottomEl.anchor.set(0.5);
+        this.game.graphics.turretExterior.anchor.set(0.5);
 
-        this.floorEl.anchor.set(0.5);
-        this.floorEl.rotation = 0.25 * Math.PI;
-        this.floorEl.scale.set(0.875);
+        this.game.graphics.turretFloor.anchor.set(0.5);
+        this.game.graphics.turretFloor.rotation = 0.25 * Math.PI;
+        this.game.graphics.turretFloor.scale.set(0.875);
 
-        this.headElOpening.anchor.set(0.5);
-        this.headElOpening.alpha = 1;
+        this.game.graphics.turretCeiling.anchor.set(0.5);
+        this.game.graphics.turretCeiling.alpha = 1;
     }
     update() {
         this.openingUpdate();
@@ -39,7 +30,7 @@ class Turret {
     openingUpdate() {
         if (this.game.frameCount >= 60) {
             if (this.game.frameCount % 60 === 0) {
-                this.headElOpening.alpha -= 0.34;
+                this.game.graphics.turretCeiling.alpha -= 0.34;
             }
         }
     }

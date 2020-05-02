@@ -7,12 +7,10 @@ class Game {
             height: 1024,
             transparent: true,
         });
+        this.graphics = new Graphics(this);
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
-        this.background = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-map.png')
-        );
         this.backgroundRot = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
@@ -29,13 +27,14 @@ class Game {
     }
 
     init() {
-        this.background.x = this.app.renderer.width / 2;
-        this.background.y = this.app.renderer.height / 2;
-        this.background.anchor.set(0.5, 0.5);
+        this.graphics.background.x = this.app.renderer.width / 2;
+        this.graphics.background.y = this.app.renderer.height / 2;
+        this.graphics.background.anchor.set(0.5, 0.5);
         this.scoreInit();
-        this.placeAssets();
+        this.graphics.placeAssets();
         this.app.ticker.add(() => this.update());
     }
+
     update() {
         if (this.player.alive) {
             this.frameCount++;
@@ -61,33 +60,6 @@ class Game {
         }
     }
 
-    placeAssets() {
-        // background
-        this.app.stage.addChild(this.background);
-
-        // turret container
-        this.app.stage.addChild(this.turret.container);
-
-        // cannon
-        this.turret.container.addChild(this.cannon.container);
-        this.cannon.container.addChild(this.cannon.cannonBarrelSmoke);
-        this.cannon.container.addChild(this.cannon.cannonSmoke);
-        this.cannon.container.addChild(this.cannon.cannonFire);
-        this.cannon.container.addChild(this.cannon.barrel);
-
-        // turret top layers
-        this.turret.container.addChild(this.turret.bottomEl);
-        this.turret.container.addChild(this.turret.floorEl);
-        this.turret.container.addChild(this.turret.headElOpening);
-
-        // player
-        this.turret.floorEl.addChild(this.player.el);
-        this.player.el.addChild(this.player.bloodEl);
-
-        // score
-        this.app.stage.addChild(this.scoreValue);
-    }
-
     updateTurret() {
         const target = this.backgroundTargetRot;
         const actual = this.backgroundRot;
@@ -97,7 +69,7 @@ class Game {
 
         this.backgroundRot += offset;
         if (!this.reduceMotion) {
-            this.background.rotation = this.backgroundRot;
+            this.graphics.background.rotation = this.backgroundRot;
         } else {
             this.turret.bottomEl.rotation = this.backgroundRot;
             this.turret.headElOpening.rotation = this.backgroundRot;

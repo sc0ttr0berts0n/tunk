@@ -9,7 +9,7 @@ class Flak {
     ) {
         this.game = game;
         this.container = new PIXI.Sprite();
-        this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-flak.png'));
+        this.el = new PIXI.Sprite(this.game.graphics.flakGraphic);
         this.angle = angle + 0.5 * Math.PI;
         this.killDistance = killDistance;
         this.yOff = -ticksUntilImpact * speed;
@@ -35,7 +35,7 @@ class Flak {
             this.container.destroy();
         }
         this.el.y += this.speed;
-        const player = this.game.player.el.worldTransform;
+        const player = this.game.graphics.player.worldTransform;
         const flak = this.el.worldTransform;
         const xDist = player.tx - flak.tx;
         const yDist = player.ty - flak.ty;
