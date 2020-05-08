@@ -39,10 +39,11 @@ class Wedge {
         this.initOutsideLight();
     }
     update() {
-        this.checkForDamage();
+        this.updateWallDamage();
+        this.updateScore();
         this.updateHealthBar();
-        this.checkRepairing();
-        this.damageCheck();
+        this.updateCautionFloor();
+        this.updateOutsideLight();
     }
     reinit() {
         this.willBeShot = false;
@@ -77,7 +78,7 @@ class Wedge {
         this.cautionFloorBoundary.y += 240;
         this.wall.addChild(this.cautionFloorBoundary);
     }
-    damageCheck() {
+    updateCautionFloor() {
         // caution floor anim
         if (this.isLethal) {
             this.cautionFloorExpand.visible = true;
@@ -92,21 +93,24 @@ class Wedge {
             this.cautionFloorBoundary.visible = false;
             this.cautionFloorExpand.scale.x = 0;
         }
+    }
 
+    updateOutsideLight() {
         // show/hide light
         if (this.health < 60) {
             this.outsideLight.visible = true;
+
+            // outside light anims
+            if (this.outsideLight.alpha < 0.4) {
+                this.outsideLight.alpha = 0.41;
+            } else if (this.outsideLight.alpha > 0.6) {
+                this.outsideLight.alpha = 0.59;
+            } else {
+                this.outsideLight.alpha +=
+                    Math.sign(Math.random() - 0.5) * 0.005;
+            }
         } else {
             this.outsideLight.visible = false;
-        }
-
-        // outside light anims
-        if (this.outsideLight.alpha < 0.4) {
-            this.outsideLight.alpha = 0.41;
-        } else if (this.outsideLight.alpha > 0.6) {
-            this.outsideLight.alpha = 0.59;
-        } else {
-            this.outsideLight.alpha += Math.sign(Math.random() - 0.5) * 0.005;
         }
     }
 
@@ -122,6 +126,20 @@ class Wedge {
         this.outsideLight.alpha = 0.5;
         this.outsideLight.visible = false;
         this.wall.addChild(this.outsideLight);
+    }
+
+    updateScore() {
+        if (this.health < this.maxHealth) {
+            this.scoreCheck = false;
+        }
+        if (
+            this.health >= this.maxHealth &&
+            !this.scoreCheck &&
+            this.game.player.alive
+        ) {
+            this.game.score++;
+            this.scoreCheck = true;
+        }
     }
 
     initLetters() {
@@ -152,33 +170,14 @@ class Wedge {
             this.healthBar.visible = true;
         }
     }
-    checkForDamage() {
+    updateWallDamage() {
         this.wall.texture =
             this.health < this.maxHealth
                 ? this.game.graphics.damagedTexture
                 : this.game.graphics.fullTexture;
-        if (this.wall.texture === this.game.graphics.damagedTexture) {
-            this.scoreCheck = false;
-        }
-        if (
-            this.wall.texture === this.game.graphics.fullTexture &&
-            this.scoreCheck === false &&
-            this.game.player.alive
-        ) {
-            this.game.score++;
-            this.scoreCheck = true;
-        }
     }
     setHealth(amt = 0) {
         this.health = amt;
-    }
-    checkRepairing() {
-        if (
-            this.game.player.pos.x === this.playerPos.x &&
-            this.game.player.pos.y === this.playerPos.y
-        ) {
-            this.addHealth(2);
-        }
     }
     addHealth(n) {
         this.health += n;

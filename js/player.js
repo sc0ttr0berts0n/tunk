@@ -25,6 +25,7 @@ class Player {
         this.game.graphics.player.y = this.pos.y;
         this.game.graphics.playerBlood.rotation =
             this.bloodRot + -this.game.graphics.player.rotation;
+        this.checkRepairing();
         if (!this.alive) {
             this.game.graphics.playerBlood.visible = true;
         }
@@ -60,6 +61,15 @@ class Player {
         }
         if (angle !== 0) {
             this.game.graphics.player.rotation = angle + 0.5 * Math.PI;
+        }
+    }
+    checkRepairing() {
+        if (
+            this.targetWedge &&
+            this.pos.x === this.targetPos.x &&
+            this.pos.y === this.targetPos.y
+        ) {
+            this.targetWedge.addHealth(2);
         }
     }
     findDestination() {
