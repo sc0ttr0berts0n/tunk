@@ -27,6 +27,11 @@ class Turret {
         this.openingUpdate();
         this.game.cannon.update();
     }
+    reinit() {
+        this.wedges.forEach((wedge) => {
+            wedge.health = wedge.maxHealth;
+        });
+    }
     openingUpdate() {
         if (this.game.frameCount >= 60) {
             if (this.game.frameCount % 60 === 0) {
@@ -35,7 +40,9 @@ class Turret {
         }
     }
     getFullWedges() {
-        return this.wedges.filter((wedge) => wedge.health >= wedge.maxHealth);
+        return this.wedges.filter(
+            (wedge) => wedge.health >= wedge.maxHealth && !wedge.willBeShot
+        );
     }
     getDamagedWedges() {
         return this.wedges.filter((wedge) => {

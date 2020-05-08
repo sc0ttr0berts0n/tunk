@@ -28,6 +28,14 @@ class Player {
             this.game.graphics.playerBlood.visible = true;
         }
     }
+    reinit() {
+        this.pos = { x: 0, y: 0 };
+        this.orientation = { x: 0, y: 0 };
+        this.targetPos = { x: 0, y: 0 };
+        this.targetWedge = null;
+        this.alive = true;
+        this.bloodEl.visible = false;
+    }
     movedaboi() {
         const distx = this.targetPos.x - this.pos.x;
         const disty = this.targetPos.y - this.pos.y;
