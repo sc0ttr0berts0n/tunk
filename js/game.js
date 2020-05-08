@@ -42,10 +42,10 @@ class Game {
         if (this.player.alive) {
             this.updateTurret();
 
-            this.shootWalls();
+            this.shootFlakAtWalls();
 
             if (this.score >= 3 || this.frameCount >= 6000) {
-                this.shootHoles();
+                this.shootFlakAtHoles();
             }
 
             this.turret.update();
@@ -95,7 +95,7 @@ class Game {
                 this.frameCount + Math.random() * 120 + 60;
         }
     }
-    shootWalls() {
+    shootFlakAtWalls() {
         if (this.frameCount - this.lastRestart >= 180) {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
@@ -119,7 +119,7 @@ class Game {
             }
         }
     }
-    shootHoles() {
+    shootFlakAtHoles() {
         if (Math.random() < this.damageChance) {
             const wedges = this.turret.getDamagedWedges();
             if (wedges.length > 1) {
