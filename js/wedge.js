@@ -39,7 +39,6 @@ class Wedge {
         this.initOutsideLight();
     }
     update() {
-        this.takeDamage();
         this.checkForDamage();
         this.updateHealthBar();
         this.checkRepairing();
@@ -50,16 +49,6 @@ class Wedge {
         this.isLethal = false;
         this.scoreCheck = true;
         this.health = this.maxHealth;
-    }
-    takeDamage() {
-        if (
-            this.game.lastRestart < this.shotFrame &&
-            this.game.frameCount > this.damageFrame
-        ) {
-            this.shotFrame = null;
-            this.damageFrame = null;
-            this.setHealth(0);
-        }
     }
     initWall() {
         this.wall.rotation = this.rot + 0.5 * Math.PI; // for exact placement
