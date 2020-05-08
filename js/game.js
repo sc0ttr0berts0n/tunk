@@ -32,7 +32,7 @@ class Game {
         this.graphics.background.x = this.app.renderer.width / 2;
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
-        this.scoreInit();
+        this.initScore();
         this.graphics.placeAssets();
         this.app.ticker.add(() => this.update());
     }
@@ -50,7 +50,7 @@ class Game {
 
             this.turret.update();
 
-            this.scoreUpdate();
+            this.updateScore();
         }
         this.player.update();
         if (this.turret.wedges) {
@@ -70,7 +70,7 @@ class Game {
         this.player.reinit();
         this.turret.reinit();
         this.score = 0;
-        this.scoreUpdate();
+        this.updateScore();
     }
 
     updateTurret() {
@@ -132,12 +132,12 @@ class Game {
             }
         }
     }
-    scoreUpdate() {
+    updateScore() {
         if (this.scoreValue) {
             this.scoreValue.text = this.score;
         }
     }
-    scoreInit() {
+    initScore() {
         const scoreStyle = new PIXI.TextStyle();
         scoreStyle.fill = '#F13409';
         scoreStyle.fontFamily = 'Arial';
