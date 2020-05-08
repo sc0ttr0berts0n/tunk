@@ -33,7 +33,10 @@ class Turret {
         });
     }
     openingUpdate() {
-        if (this.game.frameCount >= 60) {
+        if (
+            this.game.frameCount >= 60 &&
+            this.game.graphics.turretCeiling.alpha > 0
+        ) {
             if (this.game.frameCount % 60 === 0) {
                 this.game.graphics.turretCeiling.alpha -= 0.34;
             }
