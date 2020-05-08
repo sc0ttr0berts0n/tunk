@@ -45,7 +45,7 @@ class Flak {
         }
 
         // calc flak-wedge distance
-        const wedge = this.target.el.worldTransform;
+        const wedge = this.target.wall.worldTransform;
         const xDistFlakWedge = flak.tx - wedge.tx;
         const yDistFlakWedge = flak.ty - wedge.ty;
         const hypotFlakWedge = Math.sqrt(

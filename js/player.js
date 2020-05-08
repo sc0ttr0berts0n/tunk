@@ -23,7 +23,8 @@ class Player {
         }
         this.game.graphics.player.x = this.pos.x;
         this.game.graphics.player.y = this.pos.y;
-        this.game.graphics.playerBlood.rotation = this.bloodRot + -this.game.graphics.player.rotation;
+        this.game.graphics.playerBlood.rotation =
+            this.bloodRot + -this.game.graphics.player.rotation;
         if (!this.alive) {
             this.game.graphics.playerBlood.visible = true;
         }
@@ -34,7 +35,7 @@ class Player {
         this.targetPos = { x: 0, y: 0 };
         this.targetWedge = null;
         this.alive = true;
-        this.bloodEl.visible = false;
+        this.game.graphics.playerBlood.visible = false;
     }
     movedaboi() {
         const distx = this.targetPos.x - this.pos.x;
