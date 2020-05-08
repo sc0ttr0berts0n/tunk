@@ -41,9 +41,6 @@ class Wedge {
         this.updateHealthBar();
         this.checkRepairing();
         this.damageCheck();
-        // console.log(this.outsideLight.alpha);
-        // console.log(this.outsideLight.visible);
-        console.log(this.health);
     }
     cautionFloorInit() {
         this.cautionFloorExpand.anchor.set(0.5, 0.5);
