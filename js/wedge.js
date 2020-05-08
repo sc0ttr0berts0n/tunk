@@ -32,16 +32,11 @@ class Wedge {
         this.init();
     }
     init() {
-        this.game.graphics.turretFloor.addChild(this.wall);
-        this.wall.rotation = this.rot + 0.5 * Math.PI; // for exact placement
-        this.wall.scale.set(1.05);
-        this.wall.x = this.pos.x;
-        this.wall.y = this.pos.y;
-        this.wall.anchor.set(0.5);
+        this.initWall();
         this.initLetters();
         this.initHealthBar();
-        this.cautionFloorInit();
-        this.outsideLightInit();
+        this.initCautionFloor();
+        this.initOutsideLight();
     }
     update() {
         this.takeDamage();
@@ -66,7 +61,15 @@ class Wedge {
             this.setHealth(0);
         }
     }
-    cautionFloorInit() {
+    initWall() {
+        this.wall.rotation = this.rot + 0.5 * Math.PI; // for exact placement
+        this.wall.scale.set(1.05);
+        this.wall.x = this.pos.x;
+        this.wall.y = this.pos.y;
+        this.wall.anchor.set(0.5);
+        this.game.graphics.turretFloor.addChild(this.wall);
+    }
+    initCautionFloor() {
         this.cautionFloorExpand.anchor.set(0.5, 0.5);
         this.cautionFloorExpand.scale.y = 0.9;
         this.cautionFloorExpand.scale.x = 0;
@@ -118,7 +121,7 @@ class Wedge {
         }
     }
 
-    outsideLightInit() {
+    initOutsideLight() {
         const lightScale = Math.random() * 0.7 + 0.3;
         this.outsideLight.anchor.set(0.5, 0);
         this.outsideLight.y += 15;
