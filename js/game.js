@@ -38,8 +38,8 @@ class Game {
     }
 
     update() {
+        this.frameCount++;
         if (this.player.alive) {
-            this.frameCount++;
             this.updateTurret();
 
             this.shootWalls();
