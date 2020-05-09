@@ -12,7 +12,7 @@ class Game {
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
-        this.backgroundRot = Math.PI * 2;
+        this.turretBodyRotation = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
         this.turret = new Turret(this, 26);
@@ -75,18 +75,17 @@ class Game {
 
     updateTurret() {
         const target = this.backgroundTargetRot;
-        const actual = this.backgroundRot;
+        const actual = this.turretBodyRotation;
         const diff = target - actual;
         const factor = 0.005;
         const offset = diff * factor;
 
-        this.backgroundRot += offset;
+        this.turretBodyRotation += offset;
         if (!this.reduceMotion) {
-            this.graphics.background.rotation = this.backgroundRot;
+            this.graphics.background.rotation = this.turretBodyRotation;
         } else {
-            this.turret.bottomEl.rotation = this.backgroundRot;
-            this.turret.headElOpening.rotation = this.backgroundRot;
-            this.cannon.container.rotation = this.backgroundRot;
+            this.graphics.turretExterior.rotation = this.turretBodyRotation;
+            this.cannon.container.rotation = this.turretBodyRotation;
         }
 
         if (this.frameCount > this.backgroundNextMove) {
