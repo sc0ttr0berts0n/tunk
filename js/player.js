@@ -11,7 +11,7 @@ class Player {
         this.init();
     }
     init() {
-        this.game.graphics.player.scale.set(0.5, 0.5);
+        this.game.graphics.player.scale.set(0.65625, 0.65625);
         this.game.graphics.player.anchor.set(0.5);
         this.game.graphics.playerBlood.anchor.set(0.45, 0.9);
         this.game.graphics.playerBlood.visible = false;
