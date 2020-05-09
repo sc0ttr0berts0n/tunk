@@ -47,7 +47,6 @@ class EndGameOverlay {
             ) {
                 this.game.graphics.endGameOverlayWhite.alpha = 0.01;
                 this.game.graphics.endGameOverlayBlack.alpha = 0.6;
-                console.log(this.game.graphics.endGameOverlayBlack.alpha);
             }
             if (
                 this.game.frameCount % 20 === 0 &&
@@ -55,7 +54,6 @@ class EndGameOverlay {
                 this.game.graphics.endGameOverlayBlack.alpha < 0.8
             ) {
                 this.game.graphics.endGameOverlayBlack.alpha += 0.1;
-                console.log(this.game.graphics.endGameOverlayBlack.alpha);
             }
         }
     }
