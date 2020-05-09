@@ -23,7 +23,7 @@ class Wedge {
             x: Math.cos(this.rot) * this.turret.radius,
             y: Math.sin(this.rot) * this.turret.radius,
         };
-        this.playerPos = { x: this.pos.x * 0.88, y: this.pos.y * 0.88 };
+        this.playerPos = { x: this.pos.x * 0.76, y: this.pos.y * 0.76 };
         this.healthBarYOffset = -26;
         this.letterYOffset = -50;
         this.willBeShot = false;
