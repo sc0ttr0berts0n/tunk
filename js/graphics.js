@@ -66,7 +66,7 @@ class Graphics {
         this.endGameOverlayWhite = new PIXI.Graphics();
 
         // GOON
-        this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/Turret-Guy.png'));
+        this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/da-missle.png'));
     }
     placeAssets() {
         // background
