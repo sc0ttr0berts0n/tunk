@@ -18,6 +18,7 @@ class Game {
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
+        this.goon = new Goon(this);
         this.init();
         this.kb = new KeyboardObserver();
         this.damageChance = 0.0125;
@@ -49,6 +50,8 @@ class Game {
             }
 
             this.turret.update();
+
+            this.goon.update();
 
             this.updateScore();
         }
