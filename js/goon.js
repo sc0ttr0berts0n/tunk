@@ -34,7 +34,6 @@ class Goon {
                 const xDist = goon.tx - pos.tx;
                 const yDist = goon.ty - pos.ty;
                 const dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-                console.log(dist);
 
                 if (dist < 40) {
                     this.spawn();
