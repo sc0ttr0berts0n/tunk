@@ -20,34 +20,23 @@ class Graphics {
         this.cannonBarrelSmoke = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
-<<<<<<< HEAD
-<<<<<<< HEAD
-        //EndGameOverlay
-        this.endGameOverlay = new PIXI.Graphics();
-=======
->>>>>>> added a good that pursues the player
-=======
->>>>>>> goon respawns on reinit
 
-        //PLAYER
+        // EndGameOverlay
+        this.endGameOverlay = new PIXI.Graphics();
+
+        // PLAYER
         this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.playerBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
-<<<<<<< HEAD
-<<<<<<< HEAD
         );
         this.playerDead = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-boi.png')
         );
         this.playerDeadBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
-=======
->>>>>>> added a good that pursues the player
-=======
->>>>>>> goon respawns on reinit
         );
 
-        //TURRET
+        // TURRET
         this.turretExterior = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-turret.png')
         );
@@ -58,7 +47,7 @@ class Graphics {
             PIXI.Texture.from('assets/da-turret.png')
         );
 
-        //WEDGE
+        // WEDGE
         this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
         this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
         this.floorWarningInner = PIXI.Texture.from(
@@ -69,15 +58,13 @@ class Graphics {
         );
         this.damagedWallLight = PIXI.Texture.from('assets/crack-light.png');
 
-        //FLAK
+        // FLAK
         this.flakGraphic = PIXI.Texture.from('assets/da-flak.png');
 
-<<<<<<< HEAD
-        //EndGameOverlay
+        // END GAME OVERLAY
         this.endGameOverlayBlack = new PIXI.Graphics();
         this.endGameOverlayWhite = new PIXI.Graphics();
-=======
->>>>>>> added a good that pursues the player
+
         // GOON
         this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/Turret-Guy.png'));
     }
