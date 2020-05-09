@@ -1,10 +1,6 @@
 class Player {
     constructor(game) {
         this.game = game;
-        this.el = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
-        this.bloodEl = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-blood.png')
-        );
         this.bloodRot = 0;
         this.pos = { x: 0, y: 0 };
         this.orientation = { x: 0, y: 0 };
@@ -15,22 +11,32 @@ class Player {
         this.init();
     }
     init() {
-        this.el.scale.set(0.75, 0.75);
-        this.el.anchor.set(0.5);
-        this.bloodEl.anchor.set(0.45, 0.9);
-        this.bloodEl.visible = false;
+        this.game.graphics.player.scale.set(0.75, 0.75);
+        this.game.graphics.player.anchor.set(0.5);
+        this.game.graphics.playerBlood.anchor.set(0.45, 0.9);
+        this.game.graphics.playerBlood.visible = false;
     }
     update() {
         if (this.alive) {
             this.findDestination();
             this.movedaboi();
         }
-        this.el.x = this.pos.x;
-        this.el.y = this.pos.y;
-        this.bloodEl.rotation = this.bloodRot + -this.el.rotation;
+        this.game.graphics.player.x = this.pos.x;
+        this.game.graphics.player.y = this.pos.y;
+        this.game.graphics.playerBlood.rotation =
+            this.bloodRot + -this.game.graphics.player.rotation;
+        this.checkRepairing();
         if (!this.alive) {
-            this.bloodEl.visible = true;
+            this.game.graphics.playerBlood.visible = true;
         }
+    }
+    reinit() {
+        this.pos = { x: 0, y: 0 };
+        this.orientation = { x: 0, y: 0 };
+        this.targetPos = { x: 0, y: 0 };
+        this.targetWedge = null;
+        this.alive = true;
+        this.game.graphics.playerBlood.visible = false;
     }
     movedaboi() {
         const distx = this.targetPos.x - this.pos.x;
@@ -54,7 +60,16 @@ class Player {
             this.pos.y += movey;
         }
         if (angle !== 0) {
-            this.el.rotation = angle + 0.5 * Math.PI;
+            this.game.graphics.player.rotation = angle + 0.5 * Math.PI;
+        }
+    }
+    checkRepairing() {
+        if (
+            this.targetWedge &&
+            this.pos.x === this.targetPos.x &&
+            this.pos.y === this.targetPos.y
+        ) {
+            this.targetWedge.addHealth(2);
         }
     }
     findDestination() {

@@ -2,25 +2,22 @@ class Wedge {
     constructor(game, turret, id, wedgeCount) {
         this.game = game;
         this.turret = turret;
-        this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
-        this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
-        this.cautionFloorExpand = new PIXI.Sprite(
-            PIXI.Texture.from('assets/floor-warning-01.png')
-        );
-        this.cautionFloorBoundary = new PIXI.Sprite(
-            PIXI.Texture.from('assets/floor-warning-02.png')
-        );
-        this.el = new PIXI.Sprite(this.fullTexture);
-        this.outsideLight = new PIXI.Sprite(
-            PIXI.Texture.from('assets/crack-light.png')
-        );
         this.healthBar = new PIXI.Graphics();
         this.id = id;
         this.wedgeCount = wedgeCount;
         this.maxHealth = 60;
         this.health = this.maxHealth;
         this.letter = String.fromCharCode(65 + this.id);
-
+        this.wall = new PIXI.Sprite(this.game.graphics.fullTexture);
+        this.cautionFloorExpand = new PIXI.Sprite(
+            this.game.graphics.floorWarningInner
+        );
+        this.cautionFloorBoundary = new PIXI.Sprite(
+            this.game.graphics.floorWarningBoundary
+        );
+        this.outsideLight = new PIXI.Sprite(
+            this.game.graphics.damagedWallLight
+        );
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
         this.pos = {
             x: Math.cos(this.rot) * this.turret.radius,
@@ -30,28 +27,39 @@ class Wedge {
         this.healthBarYOffset = -26;
         this.letterYOffset = -50;
         this.willBeShot = false;
+        this.isLethal = false;
         this.scoreCheck = true;
         this.init();
     }
     init() {
-        this.turret.floorEl.addChild(this.el);
-        this.el.rotation = this.rot + 0.5 * Math.PI; // for exact placement
-        this.el.scale.set(1.05);
-        this.el.x = this.pos.x;
-        this.el.y = this.pos.y;
-        this.el.anchor.set(0.5);
+        this.initWall();
         this.initLetters();
         this.initHealthBar();
-        this.cautionFloorInit();
-        this.outsideLightInit();
+        this.initCautionFloor();
+        this.initOutsideLight();
     }
     update() {
-        this.checkForDamage();
+        this.updateWallDamage();
+        this.updateScore();
         this.updateHealthBar();
-        this.checkRepairing();
-        this.damageCheck();
+        this.updateCautionFloor();
+        this.updateOutsideLight();
     }
-    cautionFloorInit() {
+    reinit() {
+        this.willBeShot = false;
+        this.isLethal = false;
+        this.scoreCheck = true;
+        this.health = this.maxHealth;
+    }
+    initWall() {
+        this.wall.rotation = this.rot + 0.5 * Math.PI; // for exact placement
+        this.wall.scale.set(1.05);
+        this.wall.x = this.pos.x;
+        this.wall.y = this.pos.y;
+        this.wall.anchor.set(0.5);
+        this.game.graphics.turretFloor.addChild(this.wall);
+    }
+    initCautionFloor() {
         this.cautionFloorExpand.anchor.set(0.5, 0.5);
         this.cautionFloorExpand.scale.y = 0.9;
         this.cautionFloorExpand.scale.x = 0;
@@ -59,7 +67,7 @@ class Wedge {
         this.cautionFloorExpand.visible = false;
         this.cautionFloorExpand.alpha = 1;
         this.cautionFloorExpand.y += 240;
-        this.el.addChild(this.cautionFloorExpand);
+        this.wall.addChild(this.cautionFloorExpand);
 
         this.cautionFloorBoundary.anchor.set(0.5, 0.5);
         this.cautionFloorBoundary.scale.y = 0.9;
@@ -68,15 +76,11 @@ class Wedge {
         this.cautionFloorBoundary.visible = false;
         this.cautionFloorBoundary.alpha = 1;
         this.cautionFloorBoundary.y += 240;
-        this.el.addChild(this.cautionFloorBoundary);
+        this.wall.addChild(this.cautionFloorBoundary);
     }
-    damageCheck() {
-        if (this.health < 60) {
-            this.outsideLight.visible = true;
-        } else {
-            this.outsideLight.visible = false;
-        }
-        if (this.willBeShot) {
+    updateCautionFloor() {
+        // caution floor anim
+        if (this.isLethal) {
             this.cautionFloorExpand.visible = true;
             this.cautionFloorBoundary.visible = true;
             if (this.cautionFloorExpand.scale.x < 0.9) {
@@ -89,17 +93,28 @@ class Wedge {
             this.cautionFloorBoundary.visible = false;
             this.cautionFloorExpand.scale.x = 0;
         }
+    }
 
-        if (this.outsideLight.alpha <= 0.4) {
-            this.outsideLight.alpha = 0.41;
-        } else if (this.outsideLight.alpha >= 0.6) {
-            this.outsideLight.alpha = 0.59;
+    updateOutsideLight() {
+        // show/hide light
+        if (this.health < 60) {
+            this.outsideLight.visible = true;
+
+            // outside light anims
+            if (this.outsideLight.alpha < 0.4) {
+                this.outsideLight.alpha = 0.41;
+            } else if (this.outsideLight.alpha > 0.6) {
+                this.outsideLight.alpha = 0.59;
+            } else {
+                this.outsideLight.alpha +=
+                    Math.sign(Math.random() - 0.5) * 0.005;
+            }
         } else {
-            this.outsideLight.alpha += Math.sign(Math.random() - 0.5) * 0.005;
+            this.outsideLight.visible = false;
         }
     }
 
-    outsideLightInit() {
+    initOutsideLight() {
         const lightScale = Math.random() * 0.7 + 0.3;
         this.outsideLight.anchor.set(0.5, 0);
         this.outsideLight.y += 15;
@@ -110,7 +125,21 @@ class Wedge {
         this.outsideLight.blendMode = PIXI.BLEND_MODES.ADD;
         this.outsideLight.alpha = 0.5;
         this.outsideLight.visible = false;
-        this.el.addChild(this.outsideLight);
+        this.wall.addChild(this.outsideLight);
+    }
+
+    updateScore() {
+        if (this.health < this.maxHealth) {
+            this.scoreCheck = false;
+        }
+        if (
+            this.health >= this.maxHealth &&
+            !this.scoreCheck &&
+            this.game.player.alive
+        ) {
+            this.game.score++;
+            this.scoreCheck = true;
+        }
     }
 
     initLetters() {
@@ -121,17 +150,17 @@ class Wedge {
         letterStyle.fontFamily = 'Arial';
         letterStyle.fontWeight = 'bold';
         const letter = new PIXI.Text(this.letter, letterStyle);
-        letter.rotation = -this.el.rotation;
+        letter.rotation = -this.wall.rotation;
         letter.anchor.set(0.5);
         letter.y = this.letterYOffset;
-        this.el.addChild(letter);
+        this.wall.addChild(letter);
     }
     initHealthBar() {
         this.healthBar.beginFill(0xff0050);
         this.healthBar.drawRect(0, 0, 64, 10);
         this.healthBar.y = this.healthBarYOffset;
         this.healthBar.x = -(64 / 2);
-        this.el.addChild(this.healthBar);
+        this.wall.addChild(this.healthBar);
     }
     updateHealthBar() {
         this.healthBar.scale.x = this.health / this.maxHealth;
@@ -141,29 +170,14 @@ class Wedge {
             this.healthBar.visible = true;
         }
     }
-    checkForDamage() {
-        this.el.texture =
+    updateWallDamage() {
+        this.wall.texture =
             this.health < this.maxHealth
-                ? this.damagedTexture
-                : this.fullTexture;
-        if (this.el.texture === this.damagedTexture) {
-            this.scoreCheck = false;
-        }
-        if (this.el.texture === this.fullTexture && this.scoreCheck === false) {
-            this.game.score++;
-            this.scoreCheck = true;
-        }
+                ? this.game.graphics.damagedTexture
+                : this.game.graphics.fullTexture;
     }
     setHealth(amt = 0) {
         this.health = amt;
-    }
-    checkRepairing() {
-        if (
-            this.game.player.pos.x === this.playerPos.x &&
-            this.game.player.pos.y === this.playerPos.y
-        ) {
-            this.addHealth(2);
-        }
     }
     addHealth(n) {
         this.health += n;

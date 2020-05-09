@@ -6,13 +6,12 @@ class Game {
             width: 1024,
             height: 1024,
             transparent: true,
+            maxFPS: 30,
         });
+        this.graphics = new Graphics(this);
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
-        this.background = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-map.png')
-        );
         this.backgroundRot = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
@@ -24,32 +23,34 @@ class Game {
         this.damageChance = 0.0125;
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
+        this.lastRestart = 0;
         this.firstShot = false;
         this.reduceMotion = false;
     }
 
     init() {
-        this.background.x = this.app.renderer.width / 2;
-        this.background.y = this.app.renderer.height / 2;
-        this.background.anchor.set(0.5, 0.5);
-        this.scoreInit();
-        this.placeAssets();
+        this.graphics.background.x = this.app.renderer.width / 2;
+        this.graphics.background.y = this.app.renderer.height / 2;
+        this.graphics.background.anchor.set(0.5, 0.5);
+        this.initScore();
+        this.graphics.placeAssets();
         this.app.ticker.add(() => this.update());
     }
+
     update() {
+        this.frameCount++;
         if (this.player.alive) {
-            this.frameCount++;
             this.updateTurret();
 
-            this.shootWalls();
+            this.shootFlakAtWalls();
 
             if (this.score >= 3 || this.frameCount >= 6000) {
-                this.shootHoles();
+                this.shootFlakAtHoles();
             }
 
             this.turret.update();
 
-            this.scoreUpdate();
+            this.updateScore();
         }
         this.player.update();
         if (this.turret.wedges) {
@@ -60,32 +61,16 @@ class Game {
             this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
     }
-
-    placeAssets() {
-        // background
-        this.app.stage.addChild(this.background);
-
-        // turret container
-        this.app.stage.addChild(this.turret.container);
-
-        // cannon
-        this.turret.container.addChild(this.cannon.container);
-        this.cannon.container.addChild(this.cannon.cannonBarrelSmoke);
-        this.cannon.container.addChild(this.cannon.cannonSmoke);
-        this.cannon.container.addChild(this.cannon.cannonFire);
-        this.cannon.container.addChild(this.cannon.barrel);
-
-        // turret top layers
-        this.turret.container.addChild(this.turret.bottomEl);
-        this.turret.container.addChild(this.turret.floorEl);
-        this.turret.container.addChild(this.turret.headElOpening);
-
-        // player
-        this.turret.floorEl.addChild(this.player.el);
-        this.player.el.addChild(this.player.bloodEl);
-
-        // score
-        this.app.stage.addChild(this.scoreValue);
+    reinit() {
+        this.flaks.forEach((flak) => flak.reinit());
+        this.flaks = [];
+        this.turret.wedges.forEach((wedge) => wedge.reinit());
+        this.lastRestart = this.frameCount;
+        this.kb.reinit();
+        this.player.reinit();
+        this.turret.reinit();
+        this.score = 0;
+        this.updateScore();
     }
 
     updateTurret() {
@@ -97,7 +82,7 @@ class Game {
 
         this.backgroundRot += offset;
         if (!this.reduceMotion) {
-            this.background.rotation = this.backgroundRot;
+            this.graphics.background.rotation = this.backgroundRot;
         } else {
             this.turret.bottomEl.rotation = this.backgroundRot;
             this.turret.headElOpening.rotation = this.backgroundRot;
@@ -110,8 +95,8 @@ class Game {
                 this.frameCount + Math.random() * 120 + 60;
         }
     }
-    shootWalls() {
-        if (this.frameCount >= 180) {
+    shootFlakAtWalls() {
+        if (this.frameCount - this.lastRestart >= 180) {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
@@ -129,25 +114,12 @@ class Game {
                         wedges[Math.floor(Math.random() * wedges.length)];
 
                     // init flak animation
-                    this.flaks.push(
-                        new Flak(
-                            this,
-                            wedge.rot,
-                            120,
-                            -this.turret.radius,
-                            false
-                        )
-                    );
-
-                    // schedule damage to occur when the flak arrives
-                    setTimeout(() => {
-                        wedge.setHealth();
-                    }, 1000);
+                    this.flaks.push(new Flak(this, wedge, wedge.rot, false));
                 }
             }
         }
     }
-    shootHoles() {
+    shootFlakAtHoles() {
         if (Math.random() < this.damageChance) {
             const wedges = this.turret.getDamagedWedges();
             if (wedges.length > 1) {
@@ -156,27 +128,16 @@ class Game {
                 const oppositeWedgeId =
                     (wedge.id + wedgeCount / 2) % wedgeCount;
                 const oppositeWedge = this.turret.wedges[oppositeWedgeId];
-
-                const killDist =
-                    oppositeWedge.health < wedge.maxHealth
-                        ? this.turret.radius * 3
-                        : this.turret.radius;
-                this.flaks.push(new Flak(this, wedge.rot, 130, killDist));
-                wedge.willBeShot = true;
-
-                setTimeout(() => {
-                    oppositeWedge.setHealth();
-                    wedge.willBeShot = false;
-                }, 1000);
+                this.flaks.push(new Flak(this, oppositeWedge, wedge.rot));
             }
         }
     }
-    scoreUpdate() {
+    updateScore() {
         if (this.scoreValue) {
             this.scoreValue.text = this.score;
         }
     }
-    scoreInit() {
+    initScore() {
         const scoreStyle = new PIXI.TextStyle();
         scoreStyle.fill = '#F13409';
         scoreStyle.fontFamily = 'Arial';
