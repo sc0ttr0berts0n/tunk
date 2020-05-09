@@ -77,6 +77,7 @@ class Game {
         this.score = 0;
         this.updateScore();
         this.endGameOverlay.reinit();
+        this.goon.reinit();
     }
 
     updateTurret() {

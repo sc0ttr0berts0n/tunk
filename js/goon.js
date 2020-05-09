@@ -34,16 +34,15 @@ class Goon {
                 const xDist = goon.tx - pos.tx;
                 const yDist = goon.ty - pos.ty;
                 const dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-<<<<<<< HEAD
-=======
-                console.log(dist);
->>>>>>> 30454fb22ad1770d5a5710a4c6e5450eeee5f18d
 
                 if (dist < 40) {
                     this.spawn();
                 }
             });
         }
+    }
+    reinit() {
+        this.spawn();
     }
     spawn() {
         const sign = () => Math.sign(Math.random() - 0.5);

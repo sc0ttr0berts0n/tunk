@@ -20,25 +20,11 @@ class Graphics {
         this.cannonBarrelSmoke = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
-<<<<<<< HEAD
-        //EndGameOverlay
-        this.endGameOverlay = new PIXI.Graphics();
-=======
->>>>>>> 30454fb22ad1770d5a5710a4c6e5450eeee5f18d
 
         //PLAYER
         this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.playerBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
-<<<<<<< HEAD
-        );
-        this.playerDead = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-boi.png')
-        );
-        this.playerDeadBlood = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-blood.png')
-=======
->>>>>>> 30454fb22ad1770d5a5710a4c6e5450eeee5f18d
         );
 
         //TURRET
