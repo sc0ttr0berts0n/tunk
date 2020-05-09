@@ -20,19 +20,25 @@ class Graphics {
         this.cannonBarrelSmoke = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
+<<<<<<< HEAD
         //EndGameOverlay
         this.endGameOverlay = new PIXI.Graphics();
+=======
+>>>>>>> added a good that pursues the player
 
         //PLAYER
         this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.playerBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
+<<<<<<< HEAD
         );
         this.playerDead = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-boi.png')
         );
         this.playerDeadBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
+=======
+>>>>>>> added a good that pursues the player
         );
 
         //TURRET
@@ -60,9 +66,12 @@ class Graphics {
         //FLAK
         this.flakGraphic = PIXI.Texture.from('assets/da-flak.png');
 
+<<<<<<< HEAD
         //EndGameOverlay
         this.endGameOverlayBlack = new PIXI.Graphics();
         this.endGameOverlayWhite = new PIXI.Graphics();
+=======
+>>>>>>> added a good that pursues the player
         // GOON
         this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/Turret-Guy.png'));
     }
