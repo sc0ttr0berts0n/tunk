@@ -21,15 +21,19 @@ class Graphics {
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
 <<<<<<< HEAD
+<<<<<<< HEAD
         //EndGameOverlay
         this.endGameOverlay = new PIXI.Graphics();
 =======
 >>>>>>> added a good that pursues the player
+=======
+>>>>>>> goon respawns on reinit
 
         //PLAYER
         this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
         this.playerBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
+<<<<<<< HEAD
 <<<<<<< HEAD
         );
         this.playerDead = new PIXI.Sprite(
@@ -39,6 +43,8 @@ class Graphics {
             PIXI.Texture.from('assets/da-blood.png')
 =======
 >>>>>>> added a good that pursues the player
+=======
+>>>>>>> goon respawns on reinit
         );
 
         //TURRET

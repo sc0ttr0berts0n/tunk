@@ -47,6 +47,9 @@ class Goon {
             });
         }
     }
+    reinit() {
+        this.spawn();
+    }
     spawn() {
         const sign = () => Math.sign(Math.random() - 0.5);
         this.game.graphics.goon.x =
