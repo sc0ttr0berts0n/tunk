@@ -11,7 +11,7 @@ class Player {
         this.init();
     }
     init() {
-        this.game.graphics.player.scale.set(0.75, 0.75);
+        this.game.graphics.player.scale.set(0.5, 0.5);
         this.game.graphics.player.anchor.set(0.5);
         this.game.graphics.playerBlood.anchor.set(0.45, 0.9);
         this.game.graphics.playerBlood.visible = false;
@@ -21,8 +21,10 @@ class Player {
             this.findDestination();
             this.movedaboi();
         }
-        this.game.graphics.player.x = this.pos.x;
-        this.game.graphics.player.y = this.pos.y;
+        this.game.graphics.player.x =
+            this.pos.x + this.game.app.renderer.width / 2;
+        this.game.graphics.player.y =
+            this.pos.y + this.game.app.renderer.height / 2;
         this.game.graphics.playerBlood.rotation =
             this.bloodRot + -this.game.graphics.player.rotation;
         this.checkRepairing();

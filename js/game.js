@@ -18,6 +18,7 @@ class Game {
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
+        this.endGameOverlay = new EndGameOverlay(this);
         this.init();
         this.kb = new KeyboardObserver();
         this.damageChance = 0.0125;
@@ -44,7 +45,7 @@ class Game {
 
             this.shootFlakAtWalls();
 
-            if (this.score >= 3 || this.frameCount >= 6000) {
+            if (this.score >= 3 || this.frameCount - this.lastRestart >= 6000) {
                 this.shootFlakAtHoles();
             }
 
@@ -60,6 +61,7 @@ class Game {
             this.flaks.forEach((flak) => flak.update());
             this.flaks = this.flaks.filter((flak) => !flak.isDead);
         }
+        this.endGameOverlay.update();
     }
     reinit() {
         this.flaks.forEach((flak) => flak.reinit());
@@ -71,6 +73,7 @@ class Game {
         this.turret.reinit();
         this.score = 0;
         this.updateScore();
+        this.endGameOverlay.reinit();
     }
 
     updateTurret() {
