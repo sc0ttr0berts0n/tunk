@@ -63,6 +63,8 @@ class Graphics {
         //EndGameOverlay
         this.endGameOverlayBlack = new PIXI.Graphics();
         this.endGameOverlayWhite = new PIXI.Graphics();
+        // GOON
+        this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/Turret-Guy.png'));
     }
     placeAssets() {
         // background
@@ -95,5 +97,8 @@ class Graphics {
 
         // score
         this.game.app.stage.addChild(this.game.scoreValue);
+
+        // goon
+        this.game.app.stage.addChild(this.goon);
     }
 }
