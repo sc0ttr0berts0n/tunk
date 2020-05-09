@@ -8,7 +8,7 @@ class Flak {
         this.speed = speed;
         this.angle = angle + 0.5 * Math.PI;
         this.isLethal = isLethal;
-        this.yOff = -this.game.turret.radius - 1024;
+        this.yOff = -this.game.turret.radius - this.game.app.renderer.width * 4;
         this.isDead = false;
         this.init();
     }
