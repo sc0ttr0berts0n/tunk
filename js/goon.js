@@ -1,7 +1,7 @@
 class Goon {
     constructor(game) {
         this.game = game;
-        this.speed = 0.5;
+        this.smokes = [];
         this.init();
     }
     init() {
@@ -31,6 +31,7 @@ class Goon {
             this.game.player.alive = false;
         }
 
+        // check to goon death by flak
         if (this.game.flaks.length > 0) {
             this.game.flaks.forEach((flak) => {
                 const goon = this.game.graphics.goon.worldTransform;
@@ -44,6 +45,13 @@ class Goon {
                 }
             });
         }
+
+        // add smoke
+        this.smokes = this.smokes.filter((smoke) => !smoke.dead);
+        if (this.game.frameCount % 15 === 0) {
+            this.smokes.push(new GoonSmoke(game));
+        }
+        this.smokes.forEach((smoke) => smoke.update());
     }
     reinit() {
         this.spawn();
@@ -60,10 +68,38 @@ class Goon {
 }
 
 class GoonSmoke {
-    constructor(game, goon) {
-        this.pos = {
-            x: this.game.graphics.goon.x,
-            y: this.game.graphics.goon.y,
-        };
+    constructor(game) {
+        this.game = game;
+        this.el = new PIXI.Sprite(this.game.graphics.goonSmoke);
+        this.lifespan = Math.floor(Math.random() * 600 + 20);
+        this.age = 0;
+        this.dead = false;
+        this.sign = Math.sign(Math.random() - 0.5);
+
+        this.init();
+    }
+    init() {
+        this.el.x = this.game.graphics.goon.x;
+        this.el.y = this.game.graphics.goon.y;
+        this.el.anchor.set(0.5, 0.5);
+        this.el.scale.set(Math.random() * 0.25 + 0.25);
+        this.el.rotation = Math.PI * 2 * Math.random();
+        this.el.alpha = 0;
+        this.game.app.stage.addChild(this.el);
+    }
+    update() {
+        this.age++;
+        if (this.age > this.lifespan) {
+            this.dead = true;
+            this.el.destroy();
+        } else {
+            if (this.age < 50) {
+                this.el.alpha += 1 / 50;
+            }
+            if (this.age > this.lifespan - 10) {
+                this.el.alpha += -0.1;
+            }
+            this.el.rotation += ((Math.PI * 2) / 360) * this.sign;
+        }
     }
 }

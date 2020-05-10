@@ -67,6 +67,7 @@ class Graphics {
 
         // GOON
         this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/da-missle.png'));
+        this.goonSmoke = PIXI.Texture.from('assets/goon-smoke.png');
     }
     placeAssets() {
         // background
