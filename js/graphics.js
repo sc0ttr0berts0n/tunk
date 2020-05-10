@@ -1,11 +1,12 @@
 class Graphics {
     constructor(game) {
         this.game = game;
- 
+
         //BACKGROUND MAP
         this.background = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-map.png'));
-        
+            PIXI.Texture.from('assets/da-map.png')
+        );
+
         //BARREL GRAPHICS
         this.barrel = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel.png')
@@ -19,14 +20,23 @@ class Graphics {
         this.cannonBarrelSmoke = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
-        
-        //PLAYER
-        this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png')
+
+        // EndGameOverlay
+        this.endGameOverlay = new PIXI.Graphics();
+
+        // PLAYER
+        this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
+        this.playerBlood = new PIXI.Sprite(
+            PIXI.Texture.from('assets/da-blood.png')
         );
-        this.playerBlood = new PIXI.Sprite(PIXI.Texture.from('assets/da-blood.png')
+        this.playerDead = new PIXI.Sprite(
+            PIXI.Texture.from('assets/da-boi.png')
+        );
+        this.playerDeadBlood = new PIXI.Sprite(
+            PIXI.Texture.from('assets/da-blood.png')
         );
 
-        //TURRET
+        // TURRET
         this.turretExterior = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-turret.png')
         );
@@ -37,16 +47,28 @@ class Graphics {
             PIXI.Texture.from('assets/da-turret.png')
         );
 
-        //WEDGE
+        // WEDGE
         this.fullTexture = PIXI.Texture.from('assets/da-wedge-full.png');
         this.damagedTexture = PIXI.Texture.from('assets/da-wedge-damaged.png');
-        this.floorWarningInner = PIXI.Texture.from('assets/floor-warning-01.png');
-        this.floorWarningBoundary = PIXI.Texture.from('assets/floor-warning-02.png');
+        this.floorWarningInner = PIXI.Texture.from(
+            'assets/floor-warning-01.png'
+        );
+        this.floorWarningBoundary = PIXI.Texture.from(
+            'assets/floor-warning-02.png'
+        );
         this.damagedWallLight = PIXI.Texture.from('assets/crack-light.png');
 
-        //FLAK
-        this.flakGraphic = PIXI.Texture.from('assets/da-flak.png')
-    };
+        // FLAK
+        this.flakGraphic = PIXI.Texture.from('assets/da-flak.png');
+
+        // END GAME OVERLAY
+        this.endGameOverlayBlack = new PIXI.Graphics();
+        this.endGameOverlayWhite = new PIXI.Graphics();
+
+        // GOON
+        this.goon = new PIXI.Sprite(PIXI.Texture.from('assets/da-missle.png'));
+        this.goonSmoke = PIXI.Texture.from('assets/goon-smoke.png');
+    }
     placeAssets() {
         // background
         this.game.app.stage.addChild(this.background);
@@ -61,16 +83,25 @@ class Graphics {
         this.game.cannon.container.addChild(this.cannonFire);
         this.game.cannon.container.addChild(this.barrel);
 
-        // turret top layers
+        //Turret objects
         this.game.turret.container.addChild(this.turretExterior);
         this.game.turret.container.addChild(this.turretFloor);
-        this.game.turret.container.addChild(this.turretCeiling);
 
-        // player
-        this.turretFloor.addChild(this.player);
+        //End Game Overlay
+        this.game.app.stage.addChild(this.endGameOverlayBlack);
+        this.game.app.stage.addChild(this.endGameOverlayWhite);
+
+        //Player
+        this.game.app.stage.addChild(this.player);
         this.player.addChild(this.playerBlood);
+
+        //Turret Ceiling
+        this.game.app.stage.addChild(this.turretCeiling);
 
         // score
         this.game.app.stage.addChild(this.game.scoreValue);
+
+        // goon
+        this.game.app.stage.addChild(this.goon);
     }
 }
