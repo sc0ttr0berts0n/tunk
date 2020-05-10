@@ -48,7 +48,7 @@ class Goon {
 
         // add smoke
         this.smokes = this.smokes.filter((smoke) => !smoke.dead);
-        if (this.game.frameCount % 15 === 0) {
+        if (this.game.frameCount % 10 === 0) {
             this.smokes.push(new GoonSmoke(game));
         }
         this.smokes.forEach((smoke) => smoke.update());
@@ -71,6 +71,8 @@ class GoonSmoke {
     constructor(game) {
         this.game = game;
         this.el = new PIXI.Sprite(this.game.graphics.goonSmoke);
+        this.el.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+        this.random = Math.random();
         this.lifespan = Math.floor(Math.random() * 600 + 20);
         this.age = 0;
         this.dead = false;
@@ -96,10 +98,10 @@ class GoonSmoke {
             if (this.age < 50) {
                 this.el.alpha += 1 / 50;
             }
-            if (this.age > this.lifespan - 10) {
-                this.el.alpha += -0.1;
+            if (this.age > this.lifespan - 20) {
+                this.el.alpha += -1 / 20;
             }
-            this.el.rotation += ((Math.PI * 2) / 360) * this.sign;
+            this.el.rotation += ((Math.PI * 2) / 360) * this.sign * this.random;
         }
     }
 }
