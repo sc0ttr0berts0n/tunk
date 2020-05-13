@@ -16,7 +16,7 @@ class Game {
         this.scoreDomElText = this.score.toString();
         this.highScore = localStorage.getItem('tunk-high-score') || 0;
         this.highScoreDomEl = document.querySelector('.game-ui--high-score');
-        this.highScoreDomElText = this.highScore;
+        this.highScoreDomElText = `${this.highScore}`;
         this.backgroundRot = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
@@ -32,7 +32,7 @@ class Game {
         this.lastRestart = 0;
         this.firstShot = false;
         this.reduceMotion = false;
-        this.paused = false;
+        this.paused = true;
     }
 
     init() {
@@ -42,6 +42,7 @@ class Game {
         this.graphics.placeAssets();
         this.initScore();
         this.app.ticker.add(() => this.update());
+        setTimeout(this.clearTitle, 5000);
     }
 
     update() {
@@ -155,6 +156,12 @@ class Game {
             localStorage.setItem('tunk-high-score', this.highScore.toString());
             this.highScoreDomEl.textContent = this.highScore;
         }
+    }
+    resetHighScore() {
+        localStorage.setItem('tunk-high-score', '0');
+        this.highScore = this.score;
+        this.highScoreDomElText = this.score.toString();
+        this.highScoreDomEl.textContent = this.highScoreDomElText;
     }
     initScore() {
         this.highScoreDomEl.textContent = this.highScoreDomElText;

@@ -1,5 +1,6 @@
 .modal--container {
     display: none;
+    overflow: hidden;
     flex-direction: column;
     justify-content: flex-start;
     position: absolute;

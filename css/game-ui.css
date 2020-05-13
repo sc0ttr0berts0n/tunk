@@ -109,7 +109,7 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    bottom: -1vmin;
+    bottom: -0.5vmin;
     height: 10vmin;
     left: 50%;
     transform: translateX(-50%);
