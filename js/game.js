@@ -12,6 +12,11 @@ class Game {
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
+        this.scoreDomEl = document.querySelector('.game-ui--score');
+        this.scoreDomElText = this.score.toString();
+        this.highScore = localStorage.getItem('tunk-high-score') || 0;
+        this.highScoreDomEl = document.querySelector('.game-ui--high-score');
+        this.highScoreDomElText = this.highScore;
         this.backgroundRot = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
@@ -26,39 +31,42 @@ class Game {
         this.lastRestart = 0;
         this.firstShot = false;
         this.reduceMotion = false;
+        this.paused = false;
     }
 
     init() {
         this.graphics.background.x = this.app.renderer.width / 2;
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
-        this.initScore();
         this.graphics.placeAssets();
+        this.initScore();
         this.app.ticker.add(() => this.update());
     }
 
     update() {
-        this.frameCount++;
-        if (this.player.alive) {
-            this.updateTurret();
+        if (!game.paused) {
+            this.frameCount++;
+            if (this.player.alive) {
+                this.updateTurret();
 
-            this.shootFlakAtWalls();
+                this.shootFlakAtWalls();
 
-            if (this.score >= 3 || this.frameCount >= 6000) {
-                this.shootFlakAtHoles();
+                if (this.score >= 3 || this.frameCount >= 6000) {
+                    this.shootFlakAtHoles();
+                }
+
+                this.turret.update();
+
+                this.updateScore();
             }
-
-            this.turret.update();
-
-            this.updateScore();
-        }
-        this.player.update();
-        if (this.turret.wedges) {
-            this.turret.wedges.forEach((wedge) => wedge.update());
-        }
-        if (this.flaks.length > 0) {
-            this.flaks.forEach((flak) => flak.update());
-            this.flaks = this.flaks.filter((flak) => !flak.isDead);
+            this.player.update();
+            if (this.turret.wedges) {
+                this.turret.wedges.forEach((wedge) => wedge.update());
+            }
+            if (this.flaks.length > 0) {
+                this.flaks.forEach((flak) => flak.update());
+                this.flaks = this.flaks.filter((flak) => !flak.isDead);
+            }
         }
     }
     reinit() {
@@ -84,8 +92,8 @@ class Game {
         if (!this.reduceMotion) {
             this.graphics.background.rotation = this.backgroundRot;
         } else {
-            this.turret.bottomEl.rotation = this.backgroundRot;
-            this.turret.headElOpening.rotation = this.backgroundRot;
+            this.graphics.turretExterior.rotation = this.backgroundRot;
+            this.graphics.turretCeiling.rotation = this.backgroundRot;
             this.cannon.container.rotation = this.backgroundRot;
         }
 
@@ -133,22 +141,18 @@ class Game {
         }
     }
     updateScore() {
-        if (this.scoreValue) {
-            this.scoreValue.text = this.score;
+        if (this.score.toString() !== this.scoreDomElText) {
+            this.scoreDomElText = this.score.toString();
+            this.scoreDomEl.textContent = this.score.toString();
+        }
+        if (this.score > Number(this.highScore)) {
+            this.highScore = this.score.toString();
+            localStorage.setItem('tunk-high-score', this.highScore.toString());
+            this.highScoreDomEl.textContent = this.highScore;
         }
     }
     initScore() {
-        const scoreStyle = new PIXI.TextStyle();
-        scoreStyle.fill = '#F13409';
-        scoreStyle.fontFamily = 'Arial';
-        scoreStyle.fontSize = 48;
-        scoreStyle.fontWeight = 'bold';
-        scoreStyle.stroke = '#000000';
-        scoreStyle.strokeThickness = 10;
-        this.scoreValue = new PIXI.Text(this.score, scoreStyle);
-        this.scoreValue.anchor.set(0.5);
-        this.scoreValue.y = this.app.renderer.height / 2 + 400;
-        this.scoreValue.x = this.app.renderer.width / 2;
+        this.highScoreDomEl.textContent = this.highScoreDomElText;
     }
 }
 

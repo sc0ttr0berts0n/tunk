@@ -42,19 +42,6 @@ canvas {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.button {
-    border-radius: 8px;
-    background-color: #5e8089;
-    padding: 0.5rem 1rem;
-    display: inline;
-    cursor: pointer;
-    text-transform: uppercase;
-    border-bottom: 4px solid #0e0b0e;
-}
-.button:hover {
-    background-color: #648892;
-    border-bottom-width: 0px;
-}
 .toggle-button {
     display: inline-block;
 }
