@@ -1,3 +1,4 @@
+// sets up the opening and closing of modals
 const modalTogglers = document.querySelectorAll('[data-modal-toggler]');
 modalTogglers.forEach((toggler) => {
     const modal = document.querySelector(
@@ -18,6 +19,7 @@ modalTogglers.forEach((toggler) => {
     });
 });
 
+// toggles game object boolean passed in through data-game-boolean attribute
 const booleanTogglers = document.querySelectorAll('[data-game-boolean]');
 booleanTogglers.forEach((toggler) => {
     const cssClass = toggler.classList.toString();
@@ -34,6 +36,7 @@ booleanTogglers.forEach((toggler) => {
     });
 });
 
+// runs a method in game object passed in as data on data-game-method attribute
 const methodRunners = document.querySelectorAll('[data-game-method]');
 methodRunners.forEach((runner) => {
     runner.addEventListener('click', () => {
@@ -42,4 +45,32 @@ methodRunners.forEach((runner) => {
             game[method]();
         }
     });
+});
+
+// show or hide the title
+const showTitle = sessionStorage.getItem('tunk-show-title') !== 'false';
+const titleScreen = document.querySelector('[data-title-screen]');
+titleScreen.addEventListener('click', () => {
+    sessionStorage.setItem('tunk-show-title', 'false');
+    removeTitleScreen();
+});
+
+// function to remove title screen via class addition
+// unpauses the game;
+const removeTitleScreen = () => {
+    titleScreen.classList.add('title--container__hide');
+    setTimeout(() => {
+        game.paused = false;
+    }, 1500);
+};
+
+// when the game is loaded, remove the title screen, either
+// immediately, or after a duration, depending on whether
+// its been cleared in the past via session storage.
+document.addEventListener('DOMContentLoaded', () => {
+    if (showTitle) {
+        setTimeout(removeTitleScreen, 5000);
+    } else {
+        removeTitleScreen();
+    }
 });

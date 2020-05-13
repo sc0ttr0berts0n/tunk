@@ -15,13 +15,22 @@
         <link rel="stylesheet" href="css/app-ui.css">
         <link rel="stylesheet" href="css/game-ui.css">
         <link rel="stylesheet" href="css/modal.css">
+        <link rel="stylesheet" href="css/title.css">
     </head>
     <body>
         <div class="app-ui--container">
             <div class="game-ui--container">
+                <!-- Title -->
+                <div data-title-screen class="title--container modal--container modal--container__visible">
+                    <img class="title--graphic" src="assets/da-title.png" alt="Title Title Screen">
+                </div>
+
+                <!-- UI Buttons -->
                 <button data-game-method="reinit" class="game-ui--button game-ui--button__top game-ui--button__left">♻️</button>
                 <button data-modal-toggler="help" class="game-ui--button game-ui--button__bottom game-ui--button__left">❓</button>
                 <button data-modal-toggler="options" class="game-ui--button game-ui--button__bottom game-ui--button__right">⚙️</button>
+
+                <!-- Help Modal -->
                 <div data-modal="help" class="modal--container">
                     <button class="modal--close"></button>
                     <div class="modal--headline">Help!</div>
@@ -33,13 +42,18 @@
                         Thanks for playing! –Team Tunk
                     </div>
                 </div>
+
+                <!-- Options Modal -->
                 <div data-modal="options" class="modal--container">
                     <button class="modal--close"></button>
                     <div class="modal--headline">Options</div>
                     <div class="modal--grid">
                         <button data-game-boolean="reduceMotion" class="modal--toggle-button">Reduce Motion</button>
+                        <button data-game-method="resetHighScore" class="modal--toggle-button">Reset High Score</button>
                     </div>
                 </div>
+
+                <!-- Score UI -->
                 <div class="game-ui--score-wrapper">
                     <div class="game-ui--score">0</div>
                     <div class="game-ui--high-score-label">High<br />Score</div>
