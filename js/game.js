@@ -153,8 +153,13 @@ class Game {
     }
     resetHighScore() {
         localStorage.setItem('tunk-high-score', '0');
-        this.highScore = this.score;
-        this.highScoreDomElText = this.score.toString();
+        if (this.player.alive) {
+            this.highScore = this.score;
+            this.highScoreDomElText = this.score.toString();
+        } else {
+            this.highScore = 0;
+            this.highScoreDomElText = '0';
+        }
         this.highScoreDomEl.textContent = this.highScoreDomElText;
     }
     initScore() {
