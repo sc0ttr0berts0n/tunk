@@ -131,6 +131,7 @@
     padding-bottom: 0.25vmin;
     border-bottom: 1px solid rgba(255, 255, 255, 0.7);
     margin-bottom: 0.25vmin;
+    letter-spacing: -0.25vmin;
 }
 
 .game-ui--high-score-label {
