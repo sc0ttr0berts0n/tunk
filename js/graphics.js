@@ -28,12 +28,6 @@ class Graphics {
         this.playerBlood = new PIXI.Sprite(
             PIXI.Texture.from('assets/da-blood.png')
         );
-        this.playerDead = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-boi.png')
-        );
-        this.playerDeadBlood = new PIXI.Sprite(
-            PIXI.Texture.from('assets/da-blood.png')
-        );
 
         //TURRET
         this.turretExterior = new PIXI.Sprite(
@@ -92,8 +86,5 @@ class Graphics {
 
         //Turret Ceiling
         this.game.app.stage.addChild(this.turretCeiling);
-
-        // score
-        this.game.app.stage.addChild(this.game.scoreValue);
     }
 }
