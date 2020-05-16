@@ -89,11 +89,8 @@ class Graphics {
         //Player
         this.game.app.stage.addChild(this.player);
         this.player.addChild(this.playerBlood);
-<<<<<<< HEAD
 
         //Turret Ceiling
         this.game.app.stage.addChild(this.turretCeiling);
-=======
->>>>>>> aec7b6c4df20a1a72d91e17be45500c7234bd8b9
     }
 }
