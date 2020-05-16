@@ -20,11 +20,8 @@ class Graphics {
         this.cannonBarrelSmoke = new PIXI.Sprite(
             PIXI.Texture.from('assets/turret-barrel-smoke.png')
         );
-<<<<<<< HEAD
         //EndGameOverlay
         this.endGameOverlay = new PIXI.Graphics();
-=======
->>>>>>> aec7b6c4df20a1a72d91e17be45500c7234bd8b9
 
         //PLAYER
         this.player = new PIXI.Sprite(PIXI.Texture.from('assets/da-boi.png'));
@@ -56,13 +53,10 @@ class Graphics {
 
         //FLAK
         this.flakGraphic = PIXI.Texture.from('assets/da-flak.png');
-<<<<<<< HEAD
 
         //EndGameOverlay
         this.endGameOverlayBlack = new PIXI.Graphics();
         this.endGameOverlayWhite = new PIXI.Graphics();
-=======
->>>>>>> aec7b6c4df20a1a72d91e17be45500c7234bd8b9
     }
     placeAssets() {
         // background
