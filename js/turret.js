@@ -20,6 +20,9 @@ class Turret {
         this.game.graphics.turretFloor.rotation = 0.25 * Math.PI;
         this.game.graphics.turretFloor.scale.set(0.875);
 
+        this.game.graphics.turretCeiling.x = this.game.app.renderer.width / 2;
+        this.game.graphics.turretCeiling.y = this.game.app.renderer.height / 2;
+        this.game.graphics.turretCeiling.rotation = -0.25 * Math.PI;
         this.game.graphics.turretCeiling.anchor.set(0.5);
         this.game.graphics.turretCeiling.alpha = 1;
     }
@@ -37,7 +40,10 @@ class Turret {
             this.game.frameCount >= 60 &&
             this.game.graphics.turretCeiling.alpha > 0
         ) {
-            if (this.game.frameCount % 60 === 0) {
+            if (
+                this.game.frameCount % 60 === 0 &&
+                this.game.graphics.turretCeiling.alpha > 0
+            ) {
                 this.game.graphics.turretCeiling.alpha -= 0.34;
             }
         }
