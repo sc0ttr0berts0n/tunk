@@ -59,14 +59,10 @@ class Game {
 
                 this.shootFlakAtWalls();
 
-<<<<<<< HEAD
                 if (
                     this.score >= 3 ||
                     this.frameCount - this.lastRestart >= 6000
                 ) {
-=======
-                if (this.score >= 3 || this.frameCount >= 6000) {
->>>>>>> aec7b6c4df20a1a72d91e17be45500c7234bd8b9
                     this.shootFlakAtHoles();
                 }
 
