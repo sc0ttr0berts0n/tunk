@@ -11,6 +11,12 @@ class Game {
         this.graphics = new Graphics(this);
         this.flaks = [];
         this.score = 0;
+        this.scoreValue = null;
+        this.scoreDomEl = document.querySelector('.game-ui--score');
+        this.scoreDomElText = this.score.toString();
+        this.highScore = localStorage.getItem('tunk-high-score') || 0;
+        this.highScoreDomEl = document.querySelector('.game-ui--high-score');
+        this.highScoreDomElText = `${this.highScore}`;
         this.turretBodyRotation = Math.PI * 2;
         this.scoreDomEl = document.querySelector('.game-ui--score');
         this.scoreDomElText = this.score.toString();
@@ -53,10 +59,14 @@ class Game {
 
                 this.shootFlakAtWalls();
 
+<<<<<<< HEAD
                 if (
                     this.score >= 3 ||
                     this.frameCount - this.lastRestart >= 6000
                 ) {
+=======
+                if (this.score >= 3 || this.frameCount >= 6000) {
+>>>>>>> aec7b6c4df20a1a72d91e17be45500c7234bd8b9
                     this.shootFlakAtHoles();
                 }
 
