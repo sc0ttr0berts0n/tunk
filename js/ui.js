@@ -1,55 +1,45 @@
-// vars
-const showHelpButton = document.querySelector('.help-button');
-const closeHelpButton = document.querySelector('.help-close');
-const helpPanel = document.querySelector('.help-window');
-const showOptionsButton = document.querySelector('.options-button');
-const restartButton = document.querySelector('.restart-button');
-const closeOptionsButton = document.querySelector('.options-close');
-const optionsPanel = document.querySelector('.options-window');
-const toggleButton = document.querySelectorAll('.toggle-button');
-const reduceMotionButton = document.querySelector('.options-reduce-motion');
+const modalTogglers = document.querySelectorAll('[data-modal-toggler]');
+modalTogglers.forEach((toggler) => {
+    const modal = document.querySelector(
+        `[data-modal="${toggler.dataset.modalToggler}"]`
+    );
 
-// modal open/close
-showHelpButton.addEventListener('click', () => {
-    helpPanel.style.display = 'block';
-});
-closeHelpButton.addEventListener('click', () => {
-    helpPanel.style.display = 'none';
-});
-showOptionsButton.addEventListener('click', () => {
-    optionsPanel.style.display = 'block';
-});
-closeOptionsButton.addEventListener('click', () => {
-    optionsPanel.style.display = 'none';
+    const closeButton = modal.querySelector('.modal--close');
+
+    toggler.addEventListener('click', () => {
+        game.paused = true;
+        modal.classList.add('modal--container__visible');
+        closeButton.focus();
+        closeButton.addEventListener('click', () => {
+            modal.classList.remove('modal--container__visible');
+            game.paused = false;
+            toggler.focus();
+        });
+    });
 });
 
-// visually toggle the toggle buttons
-toggleButton.forEach((button) => {
-    button.addEventListener('click', (e) => {
-        // temp gate to handle buttons that arent reduce motion
-        if (e.target.classList.contains('options-reduce-motion')) return;
-
-        if (e.target.classList.contains('toggle-button__off')) {
-            e.target.classList.remove('toggle-button__off');
-            e.target.classList.add('toggle-button__on');
-            console.log('lol');
+const booleanTogglers = document.querySelectorAll('[data-game-boolean]');
+booleanTogglers.forEach((toggler) => {
+    const cssClass = toggler.classList.toString();
+    const targetBoolean = toggler.dataset.gameBoolean;
+    toggler.addEventListener('click', () => {
+        game[targetBoolean] = !game[targetBoolean];
+        if (game[targetBoolean]) {
+            toggler.classList.remove(`${cssClass}__off`);
+            toggler.classList.add(`${cssClass}__on`);
         } else {
-            e.target.classList.add('toggle-button__off');
-            e.target.classList.remove('toggle-button__on');
-            console.log('jk');
+            toggler.classList.add(`${cssClass}__off`);
+            toggler.classList.remove(`${cssClass}__on`);
         }
     });
 });
 
-reduceMotionButton.addEventListener('click', (e) => {
-    game.reduceMotion = !game.reduceMotion;
-    if (game.reduceMotion) {
-        e.target.classList.remove('toggle-button__off');
-        e.target.classList.add('toggle-button__on');
-    } else {
-        e.target.classList.add('toggle-button__off');
-        e.target.classList.remove('toggle-button__on');
-    }
+const methodRunners = document.querySelectorAll('[data-game-method]');
+methodRunners.forEach((runner) => {
+    runner.addEventListener('click', () => {
+        const method = runner.dataset.gameMethod;
+        if (method && game[method]) {
+            game[method]();
+        }
+    });
 });
-
-restartButton.addEventListener('click', () => game.reinit());

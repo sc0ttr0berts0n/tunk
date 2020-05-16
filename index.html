@@ -12,12 +12,44 @@
           gtag('config', 'UA-73093001-4', { 'anonymize_ip': true });
         </script>
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/app-ui.css">
+        <link rel="stylesheet" href="css/game-ui.css">
+        <link rel="stylesheet" href="css/modal.css">
     </head>
     <body>
-        <div class="ui">
+        <div class="app-ui--container">
+            <div class="game-ui--container">
+                <button data-game-method="reinit" class="game-ui--button game-ui--button__top game-ui--button__left">♻️</button>
+                <button data-modal-toggler="help" class="game-ui--button game-ui--button__bottom game-ui--button__left">❓</button>
+                <button data-modal-toggler="options" class="game-ui--button game-ui--button__bottom game-ui--button__right">⚙️</button>
+                <div data-modal="help" class="modal--container">
+                    <button class="modal--close"></button>
+                    <div class="modal--headline">Help!</div>
+                    <div class="modal--body">
+                        Repair the turret, dodge flak!<br />
+                        Your score is how many wall segments you've repaired. <br />Press
+                        the letter that corresponds to the wall segment to move your player
+                        there.<br />Refresh to restart!<br />
+                        Thanks for playing! –Team Tunk
+                    </div>
+                </div>
+                <div data-modal="options" class="modal--container">
+                    <button class="modal--close"></button>
+                    <div class="modal--headline">Options</div>
+                    <div class="modal--grid">
+                        <button data-game-boolean="reduceMotion" class="modal--toggle-button">Reduce Motion</button>
+                    </div>
+                </div>
+                <div class="game-ui--score-wrapper">
+                    <div class="game-ui--score">0</div>
+                    <div class="game-ui--high-score-label">High<br />Score</div>
+                    <div class="game-ui--high-score"></div></div>
+            </div>
+        </div>
+        <div class="ui" style="display: none;">
             <div class="canvas-ui">
                 <div class="help-button button">❓</div>
-                <div class="help-window modal modal--wrapper" style="display: none">
+                <div class="help-window modal" style="display: none">
                     <div class="help-close button modal--close">close</div>
                     Repair the turret, dodge flak!<br />
                     Your score is how many wall segments you've repaired. <br />Press
@@ -25,11 +57,7 @@
                     there.<br />Refresh to restart!<br />
                     Thanks for playing! –Team Tunk
                 </div>
-                <div class="options-button button">⚙️</div>
-                <div class="options-window modal modal--wrapper" style="display: none">
-                    <div class="options-close button modal--close">close</div>
-                    <div class="options-reduce-motion button toggle-button toggle-button__off">Reduce Motion</div>
-                </div>
+                <div class="options-button">⚙️</div>
                 <div class="restart-button button">♻️</div>
             </div>
         </div>
