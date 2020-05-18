@@ -16,10 +16,10 @@ class Player {
         this.game.graphics.playerBlood.anchor.set(0.45, 0.9);
         this.game.graphics.playerBlood.visible = false;
     }
-    update() {
+    update(delta) {
         if (this.alive) {
             this.findDestination();
-            this.movedaboi();
+            this.movedaboi(delta);
         }
         this.game.graphics.player.x =
             this.pos.x + this.game.app.renderer.width / 2;
@@ -40,17 +40,19 @@ class Player {
         this.alive = true;
         this.game.graphics.playerBlood.visible = false;
     }
-    movedaboi() {
+    movedaboi(delta) {
         const distx = this.targetPos.x - this.pos.x;
         const disty = this.targetPos.y - this.pos.y;
         const angle = Math.atan2(disty, distx);
 
         const movex =
             (distx / Math.sqrt(Math.pow(distx, 2) + Math.pow(disty, 2))) *
-            this.speed;
+            this.speed *
+            delta;
         const movey =
             (disty / Math.sqrt(Math.pow(distx, 2) + Math.pow(disty, 2))) *
-            this.speed;
+            this.speed *
+            delta;
         if (
             Math.abs(distx) < Math.abs(this.speed) &&
             Math.abs(disty) < Math.abs(this.speed)

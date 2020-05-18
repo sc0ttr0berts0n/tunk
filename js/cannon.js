@@ -14,7 +14,8 @@ class Cannon {
         this.game.graphics.cannonBarrelSmoke.y = this.cannonTargetY - 0;
         this.game.graphics.cannonBarrelSmoke.rotation = 0 * Math.PI;
         this.game.graphics.cannonBarrelSmoke.scale.set(0.9);
-        this.game.graphics.cannonBarrelSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
+        this.game.graphics.cannonBarrelSmoke.blendMode =
+            PIXI.BLEND_MODES.OVERLAY;
 
         this.game.graphics.cannonSmoke.anchor.set(0, 0.5);
         this.game.graphics.cannonSmoke.x = this.cannonTargetX + 370;
@@ -37,7 +38,7 @@ class Cannon {
         this.game.graphics.barrel.rotation = 0 * Math.PI;
     }
 
-    update() {
+    update(delta) {
         if (this.game.frameCount > this.nextShot - 4) {
             this.game.graphics.cannonFire.alpha = 1;
             this.game.graphics.cannonSmoke.alpha += 0.3;

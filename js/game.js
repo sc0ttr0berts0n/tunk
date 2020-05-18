@@ -46,22 +46,18 @@ class Game {
         this.graphics.background.x = this.app.renderer.width / 2;
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
-<<<<<<< HEAD
         this.initScore();
-<<<<<<< Updated upstream
-=======
->>>>>>> a1f7922b330176ad8242003d9a936f1c7af87fa5
         this.graphics.placeAssets();
         this.initScore();
-        this.app.ticker.add(() => this.update());
+        this.app.ticker.add((delta) => this.update(delta));
         setTimeout(this.clearTitle, 5000);
     }
 
-    update() {
+    update(delta) {
         if (!game.paused) {
             this.frameCount++;
             if (this.player.alive) {
-                this.updateTurret();
+                this.updateTurret(delta);
 
                 this.shootFlakAtWalls();
 
@@ -74,64 +70,17 @@ class Game {
 
                 this.turret.update();
 
-<<<<<<< HEAD
-            this.updateScore();
-        }
-        this.player.update();
-        if (this.turret.wedges) {
-            this.turret.wedges.forEach((wedge) => wedge.update());
-        }
-        if (this.flaks.length > 0) {
-            this.flaks.forEach((flak) => flak.update());
-            this.flaks = this.flaks.filter((flak) => !flak.isDead);
-=======
-        this.app.ticker.add((delta) => this.update(delta));
-        setTimeout(this.clearTitle, 5000);
-    }
-
-    update(delta) {
-        this.delta = delta;
-        if (!game.paused) {
-            this.frameCount++;
-            if (this.frameCount % 2 === 0) {
-                if (this.player.alive) {
-                    this.updateTurret();
-
-                    this.shootFlakAtWalls();
-
-                    if (
-                        this.score >= 3 ||
-                        this.frameCount - this.lastRestart >= 6000
-                    ) {
-                        this.shootFlakAtHoles();
-                    }
-
-                    this.turret.update();
-
-                    this.updateScore();
-                }
-                this.player.update();
-                if (this.turret.wedges) {
-                    this.turret.wedges.forEach((wedge) => wedge.update());
-                }
-                if (this.flaks.length > 0) {
-                    this.flaks.forEach((flak) => flak.update());
-                    this.flaks = this.flaks.filter((flak) => !flak.isDead);
-                }
-            }
->>>>>>> Stashed changes
-=======
                 this.updateScore();
             }
-            this.player.update();
+            this.player.update(delta);
             if (this.turret.wedges) {
                 this.turret.wedges.forEach((wedge) => wedge.update());
             }
-            if (this.flaks.length > 0) {
-                this.flaks.forEach((flak) => flak.update());
+            if (this.flaks.length) {
+                this.flaks.forEach((flak) => flak.update(delta));
                 this.flaks = this.flaks.filter((flak) => !flak.isDead);
+                this.updateScore();
             }
->>>>>>> a1f7922b330176ad8242003d9a936f1c7af87fa5
         }
         this.endGameOverlay.update();
     }
@@ -148,12 +97,12 @@ class Game {
         this.endGameOverlay.reinit();
     }
 
-    updateTurret() {
+    updateTurret(delta) {
         const target = this.backgroundTargetRot;
         const actual = this.turretBodyRotation;
         const diff = target - actual;
         const factor = 0.005;
-        const offset = diff * factor;
+        const offset = diff * factor * delta;
 
         this.turretBodyRotation += offset;
         if (!this.reduceMotion) {

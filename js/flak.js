@@ -27,7 +27,7 @@ class Flak {
             this.target.isLethal = true;
         }
     }
-    update() {
+    update(delta) {
         this.el.y += this.speed;
         // calc player-flak distance
         const player = this.game.graphics.player.worldTransform;
@@ -53,7 +53,7 @@ class Flak {
         );
 
         // move flak
-        this.el.y += this.speed;
+        this.el.y += this.speed * delta;
 
         // collide and remove
         const wedgeHealthAboveZero = this.target.health > 0;

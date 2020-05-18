@@ -26,9 +26,9 @@ class Turret {
         this.game.graphics.turretCeiling.anchor.set(0.5);
         this.game.graphics.turretCeiling.alpha = 1;
     }
-    update() {
+    update(delta) {
         this.openingUpdate();
-        this.game.cannon.update();
+        this.game.cannon.update(delta);
     }
     reinit() {
         this.wedges.forEach((wedge) => {
