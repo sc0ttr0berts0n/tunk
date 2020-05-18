@@ -9,6 +9,7 @@ class Game {
             maxFPS: 30,
         });
         this.graphics = new Graphics(this);
+        this.delta = 0;
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
@@ -34,6 +35,7 @@ class Game {
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
         this.initScore();
+<<<<<<< Updated upstream
         this.graphics.placeAssets();
         this.app.ticker.add(() => this.update());
     }
@@ -60,6 +62,42 @@ class Game {
         if (this.flaks.length > 0) {
             this.flaks.forEach((flak) => flak.update());
             this.flaks = this.flaks.filter((flak) => !flak.isDead);
+=======
+        this.app.ticker.add((delta) => this.update(delta));
+        setTimeout(this.clearTitle, 5000);
+    }
+
+    update(delta) {
+        this.delta = delta;
+        if (!game.paused) {
+            this.frameCount++;
+            if (this.frameCount % 2 === 0) {
+                if (this.player.alive) {
+                    this.updateTurret();
+
+                    this.shootFlakAtWalls();
+
+                    if (
+                        this.score >= 3 ||
+                        this.frameCount - this.lastRestart >= 6000
+                    ) {
+                        this.shootFlakAtHoles();
+                    }
+
+                    this.turret.update();
+
+                    this.updateScore();
+                }
+                this.player.update();
+                if (this.turret.wedges) {
+                    this.turret.wedges.forEach((wedge) => wedge.update());
+                }
+                if (this.flaks.length > 0) {
+                    this.flaks.forEach((flak) => flak.update());
+                    this.flaks = this.flaks.filter((flak) => !flak.isDead);
+                }
+            }
+>>>>>>> Stashed changes
         }
         this.endGameOverlay.update();
     }
