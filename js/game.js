@@ -9,6 +9,7 @@ class Game {
             maxFPS: 30,
         });
         this.graphics = new Graphics(this);
+        this.audio = new AudioAssets(this);
         this.delta = 0;
         this.flaks = [];
         this.score = 0;
