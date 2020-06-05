@@ -50,6 +50,7 @@ class Game {
         this.initScore();
         this.graphics.placeAssets();
         this.initScore();
+        Howler.volume(0.2);
         this.app.ticker.add((delta) => this.update(delta));
         setTimeout(this.clearTitle, 5000);
     }

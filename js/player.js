@@ -7,6 +7,8 @@ class Player {
         this.targetPos = { x: 0, y: 0 };
         this.targetWedge = null;
         this.alive = true;
+        this.lastIsMoving = false;
+        this.isMoving = false;
         this.speed = 15;
         this.init();
     }
@@ -30,6 +32,9 @@ class Player {
         this.checkRepairing();
         if (!this.alive) {
             this.game.graphics.playerBlood.visible = true;
+        }
+        if (this.game.frameCount % 5 === 0) {
+            console.log(this.isMoving);
         }
     }
     reinit() {
@@ -59,13 +64,36 @@ class Player {
         ) {
             this.pos.x = this.targetPos.x;
             this.pos.y = this.targetPos.y;
+            this.isMoving = false;
         } else {
             this.pos.x += movex;
             this.pos.y += movey;
+            this.isMoving = true;
         }
         if (angle !== 0) {
             this.game.graphics.player.rotation = angle + 0.5 * Math.PI;
         }
+
+        this.playSounds();
+
+        this.lastIsMoving = this.isMoving;
+    }
+    playSounds() {
+        const isArriving = this.lastIsMoving && !this.isMoving;
+        const isDeparting = !this.lastIsMoving && this.isMoving;
+        if (isArriving) {
+            this.game.audio.moveArrive.play();
+        } else if (isDeparting) {
+            this.game.audio.moveDepart.play();
+        }
+    }
+    inMotion() {
+        return this.isMoving && !this.atTarget();
+    }
+    atTarget() {
+        return (
+            this.pos.x === this.targetPos.x && this.pos.y === this.targetPos.y
+        );
     }
     checkRepairing() {
         if (
