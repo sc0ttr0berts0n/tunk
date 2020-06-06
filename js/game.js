@@ -34,7 +34,7 @@ class Game {
         this.endGameOverlay = new EndGameOverlay(this);
         this.init();
         this.kb = new KeyboardObserver();
-        this.damageChance = 0.00625;
+        this.damageChance = 0.008;
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
         this.lastRestart = 0;
