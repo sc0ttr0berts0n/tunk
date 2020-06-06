@@ -70,6 +70,9 @@ class Flak {
             if (this.isLethal) {
                 this.target.isLethal = false;
             }
+
+            // play sound
+            this.game.audio.wallBreak.play();
         }
 
         if (flakFlewThroughTurret) {
