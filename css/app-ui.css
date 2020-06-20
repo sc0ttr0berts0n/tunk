@@ -1,1 +1,8 @@
-/* Intentially Left Blank */
+.app-ui--container {
+    background-image: url('/assets/overlay-console.png');
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    z-index: 10000;
+    position: relative;
+}
