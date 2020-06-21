@@ -23,8 +23,8 @@ body {
 }
 canvas,
 .canvas--scanlines {
-    width: 67.5vmin;
-    height: 67.5vmin;
+    width: 90vmin;
+    height: 90vmin;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -36,8 +36,8 @@ canvas,
 }
 .canvas-ui {
     z-index: 100;
-    width: 67.5vmin;
-    height: 67.5vmin;
+    width: 90vmin;
+    height: 90vmin;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -157,7 +157,7 @@ canvas,
 .canvas--scanlines {
     overflow: hidden;
     position: absolute;
-    z-index: 2000;
+    z-index: 900;
     background-color: transparent;
 }
 .canvas--scanlines::after {
@@ -176,9 +176,10 @@ canvas,
         rgba(255, 0, 0, 0) 4px
     );
     z-index: 999999999;
+    mix-blend-mode: overlay;
 }
 .canvas--scanlines::before {
-    opacity: 0.35;
+    opacity: 0.25;
     pointer-events: none;
     content: '';
     position: absolute;
@@ -187,6 +188,7 @@ canvas,
     transform: translateY(-100%);
     top: 0;
     left: 0;
+    mix-blend-mode: overlay;
     background: repeating-linear-gradient(
         0deg,
         rgba(255, 255, 255, 0),
