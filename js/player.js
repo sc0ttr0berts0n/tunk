@@ -6,6 +6,7 @@ class Player {
         this.orientation = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
         this.targetWedge = null;
+        this.lastAlive = true;
         this.alive = true;
         this.lastIsMoving = false;
         this.isMoving = false;
@@ -21,8 +22,8 @@ class Player {
     update(delta) {
         if (this.alive) {
             this.findDestination();
-            this.movedaboi(delta);
         }
+        this.movedaboi(delta);
         this.game.graphics.player.x =
             this.pos.x + this.game.app.renderer.width / 2;
         this.game.graphics.player.y =
@@ -33,9 +34,9 @@ class Player {
         if (!this.alive) {
             this.game.graphics.playerBlood.visible = true;
         }
-        if (this.game.frameCount % 5 === 0) {
-            console.log(this.isMoving);
-        }
+        this.playSounds();
+        this.lastIsMoving = this.isMoving;
+        this.lastAlive = this.alive;
     }
     reinit() {
         this.pos = { x: 0, y: 0 };
@@ -46,6 +47,7 @@ class Player {
         this.game.graphics.playerBlood.visible = false;
     }
     movedaboi(delta) {
+        if (!this.alive) return;
         const distx = this.targetPos.x - this.pos.x;
         const disty = this.targetPos.y - this.pos.y;
         const angle = Math.atan2(disty, distx);
@@ -73,18 +75,19 @@ class Player {
         if (angle !== 0) {
             this.game.graphics.player.rotation = angle + 0.5 * Math.PI;
         }
-
-        this.playSounds();
-
-        this.lastIsMoving = this.isMoving;
     }
     playSounds() {
         const isArriving = this.lastIsMoving && !this.isMoving;
         const isDeparting = !this.lastIsMoving && this.isMoving;
+        const justDied = this.lastAlive && !this.alive;
         if (isArriving) {
-            this.game.audio.moveArrive.play();
+            // this.game.audio.moveArrive.play();
         } else if (isDeparting) {
-            this.game.audio.moveDepart.play();
+            // this.game.audio.moveDepart.play();
+        }
+        if (justDied) {
+            this.game.audio.death.play();
+            this.game.audio.bgm.stop();
         }
     }
     inMotion() {

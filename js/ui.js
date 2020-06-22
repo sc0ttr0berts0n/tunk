@@ -74,3 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
         removeTitleScreen();
     }
 });
+
+// show debug on ```` key press
+const debugUI = document.querySelectorAll('[data-debug-ui]');
+
+if (debugUI) {
+    document.addEventListener('keydown', (e) => {
+        if (e.which == 192) {
+            debugUI.forEach((el) => {
+                el.classList.toggle('show');
+            });
+        }
+    });
+}

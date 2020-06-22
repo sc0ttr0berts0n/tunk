@@ -41,6 +41,7 @@ class Game {
         this.firstShot = false;
         this.reduceMotion = false;
         this.paused = true;
+        this.muted = false;
     }
 
     init() {
@@ -51,6 +52,9 @@ class Game {
         this.graphics.placeAssets();
         this.initScore();
         Howler.volume(0.2);
+        this.audio.bgm.loop(true);
+        this.audio.bgm.play();
+        this.audio.bgm.fade(0, 0.75, 500);
         this.app.ticker.add((delta) => this.update(delta));
         setTimeout(this.clearTitle, 5000);
     }
@@ -97,6 +101,9 @@ class Game {
         this.score = 0;
         this.updateScore();
         this.endGameOverlay.reinit();
+        this.audio.bgm.stop();
+        this.audio.bgm.play();
+        this.audio.bgm.fade(0, 0.75, 500);
     }
 
     updateTurret(delta) {
