@@ -10,7 +10,7 @@ class Player {
         this.alive = true;
         this.lastIsMoving = false;
         this.isMoving = false;
-        this.speed = 15;
+        this.speed = 12;
         this.init();
     }
     init() {
