@@ -4,6 +4,7 @@
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     font-size: 24px;
     color: white;
+    box-sizing: border-box;
 }
 body,
 html {
@@ -21,6 +22,9 @@ body {
     background-size: cover;
     background-position: center;
 }
+.pointer-events-none {
+    pointer-events: none;
+}
 canvas,
 .canvas--scanlines {
     width: 90vmin;
@@ -33,6 +37,7 @@ canvas,
     border: 1vmin solid #000033;
     background-color: #ccc;
     box-shadow: 0 0 5vmin 3vmin rgba(238, 233, 213, 0.75);
+    pointer-events: none;
 }
 .canvas-ui {
     z-index: 100;
@@ -159,6 +164,7 @@ canvas,
     position: absolute;
     z-index: 900;
     background-color: transparent;
+    pointer-events: none;
 }
 .canvas--scanlines::after {
     pointer-events: none;

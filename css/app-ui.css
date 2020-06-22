@@ -2,12 +2,18 @@
     pointer-events: none;
     content: '';
     display: block;
-    background-image: url('/assets/overlay-console.png');
+    background-image: url('/assets/overlay-console-vertical.png');
     background-size: cover;
     background-position: center;
     height: 100%;
     z-index: 1000;
     position: relative;
+    pointer-events: none;
+}
+@media (min-aspect-ratio: 1/1) {
+    .app-ui--container::after {
+        background-image: url('/assets/overlay-console-horizontal.png');
+    }
 }
 
 .app-ui--overlay {
