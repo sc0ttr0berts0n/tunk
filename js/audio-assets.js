@@ -1,7 +1,7 @@
 class AudioAssets {
     constructor(game) {
         this.game = game;
-        this.bgm = new Howl({ src: ['/assets/audio/main-bgm.mp3'] });
+        this.bgm = new Howl({ src: ['/assets/audio/fsharptunk_vD.mp3'] });
         this.death = new Howl({ src: ['/assets/audio/deathsound.mp3'] });
         this.cannonFire = new Howl({ src: ['/assets/audio/canon1.mp3'] });
         this.moveDepart = new Howl({ src: ['/assets/audio/depart.mp3'] });
