@@ -61,6 +61,10 @@ class Flak {
         const flakFlewThroughTurret = this.el.y > this.game.turret.radius;
         const flakAtItsTarget = hypotFlakWedge < 30;
 
+        if (this.isLethal) {
+            this.target.isLethal = true;
+        }
+
         if (flakAtItsTarget && wedgeHealthAboveZero) {
             this.isDead = true;
             this.container.visible = false;
@@ -87,9 +91,7 @@ class Flak {
                 this.container.destroy();
             }
             this.target.willBeShot = false;
-            if (this.isLethal) {
-                this.target.isLethal = false;
-            }
+            this.target.isLethal = false;
         }
     }
     reinit() {
