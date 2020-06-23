@@ -192,8 +192,8 @@ canvas,
     left: 0;
     background: repeating-linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.25),
-        rgba(0, 0, 0, 0.25) 2px,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 2px,
         rgba(255, 0, 0, 0) 2px,
         rgba(255, 0, 0, 0) 4px
     );
@@ -201,7 +201,7 @@ canvas,
     mix-blend-mode: overlay;
 }
 .canvas--scanlines::before {
-    opacity: 0.25;
+    opacity: 0.1;
     pointer-events: none;
     content: '';
     position: absolute;
