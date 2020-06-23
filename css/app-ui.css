@@ -9,6 +9,7 @@
     z-index: 1000;
     position: relative;
     pointer-events: none;
+    image-rendering: pixelated;
 }
 @media (min-aspect-ratio: 1/1) {
     .app-ui--container::after {
