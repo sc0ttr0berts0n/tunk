@@ -68,6 +68,7 @@ class Cannon {
         this.game.graphics.barrel.y -= yOff;
 
         if (this.game.frameCount > this.nextShot) {
+            this.game.audio.cannonFire.play();
             this.game.graphics.barrel.x -= 140;
             this.game.graphics.cannonBarrelSmoke.alpha += 0.3;
             this.game.graphics.cannonBarrelSmoke.scale.set(0.9);

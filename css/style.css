@@ -39,6 +39,22 @@ canvas,
     box-shadow: 0 0 5vmin 3vmin rgba(238, 233, 213, 0.75);
     pointer-events: none;
 }
+[data-debug-ui] {
+    display: none;
+}
+.hide {
+    display: none;
+}
+.show {
+    display: block;
+}
+.show__inline {
+    display: inline;
+}
+.show__flex {
+    display: flex;
+}
+
 .canvas-ui {
     z-index: 100;
     width: 90vmin;

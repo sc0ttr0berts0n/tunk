@@ -9,6 +9,7 @@ class Game {
             maxFPS: 30,
         });
         this.graphics = new Graphics(this);
+        this.audio = new AudioAssets(this);
         this.delta = 0;
         this.flaks = [];
         this.score = 0;
@@ -33,13 +34,14 @@ class Game {
         this.endGameOverlay = new EndGameOverlay(this);
         this.init();
         this.kb = new KeyboardObserver();
-        this.damageChance = 0.0125;
+        this.damageChance = 0.008;
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
         this.lastRestart = 0;
         this.firstShot = false;
         this.reduceMotion = false;
         this.paused = true;
+        this.muted = false;
     }
 
     init() {
@@ -49,6 +51,9 @@ class Game {
         this.initScore();
         this.graphics.placeAssets();
         this.initScore();
+        Howler.volume(0.2);
+        this.audio.bgm.loop(true);
+        this.audio.bgm.play();
         this.app.ticker.add((delta) => this.update(delta));
         setTimeout(this.clearTitle, 5000);
     }
@@ -95,6 +100,8 @@ class Game {
         this.score = 0;
         this.updateScore();
         this.endGameOverlay.reinit();
+        this.audio.bgm.stop();
+        this.audio.bgm.play();
     }
 
     updateTurret(delta) {
