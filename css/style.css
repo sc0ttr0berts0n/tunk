@@ -4,6 +4,7 @@
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     font-size: 24px;
     color: white;
+    box-sizing: border-box;
 }
 body,
 html {
@@ -21,7 +22,11 @@ body {
     background-size: cover;
     background-position: center;
 }
-canvas {
+.pointer-events-none {
+    pointer-events: none;
+}
+canvas,
+.canvas--scanlines {
     width: 90vmin;
     height: 90vmin;
     position: absolute;
@@ -32,6 +37,7 @@ canvas {
     border: 1vmin solid #000033;
     background-color: #ccc;
     box-shadow: 0 0 5vmin 3vmin rgba(238, 233, 213, 0.75);
+    pointer-events: none;
 }
 [data-debug-ui] {
     display: none;
@@ -167,4 +173,59 @@ canvas {
     padding: 5vmin;
     padding-top: 20vmin;
     line-height: 1.6;
+}
+
+.canvas--scanlines {
+    overflow: hidden;
+    position: absolute;
+    z-index: 900;
+    background-color: transparent;
+    pointer-events: none;
+}
+.canvas--scanlines::after {
+    pointer-events: none;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.25),
+        rgba(0, 0, 0, 0.25) 2px,
+        rgba(255, 0, 0, 0) 2px,
+        rgba(255, 0, 0, 0) 4px
+    );
+    z-index: 999999999;
+    mix-blend-mode: overlay;
+}
+.canvas--scanlines::before {
+    opacity: 0.25;
+    pointer-events: none;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: calc(100% / 6);
+    transform: translateY(-100%);
+    top: 0;
+    left: 0;
+    mix-blend-mode: overlay;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 255, 255, 0.5) 15%,
+        rgba(255, 255, 255, 0.5) 75%,
+        rgba(255, 255, 255, 0) 75%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: scan-line 18s -16s infinite linear;
+    filter: blur(1.5px);
+}
+@keyframes scan-line {
+    to {
+        top: 100%;
+        transform: translateY(0);
+    }
 }

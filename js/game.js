@@ -115,7 +115,8 @@ class Game {
         if (!this.reduceMotion) {
             this.graphics.background.rotation = this.turretBodyRotation;
         } else {
-            this.graphics.turretExterior.rotation = this.turretBodyRotation;
+            this.graphics.turretExterior.rotation =
+                this.turretBodyRotation + Math.PI * 0.25;
             this.cannon.container.rotation = this.turretBodyRotation;
         }
 
