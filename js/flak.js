@@ -77,9 +77,9 @@ class Flak {
 
             // play sound
             this.game.audio.wallBreak.pos(
-                this.target.pos.x / 100,
+                this.target.pos.x / 175,
                 0,
-                this.target.pos.y / 100
+                this.target.pos.y / 175
             );
             this.game.audio.wallBreak.play();
         }
