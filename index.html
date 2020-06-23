@@ -18,17 +18,17 @@
         <link rel="stylesheet" href="css/title.css">
     </head>
     <body>
+
+        <!-- App Scale UI -->
         <div class="app-ui--container">
+
+            <!-- Game Scale UI -->
             <div class="game-ui--container">
+
                 <!-- Title -->
                 <div data-title-screen class="title--container modal--container modal--container__visible">
                     <img class="title--graphic" src="assets/da-title.png" alt="Title Title Screen">
                 </div>
-
-                <!-- UI Buttons -->
-                <button data-game-method="reinit" class="game-ui--button game-ui--button__top game-ui--button__left">♻️</button>
-                <button data-modal-toggler="help" class="game-ui--button game-ui--button__bottom game-ui--button__left">❓</button>
-                <button data-modal-toggler="options" class="game-ui--button game-ui--button__bottom game-ui--button__right">⚙️</button>
 
                 <!-- Help Modal -->
                 <div data-modal="help" class="modal--container">
@@ -53,29 +53,34 @@
                     </div>
                 </div>
 
+
+                <div class="canvas--scanlines"></div>
+
+                <!-- The Game Itself -->
+                <canvas id="game"></canvas>
+
+            </div>
+        </div>
+
+        <!-- App UI Overlay -->
+        <div class="app-ui--overlay pointer-events-none">
+            <div class="game-ui--container">
+
                 <!-- Score UI -->
                 <div class="game-ui--score-wrapper">
                     <div class="game-ui--score">0</div>
                     <div class="game-ui--high-score-label">High<br />Score</div>
-                    <div class="game-ui--high-score"></div></div>
-            </div>
-        </div>
-        <div class="ui" style="display: none;">
-            <div class="canvas-ui">
-                <div class="help-button button">❓</div>
-                <div class="help-window modal" style="display: none">
-                    <div class="help-close button modal--close">close</div>
-                    Repair the turret, dodge flak!<br />
-                    Your score is how many wall segments you've repaired. <br />Press
-                    the letter that corresponds to the wall segment to move your player
-                    there.<br />Refresh to restart!<br />
-                    Thanks for playing! –Team Tunk
+                    <div class="game-ui--high-score"></div>
                 </div>
-                <div class="options-button">⚙️</div>
-                <div class="restart-button button">♻️</div>
+
+
+
             </div>
+            <!-- UI Buttons -->
+            <button data-game-method="reinit" class="game-ui--button game-ui--button__top game-ui--button__left">♻️</button>
+            <button data-modal-toggler="help" class="game-ui--button game-ui--button__bottom game-ui--button__left">❓</button>
+            <button data-modal-toggler="options" class="game-ui--button game-ui--button__bottom game-ui--button__right">⚙️</button>
         </div>
-        <canvas id="game"></canvas>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
         <script src="js/keyboard-observer.js"></script>
         <script src="js/ui.js"></script>

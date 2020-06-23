@@ -2,8 +2,8 @@ class Cannon {
     constructor(game) {
         this.game = game;
         this.container = new PIXI.Container();
-        this.cannonTargetX = 120;
-        this.cannonTargetY = -10;
+        this.cannonTargetX = 200;
+        this.cannonTargetY = -120;
         this.nextShot = 4;
         this.init();
     }
@@ -11,23 +11,23 @@ class Cannon {
     init() {
         this.game.graphics.cannonBarrelSmoke.anchor.set(0, 0.5);
         this.game.graphics.cannonBarrelSmoke.x = this.cannonTargetX + 0;
-        this.game.graphics.cannonBarrelSmoke.y = this.cannonTargetY - 0;
+        this.game.graphics.cannonBarrelSmoke.y = this.cannonTargetY - -120;
         this.game.graphics.cannonBarrelSmoke.rotation = 0 * Math.PI;
         this.game.graphics.cannonBarrelSmoke.scale.set(0.9);
         this.game.graphics.cannonBarrelSmoke.blendMode =
             PIXI.BLEND_MODES.OVERLAY;
 
         this.game.graphics.cannonSmoke.anchor.set(0, 0.5);
-        this.game.graphics.cannonSmoke.x = this.cannonTargetX + 370;
-        this.game.graphics.cannonSmoke.y = this.cannonTargetY - 10;
+        this.game.graphics.cannonSmoke.x = this.cannonTargetX + 250;
+        this.game.graphics.cannonSmoke.y = this.cannonTargetY + 105;
         this.game.graphics.cannonSmoke.rotation = 0 * Math.PI;
         this.game.graphics.cannonSmoke.scale.set(2);
         this.game.graphics.cannonSmoke.blendMode = PIXI.BLEND_MODES.OVERLAY;
         this.game.graphics.cannonSmoke.alpha = 0;
 
         this.game.graphics.cannonFire.anchor.set(0, 0.5);
-        this.game.graphics.cannonFire.x = this.cannonTargetX + 370;
-        this.game.graphics.cannonFire.y = this.cannonTargetY - 0;
+        this.game.graphics.cannonFire.x = this.cannonTargetX + 250;
+        this.game.graphics.cannonFire.y = this.cannonTargetY + 105;
         this.game.graphics.cannonFire.rotation = 0 * Math.PI;
         this.game.graphics.cannonFire.alpha = 0;
 
@@ -35,7 +35,7 @@ class Cannon {
         this.game.graphics.barrel.x = this.cannonTargetX;
         this.game.graphics.barrel.y = this.cannonTargetY;
         this.game.graphics.barrel.scale.set(0.85);
-        this.game.graphics.barrel.rotation = 0 * Math.PI;
+        this.game.graphics.barrel.rotation = 0.25 * Math.PI;
     }
 
     update(delta) {

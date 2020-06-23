@@ -15,6 +15,7 @@ class Turret {
         this.container.rotation = -0.25 * Math.PI;
 
         this.game.graphics.turretExterior.anchor.set(0.5);
+        this.game.graphics.turretExterior.rotation = 0.25 * Math.PI;
 
         this.game.graphics.turretFloor.anchor.set(0.5);
         this.game.graphics.turretFloor.rotation = 0.25 * Math.PI;
@@ -22,7 +23,6 @@ class Turret {
 
         this.game.graphics.turretCeiling.x = this.game.app.renderer.width / 2;
         this.game.graphics.turretCeiling.y = this.game.app.renderer.height / 2;
-        this.game.graphics.turretCeiling.rotation = -0.25 * Math.PI;
         this.game.graphics.turretCeiling.anchor.set(0.5);
         this.game.graphics.turretCeiling.alpha = 1;
     }

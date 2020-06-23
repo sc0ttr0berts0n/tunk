@@ -7,8 +7,8 @@
     z-index: 10;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 90vmin;
+    height: 90vmin;
     border: 1vmin solid rgb(0, 0, 0);
     border-radius: 2vmin;
     margin: -1vmin;
@@ -16,7 +16,7 @@
     background-blend-mode: color;
     justify-content: center;
     align-items: center;
-    padding: 2vmin;
+    padding: 12vmin;
 }
 .modal--container__visible {
     display: flex;
@@ -45,8 +45,8 @@
     justify-content: center;
     align-items: center;
     line-height: 0;
-    top: 1vmin;
-    right: 1vmin;
+    top: 12vmin;
+    right: 12vmin;
     font-size: 8vmin;
     width: 6vmin;
     height: 6vmin;
