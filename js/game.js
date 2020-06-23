@@ -54,7 +54,6 @@ class Game {
         Howler.volume(0.2);
         this.audio.bgm.loop(true);
         this.audio.bgm.play();
-        this.audio.bgm.fade(0, 0.75, 500);
         this.app.ticker.add((delta) => this.update(delta));
         setTimeout(this.clearTitle, 5000);
     }
@@ -103,7 +102,6 @@ class Game {
         this.endGameOverlay.reinit();
         this.audio.bgm.stop();
         this.audio.bgm.play();
-        this.audio.bgm.fade(0, 0.75, 500);
     }
 
     updateTurret(delta) {
