@@ -8,8 +8,29 @@ modalTogglers.forEach((toggler) => {
     const closeButton = modal.querySelector('.modal--close');
 
     toggler.addEventListener('click', () => {
+        // remember if was open
+        const wasOpen = modal.classList.contains('modal--container__visible');
+
+        // close any open toggler first
+        const openModals = document.querySelectorAll(
+            '.modal--container__visible'
+        );
+
+        if (openModals) {
+            openModals.forEach((openModal) => {
+                openModal.classList.remove('modal--container__visible');
+            });
+        }
+
+        // pause the game
         game.paused = true;
-        modal.classList.add('modal--container__visible');
+
+        // open the target modal
+        if (wasOpen) {
+            modal.classList.remove('modal--container__visible');
+        } else {
+            modal.classList.add('modal--container__visible');
+        }
         closeButton.focus();
         closeButton.addEventListener('click', () => {
             modal.classList.remove('modal--container__visible');
@@ -74,3 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
         removeTitleScreen();
     }
 });
+
+// show debug on ```` key press
+const debugUI = document.querySelectorAll('[data-debug-ui]');
+
+if (debugUI) {
+    document.addEventListener('keydown', (e) => {
+        if (e.which == 192) {
+            debugUI.forEach((el) => {
+                el.classList.toggle('show');
+            });
+        }
+    });
+}

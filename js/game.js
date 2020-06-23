@@ -9,6 +9,8 @@ class Game {
             maxFPS: 30,
         });
         this.graphics = new Graphics(this);
+        this.audio = new AudioAssets(this);
+        this.delta = 0;
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
@@ -32,30 +34,35 @@ class Game {
         this.endGameOverlay = new EndGameOverlay(this);
         this.init();
         this.kb = new KeyboardObserver();
-        this.damageChance = 0.0125;
+        this.damageChance = 0.008;
         this.shootHoleChance = 0.0125;
         this.frameCount = 0;
         this.lastRestart = 0;
         this.firstShot = false;
         this.reduceMotion = false;
         this.paused = true;
+        this.muted = false;
     }
 
     init() {
         this.graphics.background.x = this.app.renderer.width / 2;
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
+        this.initScore();
         this.graphics.placeAssets();
         this.initScore();
-        this.app.ticker.add(() => this.update());
+        Howler.volume(0.2);
+        this.audio.bgm.loop(true);
+        this.audio.bgm.play();
+        this.app.ticker.add((delta) => this.update(delta));
         setTimeout(this.clearTitle, 5000);
     }
 
-    update() {
+    update(delta) {
         if (!game.paused) {
             this.frameCount++;
             if (this.player.alive) {
-                this.updateTurret();
+                this.updateTurret(delta);
 
                 this.shootFlakAtWalls();
 
@@ -70,13 +77,14 @@ class Game {
 
                 this.updateScore();
             }
-            this.player.update();
+            this.player.update(delta);
             if (this.turret.wedges) {
                 this.turret.wedges.forEach((wedge) => wedge.update());
             }
-            if (this.flaks.length > 0) {
-                this.flaks.forEach((flak) => flak.update());
+            if (this.flaks.length) {
+                this.flaks.forEach((flak) => flak.update(delta));
                 this.flaks = this.flaks.filter((flak) => !flak.isDead);
+                this.updateScore();
             }
         }
         this.endGameOverlay.update();
@@ -92,20 +100,23 @@ class Game {
         this.score = 0;
         this.updateScore();
         this.endGameOverlay.reinit();
+        this.audio.bgm.stop();
+        this.audio.bgm.play();
     }
 
-    updateTurret() {
+    updateTurret(delta) {
         const target = this.backgroundTargetRot;
         const actual = this.turretBodyRotation;
         const diff = target - actual;
         const factor = 0.005;
-        const offset = diff * factor;
+        const offset = diff * factor * delta;
 
         this.turretBodyRotation += offset;
         if (!this.reduceMotion) {
             this.graphics.background.rotation = this.turretBodyRotation;
         } else {
-            this.graphics.turretExterior.rotation = this.turretBodyRotation;
+            this.graphics.turretExterior.rotation =
+                this.turretBodyRotation + Math.PI * 0.25;
             this.cannon.container.rotation = this.turretBodyRotation;
         }
 

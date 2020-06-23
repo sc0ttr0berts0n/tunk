@@ -27,7 +27,7 @@ class Flak {
             this.target.isLethal = true;
         }
     }
-    update() {
+    update(delta) {
         this.el.y += this.speed;
         // calc player-flak distance
         const player = this.game.graphics.player.worldTransform;
@@ -53,13 +53,17 @@ class Flak {
         );
 
         // move flak
-        this.el.y += this.speed;
+        this.el.y += this.speed * delta;
 
         // collide and remove
         const wedgeHealthAboveZero = this.target.health > 0;
         const flakWentReallyFar = this.el.y > this.game.app.renderer.width;
         const flakFlewThroughTurret = this.el.y > this.game.turret.radius;
         const flakAtItsTarget = hypotFlakWedge < 30;
+
+        if (this.isLethal) {
+            this.target.isLethal = true;
+        }
 
         if (flakAtItsTarget && wedgeHealthAboveZero) {
             this.isDead = true;
@@ -70,6 +74,14 @@ class Flak {
             if (this.isLethal) {
                 this.target.isLethal = false;
             }
+
+            // play sound
+            this.game.audio.wallBreak.pos(
+                this.target.pos.x / 175,
+                0,
+                this.target.pos.y / 175
+            );
+            this.game.audio.wallBreak.play();
         }
 
         if (flakFlewThroughTurret) {
@@ -79,9 +91,7 @@ class Flak {
                 this.container.destroy();
             }
             this.target.willBeShot = false;
-            if (this.isLethal) {
-                this.target.isLethal = false;
-            }
+            this.target.isLethal = false;
         }
     }
     reinit() {
