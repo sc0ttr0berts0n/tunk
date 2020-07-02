@@ -1,9 +1,16 @@
-class Turret {
+import Game from './game';
+import Wedge from './wedge';
+
+export default class Turret {
+    private game: Game;
+    private wedgeCount: number;
+    public container: PIXI.Container;
+    public radius: number = 256;
+    public wedges: Wedge[];
     constructor(game, wedgeCount) {
         this.game = game;
-        this.container = new PIXI.Container();
         this.wedgeCount = wedgeCount;
-        this.radius = 256;
+        this.container = new PIXI.Container();
         this.wedges = [...new Array(wedgeCount)].map(
             (el, index) => new Wedge(game, this, index, wedgeCount)
         );

@@ -1,9 +1,14 @@
-class EndGameOverlay {
+import Game from './game';
+import Player from './player';
+
+export default class EndGameOverlay {
+    private game: Game;
+    private player: Player;
+    private deathFlash = false;
+    private whiteDeathFrame = NaN;
     constructor(game, player) {
         this.game = game;
         this.player = player;
-        this.deathFlash = false;
-        this.whiteDeathFrame = null;
         this.init();
     }
     init() {
@@ -26,7 +31,7 @@ class EndGameOverlay {
         this.game.graphics.endGameOverlayBlack.alpha = 0;
         this.game.graphics.endGameOverlayWhite.alpha = 0;
         this.deathFlash = false;
-        this.whiteDeathFrame = null;
+        this.whiteDeathFrame = NaN;
     }
     update() {
         if (!this.game.player.alive) {

@@ -1,10 +1,13 @@
-class Cannon {
+import Game from './game';
+
+export default class Cannon {
+    private game: Game;
+    public container = new PIXI.Container();
+    private cannonTargetX = 200;
+    private cannonTargetY = -120;
+    private nextShot = 4;
     constructor(game) {
         this.game = game;
-        this.container = new PIXI.Container();
-        this.cannonTargetX = 200;
-        this.cannonTargetY = -120;
-        this.nextShot = 4;
         this.init();
     }
 

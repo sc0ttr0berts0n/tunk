@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "allowJs": true,
+        "target": "es5",
+        "sourceMap": true,
+        "outFile": "src/js/app.js",
+        "sourceRoot": "src/ts/",
+        "rootDir": "src/ts",
+        "types": ["pixi.js"]
+    },
+    "include": ["src/ts/**/*"],
+    "exclude": ["node_modules", "src/js"]
+}

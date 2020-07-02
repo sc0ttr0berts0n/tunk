@@ -1,34 +1,42 @@
-class Wedge {
+import Game from './game';
+import Turret from './turret';
+
+interface Vec2 {
+    x: number;
+    y: number;
+}
+
+export default class Wedge {
+    private game: Game;
+    private turret: Turret;
+    public id: number;
+    public wedgeCount: number;
+    public maxHealth = 60;
+    public health = this.maxHealth;
+    private healthBar = new PIXI.Graphics();
+    private letter = String.fromCharCode(65 + this.id);
+    public wall = new PIXI.Sprite(this.game.graphics.fullTexture);
+    private cautionFloorExpand = new PIXI.Sprite(
+        this.game.graphics.floorWarningInner
+    );
+    private cautionFloorBoundary = new PIXI.Sprite(
+        this.game.graphics.floorWarningBoundary
+    );
+    private outsideLight = new PIXI.Sprite(this.game.graphics.damagedWallLight);
+    public rot: number;
+    public pos: Vec2;
+    public playerPos: Vec2 = { x: this.pos.x * 0.76, y: this.pos.y * 0.76 };
+    public healthBarYOffset = -26;
+    public letterYOffset = -50;
+    public willBeShot = false;
+    public isLethal = false;
+    public scoreCheck = true;
     constructor(game, turret, id, wedgeCount) {
         this.game = game;
         this.turret = turret;
-        this.healthBar = new PIXI.Graphics();
         this.id = id;
         this.wedgeCount = wedgeCount;
-        this.maxHealth = 60;
-        this.health = this.maxHealth;
-        this.letter = String.fromCharCode(65 + this.id);
-        this.wall = new PIXI.Sprite(this.game.graphics.fullTexture);
-        this.cautionFloorExpand = new PIXI.Sprite(
-            this.game.graphics.floorWarningInner
-        );
-        this.cautionFloorBoundary = new PIXI.Sprite(
-            this.game.graphics.floorWarningBoundary
-        );
-        this.outsideLight = new PIXI.Sprite(
-            this.game.graphics.damagedWallLight
-        );
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
-        this.pos = {
-            x: Math.cos(this.rot) * this.turret.radius,
-            y: Math.sin(this.rot) * this.turret.radius,
-        };
-        this.playerPos = { x: this.pos.x * 0.76, y: this.pos.y * 0.76 };
-        this.healthBarYOffset = -26;
-        this.letterYOffset = -50;
-        this.willBeShot = false;
-        this.isLethal = false;
-        this.scoreCheck = true;
         this.init();
     }
     init() {
@@ -107,7 +115,7 @@ class Wedge {
                 this.outsideLight.alpha = 0.59;
             } else {
                 this.outsideLight.alpha +=
-                    Math.sign(Math.random() - 0.5) * 0.005;
+                    Math.sin(Math.random() - 0.5) * 0.005;
             }
         } else {
             this.outsideLight.visible = false;

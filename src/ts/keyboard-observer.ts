@@ -1,7 +1,7 @@
 class KeyboardObserver {
+    public key: number | null = null;
+    public code: number | null = null;
     constructor() {
-        this.key = null;
-        this.code = null;
         this.init();
     }
     init() {

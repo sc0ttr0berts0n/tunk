@@ -1,15 +1,23 @@
-class Flak {
+import Game from './game';
+import Wedge from './wedge';
+
+export default class Flak {
+    private game: Game;
+    private angle: number;
+    private container = new PIXI.Container();
+    private el = new PIXI.Sprite(this.game.graphics.flakGraphic);
+    public target: Wedge;
+    private speed: number;
+    public isLethal: boolean;
+    private yOff = -this.game.turret.radius - this.game.app.renderer.width * 4;
+    public isDead = false;
     constructor(game, target, angle, isLethal = true, speed = 20) {
         this.game = game;
         this.angle = angle + 0.5 * Math.PI;
-        this.container = new PIXI.Container();
-        this.el = new PIXI.Sprite(this.game.graphics.flakGraphic);
         this.target = target;
         this.speed = speed;
         this.angle = angle + 0.5 * Math.PI;
         this.isLethal = isLethal;
-        this.yOff = -this.game.turret.radius - this.game.app.renderer.width * 4;
-        this.isDead = false;
         this.init();
     }
     init() {

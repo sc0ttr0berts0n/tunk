@@ -1,37 +1,71 @@
-class Game {
-    constructor(canvas) {
+import * as PIXI from 'pixi.js';
+import { Howler } from 'howler';
+import GraphicAssets from './graphics';
+import AudioAssets from './audio-assets';
+import Player from './player';
+import Turret from './turret';
+import Cannon from './cannon';
+import Flak from './flak';
+import EndGameOverlay from './endgame-overlay';
+
+export default class Game {
+    private canvas: HTMLCanvasElement;
+    public app: PIXI.Application;
+    public graphics: GraphicAssets;
+    public audio: AudioAssets;
+    private flaks: Flak[];
+    public score: number;
+    private scoreValue: string;
+    private scoreDomEl: HTMLElement;
+    private scoreDomElText: string;
+    private highScore: number;
+    private highScoreDomEl: HTMLElement;
+    private highScoreDomElText: string;
+    private turretBodyRotation: number;
+    private backgroundTargetRot: number;
+    private backgroundNextMove: number;
+    public turret: Turret;
+    public cannon: Cannon;
+    public player: Player;
+    private endGameOverlay: EndGameOverlay;
+    public kb: KeyboardObserver;
+    private damageChance: number;
+    private shootHoleChance: number;
+    public frameCount: number;
+    private lastRestart: number;
+    private firstShot: boolean;
+    private reduceMotion: boolean;
+    private paused: boolean;
+    private muted: boolean;
+    private clearTitle: TimerHandler;
+
+    constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.app = new PIXI.Application({
             view: canvas,
             width: 1024,
             height: 1024,
             transparent: true,
-            maxFPS: 30,
         });
-        this.graphics = new Graphics(this);
+        this.graphics = new GraphicAssets(this);
         this.audio = new AudioAssets(this);
-        this.delta = 0;
         this.flaks = [];
         this.score = 0;
         this.scoreValue = null;
         this.scoreDomEl = document.querySelector('.game-ui--score');
         this.scoreDomElText = this.score.toString();
-        this.highScore = localStorage.getItem('tunk-high-score') || 0;
+        this.highScore = parseInt(localStorage.getItem('tunk-high-score')) || 0;
         this.highScoreDomEl = document.querySelector('.game-ui--high-score');
         this.highScoreDomElText = `${this.highScore}`;
-        this.turretBodyRotation = Math.PI * 2;
         this.scoreDomEl = document.querySelector('.game-ui--score');
         this.scoreDomElText = this.score.toString();
-        this.highScore = localStorage.getItem('tunk-high-score') || 0;
-        this.highScoreDomEl = document.querySelector('.game-ui--high-score');
-        this.highScoreDomElText = `${this.highScore}`;
-        this.backgroundRot = Math.PI * 2;
+        this.turretBodyRotation = Math.PI * 2;
         this.backgroundTargetRot = 0;
         this.backgroundNextMove = 0;
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
-        this.endGameOverlay = new EndGameOverlay(this);
+        this.endGameOverlay = new EndGameOverlay(this, this.player);
         this.init();
         this.kb = new KeyboardObserver();
         this.damageChance = 0.008;
@@ -59,7 +93,7 @@ class Game {
     }
 
     update(delta) {
-        if (!game.paused) {
+        if (!this.paused) {
             this.frameCount++;
             if (this.player.alive) {
                 this.updateTurret(delta);
@@ -73,7 +107,7 @@ class Game {
                     this.shootFlakAtHoles();
                 }
 
-                this.turret.update();
+                this.turret.update(delta);
 
                 this.updateScore();
             }
@@ -169,9 +203,9 @@ class Game {
             this.scoreDomEl.textContent = this.score.toString();
         }
         if (this.score > Number(this.highScore)) {
-            this.highScore = this.score.toString();
-            localStorage.setItem('tunk-high-score', this.highScore.toString());
-            this.highScoreDomEl.textContent = this.highScore;
+            this.highScore = this.score;
+            localStorage.setItem('tunk-high-score', this.score.toString());
+            this.highScoreDomEl.textContent = this.highScore.toString();
         }
     }
     resetHighScore() {
@@ -189,6 +223,3 @@ class Game {
         this.highScoreDomEl.textContent = this.highScoreDomElText;
     }
 }
-
-const canvas = document.getElementById('game');
-const game = new Game(canvas);
