@@ -157,7 +157,7 @@ export default class Game {
         }
     }
     private shootFlakAtHoles() {
-        if (Math.random() < this.damageChance) {
+        if (Math.random() < this.shootHoleChance) {
             const wedges = this.turret.getDamagedWedges();
             if (wedges.length > 1) {
                 const wedge = wedges[Math.floor(Math.random() * wedges.length)];
