@@ -1,11 +1,6 @@
 import Game from './game';
 import Wedge from './wedge';
 
-interface Vec2 {
-    x: number;
-    y: number;
-}
-
 export default class Player {
     private game: Game;
     public bloodRot: number = 0;

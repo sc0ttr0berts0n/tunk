@@ -158,7 +158,7 @@ export default class Wedge {
             !this.scoreCheck &&
             this.game.player.alive
         ) {
-            this.game.score++;
+            this.game.scoreManager.score++;
             this.scoreCheck = true;
         }
     }
