@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: './src/ts/index.ts',
-    devtool: 'inline-source-map',
+    devtool: 'cheap-source-map',
     module: {
         rules: [
             {
@@ -20,7 +20,7 @@ module.exports = {
         path: path.resolve(__dirname, 'public'),
     },
     optimization: {
-        minimize: false,
+        minimize: true,
     },
     watch: true,
 };
