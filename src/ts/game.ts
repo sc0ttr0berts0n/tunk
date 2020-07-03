@@ -14,30 +14,31 @@ export default class Game {
     public app: PIXI.Application;
     public graphics: GraphicAssets;
     public audio: AudioAssets;
-    private flaks: Flak[];
-    public score: number;
-    private scoreValue: string;
-    private scoreDomEl: HTMLElement;
-    private scoreDomElText: string;
-    private highScore: number;
-    private highScoreDomEl: HTMLElement;
+    private flaks: Flak[] = [];
+    public score: number = 0;
+    private scoreDomEl: HTMLElement = document.querySelector('.game-ui--score');
+    private scoreDomElText: string = this.score.toString();
+    private highScore: number =
+        parseInt(localStorage.getItem('tunk-high-score')) || 0;
+    private highScoreDomEl: HTMLElement = document.querySelector(
+        '.game-ui--high-score'
+    );
     private highScoreDomElText: string;
-    private turretBodyRotation: number;
-    private backgroundTargetRot: number;
-    private backgroundNextMove: number;
+    private turretBodyRotation: number = Math.PI * 2;
+    private backgroundTargetRot: number = 0;
+    private backgroundNextMove: number = 0;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
-    private damageChance: number;
-    private shootHoleChance: number;
-    public frameCount: number;
-    private lastRestart: number;
-    private firstShot: boolean;
-    private reduceMotion: boolean;
-    private paused: boolean;
-    private muted: boolean;
+    private damageChance: number = 0.008;
+    private shootHoleChance: number = 0.0125;
+    public frameCount: number = 0;
+    private lastRestart: number = 0;
+    private reduceMotion: boolean = false;
+    private paused: boolean = false;
+    private muted: boolean = false;
     private clearTitle: TimerHandler;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -50,33 +51,13 @@ export default class Game {
         });
         this.graphics = new GraphicAssets(this);
         this.audio = new AudioAssets(this);
-        this.flaks = [];
-        this.score = 0;
-        this.scoreValue = null;
-        this.scoreDomEl = document.querySelector('.game-ui--score');
-        this.scoreDomElText = this.score.toString();
-        this.highScore = parseInt(localStorage.getItem('tunk-high-score')) || 0;
-        this.highScoreDomEl = document.querySelector('.game-ui--high-score');
         this.highScoreDomElText = `${this.highScore}`;
-        this.scoreDomEl = document.querySelector('.game-ui--score');
-        this.scoreDomElText = this.score.toString();
-        this.turretBodyRotation = Math.PI * 2;
-        this.backgroundTargetRot = 0;
-        this.backgroundNextMove = 0;
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
         this.endGameOverlay = new EndGameOverlay(this, this.player);
-        this.init();
         this.kb = new KeyboardObserver();
-        this.damageChance = 0.008;
-        this.shootHoleChance = 0.0125;
-        this.frameCount = 0;
-        this.lastRestart = 0;
-        this.firstShot = false;
-        this.reduceMotion = false;
-        this.paused = true;
-        this.muted = false;
+        this.init();
     }
 
     init() {
@@ -114,7 +95,7 @@ export default class Game {
             }
             this.player.update(delta);
             if (this.turret.wedges) {
-                this.turret.wedges.forEach((wedge) => wedge.update());
+                this.turret.wedges.forEach((wedge) => wedge.update(delta));
             }
             if (this.flaks.length) {
                 this.flaks.forEach((flak) => flak.update(delta));
