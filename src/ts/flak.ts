@@ -30,7 +30,7 @@ export default class Flak {
         this.isLethal = isLethal;
         this.init();
     }
-    init() {
+    public init() {
         this.container.rotation = this.angle;
         this.el.rotation = Math.PI * 0.5;
         this.el.anchor.set(1, 0.5);
@@ -45,7 +45,9 @@ export default class Flak {
             this.target.isLethal = true;
         }
     }
-    update(delta: number) {
+    public update(delta: number) {
+        // Todo: fork this into a few private methods
+
         this.el.y += this.speed;
         // calc player-flak distance
         const player = this.game.graphics.player.worldTransform;
@@ -112,7 +114,8 @@ export default class Flak {
             this.target.isLethal = false;
         }
     }
-    reinit() {
+
+    public reinit() {
         this.isLethal = false;
         this.isDead = true;
         this.el.alpha = 0;
