@@ -59,11 +59,11 @@ export default class Wedge {
         this.initCautionFloor();
         this.initOutsideLight();
     }
-    update() {
+    update(delta: number) {
         this.updateWallDamage();
         this.updateScore();
         this.updateHealthBar();
-        this.updateCautionFloor();
+        this.updateCautionFloor(delta);
         this.updateOutsideLight();
     }
     reinit() {
@@ -99,13 +99,13 @@ export default class Wedge {
         this.cautionFloorBoundary.y += 240;
         this.wall.addChild(this.cautionFloorBoundary);
     }
-    updateCautionFloor() {
+    updateCautionFloor(delta: number) {
         // caution floor anim
         if (this.isLethal) {
             this.cautionFloorExpand.visible = true;
             this.cautionFloorBoundary.visible = true;
             if (this.cautionFloorExpand.scale.x < 0.9) {
-                this.cautionFloorExpand.scale.x += 0.02;
+                this.cautionFloorExpand.scale.x += 0.02 * delta;
             } else if (this.cautionFloorExpand.scale.x >= 0.89) {
                 this.cautionFloorExpand.alpha = Math.random() * 0.5 + 0.5;
             }
