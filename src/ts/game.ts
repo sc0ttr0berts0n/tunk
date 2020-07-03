@@ -96,7 +96,7 @@ export default class Game {
         }
         this.endGameOverlay.update();
     }
-    private reinit() {
+    public reinit() {
         this.flaks.forEach((flak) => flak.reinit());
         this.flaks = [];
         this.turret.wedges.forEach((wedge) => wedge.reinit());
