@@ -7,6 +7,7 @@ import Turret from './turret';
 import Cannon from './cannon';
 import Flak from './flak';
 import EndGameOverlay from './endgame-overlay';
+import KeyboardObserver from './keyboard-observer';
 
 export default class Game {
     private canvas: HTMLCanvasElement;
@@ -92,7 +93,7 @@ export default class Game {
         setTimeout(this.clearTitle, 5000);
     }
 
-    update(delta) {
+    update(delta: number) {
         if (!this.paused) {
             this.frameCount++;
             if (this.player.alive) {
@@ -138,7 +139,7 @@ export default class Game {
         this.audio.bgm.play();
     }
 
-    updateTurret(delta) {
+    updateTurret(delta: number) {
         const target = this.backgroundTargetRot;
         const actual = this.turretBodyRotation;
         const diff = target - actual;

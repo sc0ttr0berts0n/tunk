@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Game from './game';
 import Wedge from './wedge';
 
@@ -5,18 +6,27 @@ export default class Flak {
     private game: Game;
     private angle: number;
     private container = new PIXI.Container();
-    private el = new PIXI.Sprite(this.game.graphics.flakGraphic);
+    private el: PIXI.Sprite;
     public target: Wedge;
     private speed: number;
     public isLethal: boolean;
-    private yOff = -this.game.turret.radius - this.game.app.renderer.width * 4;
+    private yOff: number;
     public isDead = false;
-    constructor(game, target, angle, isLethal = true, speed = 20) {
+
+    constructor(
+        game: Game,
+        target: Wedge,
+        angle: number,
+        isLethal = true,
+        speed = 20
+    ) {
         this.game = game;
+        this.el = new PIXI.Sprite(this.game.graphics.flakGraphic);
         this.angle = angle + 0.5 * Math.PI;
         this.target = target;
         this.speed = speed;
         this.angle = angle + 0.5 * Math.PI;
+        this.yOff = -this.game.turret.radius - this.game.app.renderer.width * 4;
         this.isLethal = isLethal;
         this.init();
     }
@@ -35,7 +45,7 @@ export default class Flak {
             this.target.isLethal = true;
         }
     }
-    update(delta) {
+    update(delta: number) {
         this.el.y += this.speed;
         // calc player-flak distance
         const player = this.game.graphics.player.worldTransform;

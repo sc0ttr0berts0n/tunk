@@ -1,14 +1,13 @@
 {
     "compilerOptions": {
-        "module": "es6",
+        "module": "commonjs",
         "allowJs": true,
+        "noImplicitAny": true,
         "target": "es5",
         "sourceMap": true,
-        "outFile": "src/js/app.js",
-        "sourceRoot": "src/ts/",
-        "rootDir": "src/ts",
+        "outDir": "./public/js/",
         "types": ["pixi.js"]
     },
-    "include": ["src/ts/**/*"],
+    "include": ["src/ts/index.ts"],
     "exclude": ["node_modules", "src/js"]
 }

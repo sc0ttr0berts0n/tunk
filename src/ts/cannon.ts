@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Game from './game';
 
 export default class Cannon {
@@ -6,7 +7,8 @@ export default class Cannon {
     private cannonTargetX = 200;
     private cannonTargetY = -120;
     private nextShot = 4;
-    constructor(game) {
+
+    constructor(game: Game) {
         this.game = game;
         this.init();
     }
@@ -41,7 +43,7 @@ export default class Cannon {
         this.game.graphics.barrel.rotation = 0.25 * Math.PI;
     }
 
-    update(delta) {
+    update(delta: number) {
         if (this.game.frameCount > this.nextShot - 4) {
             this.game.graphics.cannonFire.alpha = 1;
             this.game.graphics.cannonSmoke.alpha += 0.3;

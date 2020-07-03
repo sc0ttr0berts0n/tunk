@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Game from './game';
 import Turret from './turret';
 
@@ -14,29 +15,41 @@ export default class Wedge {
     public maxHealth = 60;
     public health = this.maxHealth;
     private healthBar = new PIXI.Graphics();
-    private letter = String.fromCharCode(65 + this.id);
-    public wall = new PIXI.Sprite(this.game.graphics.fullTexture);
-    private cautionFloorExpand = new PIXI.Sprite(
-        this.game.graphics.floorWarningInner
-    );
-    private cautionFloorBoundary = new PIXI.Sprite(
-        this.game.graphics.floorWarningBoundary
-    );
-    private outsideLight = new PIXI.Sprite(this.game.graphics.damagedWallLight);
+    private letter: string;
+    public wall: PIXI.Sprite;
+    private cautionFloorExpand: PIXI.Sprite;
+    private cautionFloorBoundary: PIXI.Sprite;
+    private outsideLight: PIXI.Sprite;
     public rot: number;
     public pos: Vec2;
-    public playerPos: Vec2 = { x: this.pos.x * 0.76, y: this.pos.y * 0.76 };
+    public playerPos: Vec2;
     public healthBarYOffset = -26;
     public letterYOffset = -50;
     public willBeShot = false;
     public isLethal = false;
     public scoreCheck = true;
-    constructor(game, turret, id, wedgeCount) {
+    constructor(game: Game, turret: Turret, id: number, wedgeCount: number) {
         this.game = game;
         this.turret = turret;
         this.id = id;
+        this.letter = String.fromCharCode(65 + this.id);
         this.wedgeCount = wedgeCount;
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
+        this.pos = {
+            x: Math.cos(this.rot) * turret.radius,
+            y: Math.sin(this.rot) * turret.radius,
+        };
+        this.playerPos = { x: this.pos.x * 0.76, y: this.pos.y * 0.76 };
+        this.wall = new PIXI.Sprite(this.game.graphics.fullTexture);
+        this.cautionFloorExpand = new PIXI.Sprite(
+            this.game.graphics.floorWarningInner
+        );
+        this.cautionFloorBoundary = new PIXI.Sprite(
+            this.game.graphics.floorWarningBoundary
+        );
+        this.outsideLight = new PIXI.Sprite(
+            this.game.graphics.damagedWallLight
+        );
         this.init();
     }
     init() {
@@ -187,7 +200,7 @@ export default class Wedge {
     setHealth(amt = 0) {
         this.health = amt;
     }
-    addHealth(n) {
+    addHealth(n: number) {
         this.health += n;
         if (this.health > this.maxHealth) {
             this.health = this.maxHealth;

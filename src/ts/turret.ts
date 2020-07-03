@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Game from './game';
 import Wedge from './wedge';
 
@@ -7,7 +8,7 @@ export default class Turret {
     public container: PIXI.Container;
     public radius: number = 256;
     public wedges: Wedge[];
-    constructor(game, wedgeCount) {
+    constructor(game: Game, wedgeCount: number) {
         this.game = game;
         this.wedgeCount = wedgeCount;
         this.container = new PIXI.Container();
@@ -33,7 +34,7 @@ export default class Turret {
         this.game.graphics.turretCeiling.anchor.set(0.5);
         this.game.graphics.turretCeiling.alpha = 1;
     }
-    update(delta) {
+    update(delta: number) {
         this.openingUpdate();
         this.game.cannon.update(delta);
     }

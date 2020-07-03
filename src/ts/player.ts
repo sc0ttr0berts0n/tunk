@@ -28,7 +28,7 @@ export default class Player {
         this.game.graphics.playerBlood.anchor.set(0.45, 0.9);
         this.game.graphics.playerBlood.visible = false;
     }
-    update(delta) {
+    update(delta: number) {
         if (this.alive) {
             this.findDestination();
         }
@@ -55,7 +55,7 @@ export default class Player {
         this.alive = true;
         this.game.graphics.playerBlood.visible = false;
     }
-    movedaboi(delta) {
+    movedaboi(delta: number) {
         if (!this.alive) return;
         const distx = this.targetPos.x - this.pos.x;
         const disty = this.targetPos.y - this.pos.y;

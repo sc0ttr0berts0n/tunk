@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <title>Tunk! 💥</title>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73093001-4"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-73093001-4', { 'anonymize_ip': true });
+        </script>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/app-ui.css">
+        <link rel="stylesheet" href="css/game-ui.css">
+        <link rel="stylesheet" href="css/modal.css">
+        <link rel="stylesheet" href="css/title.css">
+        <link rel="stylesheet" href="css/audio.css">
+    </head>
+    <body>
+
+        <!-- App Scale UI -->
+        <div class="app-ui--container">
+
+            <!-- Game Scale UI -->
+            <div class="game-ui--container">
+
+                <!-- Title -->
+                <div data-title-screen class="title--container modal--container modal--container__visible">
+                    <img class="title--graphic" src="assets/da-title.png" alt="Title Title Screen">
+                </div>
+
+                <!-- Help Modal -->
+                <div data-modal="help" class="modal--container">
+                    <button class="modal--close"></button>
+                    <div class="modal--headline">Help!</div>
+                    <div class="modal--body">
+                        Repair the turret, dodge flak!<br />
+                        Your score is how many wall segments you've repaired. <br />Press
+                        the letter that corresponds to the wall segment to move your player
+                        there.<br />Refresh to restart!<br />
+                        Thanks for playing! –Team Tunk
+                    </div>
+                </div>
+
+                <!-- Options Modal -->
+                <div data-modal="options" class="modal--container">
+                    <button class="modal--close"></button>
+                    <div class="modal--headline">Options</div>
+                    <div class="modal--grid">
+                        <button data-game-boolean="reduceMotion" class="modal--toggle-button">Reduce Motion</button>
+                        <button data-game-method="resetHighScore" class="modal--toggle-button">Reset High Score</button>
+                    </div>
+                </div>
+
+
+                <div class="canvas--scanlines"></div>
+
+                <!-- The Game Itself -->
+                <canvas id="game"></canvas>
+
+            </div>
+        </div>
+
+        <!-- App UI Overlay -->
+        <div class="app-ui--overlay pointer-events-none">
+            <div class="game-ui--container">
+
+                <!-- Score UI -->
+                <div class="game-ui--score-wrapper">
+                    <div class="game-ui--score">0</div>
+                    <div class="game-ui--high-score-label">High<br />Score</div>
+                    <div class="game-ui--high-score"></div></div>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="audio--player" data-debug-ui>
+                <div class="audio--button" data-src="ten.mp3"></div>
+                <div class="audio--button" data-src="Dark_Farm.mp3"></div>
+                <div class="audio--button" data-src="fsharptunk_vD.mp3"></div>
+                <div class="audio--button" data-src="3_LETS_WATCH.mp3"></div>
+            </div>
+
+            <!-- UI Buttons -->
+            <button data-game-method="reinit" class="game-ui--button game-ui--button__top game-ui--button__left">♻️</button>
+            <button data-modal-toggler="help" class="game-ui--button game-ui--button__bottom game-ui--button__left">❓</button>
+            <button data-modal-toggler="options" class="game-ui--button game-ui--button__bottom game-ui--button__right">⚙️</button>
+        </div>
+        <script src="/js/bundle.js"></script>
+    </body>
+</html>

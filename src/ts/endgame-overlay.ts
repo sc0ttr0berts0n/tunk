@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Game from './game';
 import Player from './player';
 
@@ -6,7 +7,8 @@ export default class EndGameOverlay {
     private player: Player;
     private deathFlash = false;
     private whiteDeathFrame = NaN;
-    constructor(game, player) {
+
+    constructor(game: Game, player: Player) {
         this.game = game;
         this.player = player;
         this.init();

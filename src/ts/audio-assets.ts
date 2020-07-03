@@ -9,6 +9,7 @@ export default class AudioAssets {
     public moveDepart: Howl;
     public moveArrive: Howl;
     public wallBreak: Howl;
+
     constructor(game: Game) {
         this.game = game;
         this.bgm = new Howl({ src: ['/assets/audio/fsharptunk_vD.mp3'] });

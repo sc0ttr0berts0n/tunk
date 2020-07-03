@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Game from './game';
 
 export default class GraphicAssets {
@@ -54,9 +55,11 @@ export default class GraphicAssets {
     //EndGameOverlay
     public endGameOverlayBlack: PIXI.Graphics = new PIXI.Graphics();
     public endGameOverlayWhite: PIXI.Graphics = new PIXI.Graphics();
-    constructor(game) {
+
+    constructor(game: Game) {
         this.game = game;
     }
+
     placeAssets(): void {
         // background
         this.game.app.stage.addChild(this.background);
