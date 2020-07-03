@@ -22,5 +22,9 @@ module.exports = {
     optimization: {
         minimize: true,
     },
-    watch: true,
+    devServer: {
+        contentBase: path.join(__dirname, 'public'),
+        compress: true,
+        port: 9000,
+    },
 };

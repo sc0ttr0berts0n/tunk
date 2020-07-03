@@ -12,10 +12,12 @@
         "ts-loader": "^7.0.5",
         "typescript": "^3.9.6",
         "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.12"
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "watch": "webpack-dev-server",
+        "build": "npx webpack"
     },
     "repository": {
         "type": "git",
