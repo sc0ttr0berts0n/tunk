@@ -60,7 +60,7 @@ export default class GraphicAssets {
         this.game = game;
     }
 
-    placeAssets(): void {
+    public placeAssets(): void {
         // background
         this.game.app.stage.addChild(this.background);
 

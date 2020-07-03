@@ -53,7 +53,7 @@ export default class Game {
         this.init();
     }
 
-    init() {
+    private init() {
         this.graphics.background.x = this.app.renderer.width / 2;
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
@@ -66,7 +66,7 @@ export default class Game {
         setTimeout(this.clearTitle, 5000);
     }
 
-    update(delta: number) {
+    private update(delta: number) {
         if (!this.paused) {
             this.frameCount++;
             if (this.player.alive) {
@@ -96,7 +96,7 @@ export default class Game {
         }
         this.endGameOverlay.update();
     }
-    reinit() {
+    private reinit() {
         this.flaks.forEach((flak) => flak.reinit());
         this.flaks = [];
         this.turret.wedges.forEach((wedge) => wedge.reinit());
@@ -110,7 +110,7 @@ export default class Game {
         this.audio.bgm.play();
     }
 
-    updateTurret(delta: number) {
+    private updateTurret(delta: number) {
         const target = this.backgroundTargetRot;
         const actual = this.turretBodyRotation;
         const diff = target - actual;
@@ -132,7 +132,7 @@ export default class Game {
                 this.frameCount + Math.random() * 120 + 60;
         }
     }
-    shootFlakAtWalls() {
+    private shootFlakAtWalls() {
         if (this.frameCount - this.lastRestart >= 180) {
             if (Math.random() < this.damageChance) {
                 const wedges = this.turret.getFullWedges();
@@ -156,7 +156,7 @@ export default class Game {
             }
         }
     }
-    shootFlakAtHoles() {
+    private shootFlakAtHoles() {
         if (Math.random() < this.damageChance) {
             const wedges = this.turret.getDamagedWedges();
             if (wedges.length > 1) {
@@ -170,7 +170,7 @@ export default class Game {
         }
     }
 
-    resetHighScore() {
+    public resetHighScore() {
         // used so the UI can reset the high score
         this.scoreManager.resetHighScore();
     }

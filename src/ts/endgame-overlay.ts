@@ -13,29 +13,34 @@ export default class EndGameOverlay {
         this.player = player;
         this.init();
     }
-    init() {
+
+    public init() {
         this.initBlack();
         this.initWhite();
     }
-    initBlack() {
+
+    private initBlack() {
         this.game.graphics.endGameOverlayBlack.beginFill(0x000000);
         this.game.graphics.endGameOverlayBlack.drawRect(0, 0, 1024, 1024);
         this.game.graphics.endGameOverlayBlack.blendMode =
             PIXI.BLEND_MODES.MULTIPLY;
         this.game.graphics.endGameOverlayBlack.alpha = 0;
     }
-    initWhite() {
+
+    private initWhite() {
         this.game.graphics.endGameOverlayWhite.beginFill(0xfffff5);
         this.game.graphics.endGameOverlayWhite.drawRect(0, 0, 1024, 1024);
         this.game.graphics.endGameOverlayWhite.alpha = 0;
     }
-    reinit() {
+
+    public reinit() {
         this.game.graphics.endGameOverlayBlack.alpha = 0;
         this.game.graphics.endGameOverlayWhite.alpha = 0;
         this.deathFlash = false;
         this.whiteDeathFrame = NaN;
     }
-    update() {
+
+    public update() {
         if (!this.game.player.alive) {
             if (!this.whiteDeathFrame) {
                 this.whiteDeathFrame = this.game.frameCount + 10;

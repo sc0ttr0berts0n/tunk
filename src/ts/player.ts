@@ -13,17 +13,20 @@ export default class Player {
     private lastIsMoving: boolean = false;
     private isMoving: boolean = false;
     private speed: number = 12;
+
     constructor(game: Game) {
         this.game = game;
         this.init();
     }
-    init() {
+
+    public init() {
         this.game.graphics.player.scale.set(0.65625, 0.65625);
         this.game.graphics.player.anchor.set(0.5);
         this.game.graphics.playerBlood.anchor.set(0.45, 0.9);
         this.game.graphics.playerBlood.visible = false;
     }
-    update(delta: number) {
+
+    public update(delta: number) {
         if (this.alive) {
             this.findDestination();
         }
@@ -42,7 +45,8 @@ export default class Player {
         this.lastIsMoving = this.isMoving;
         this.lastAlive = this.alive;
     }
-    reinit() {
+
+    public reinit() {
         this.pos = { x: 0, y: 0 };
         this.orientation = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
@@ -50,7 +54,8 @@ export default class Player {
         this.alive = true;
         this.game.graphics.playerBlood.visible = false;
     }
-    movedaboi(delta: number) {
+
+    private movedaboi(delta: number) {
         if (!this.alive) return;
         const distx = this.targetPos.x - this.pos.x;
         const disty = this.targetPos.y - this.pos.y;
@@ -80,7 +85,8 @@ export default class Player {
             this.game.graphics.player.rotation = angle + 0.5 * Math.PI;
         }
     }
-    playSounds() {
+
+    private playSounds() {
         const isArriving = this.lastIsMoving && !this.isMoving;
         const isDeparting = !this.lastIsMoving && this.isMoving;
         const justDied = this.lastAlive && !this.alive;
@@ -94,15 +100,8 @@ export default class Player {
             this.game.audio.bgm.stop();
         }
     }
-    inMotion() {
-        return this.isMoving && !this.atTarget();
-    }
-    atTarget() {
-        return (
-            this.pos.x === this.targetPos.x && this.pos.y === this.targetPos.y
-        );
-    }
-    checkRepairing() {
+
+    private checkRepairing() {
         if (
             this.targetWedge &&
             this.pos.x === this.targetPos.x &&
@@ -111,7 +110,8 @@ export default class Player {
             this.targetWedge.addHealth(2);
         }
     }
-    findDestination() {
+
+    private findDestination() {
         const wedgeIndex = this.game.kb.code - 65;
         const targetWedge = this.game.turret.wedges[wedgeIndex];
         if (targetWedge) {

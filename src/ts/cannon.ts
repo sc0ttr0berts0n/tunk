@@ -13,7 +13,7 @@ export default class Cannon {
         this.init();
     }
 
-    init() {
+    public init() {
         this.game.graphics.cannonBarrelSmoke.anchor.set(0, 0.5);
         this.game.graphics.cannonBarrelSmoke.x = this.cannonTargetX + 0;
         this.game.graphics.cannonBarrelSmoke.y = this.cannonTargetY - -120;
@@ -43,7 +43,7 @@ export default class Cannon {
         this.game.graphics.barrel.rotation = 0.25 * Math.PI;
     }
 
-    update(delta: number) {
+    public update(delta: number) {
         if (this.game.frameCount > this.nextShot - 4) {
             this.game.graphics.cannonFire.alpha = 1;
             this.game.graphics.cannonSmoke.alpha += 0.3;

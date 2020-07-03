@@ -8,6 +8,7 @@ export default class Turret {
     public container: PIXI.Container;
     public radius: number = 256;
     public wedges: Wedge[];
+
     constructor(game: Game, wedgeCount: number) {
         this.game = game;
         this.wedgeCount = wedgeCount;
@@ -17,7 +18,8 @@ export default class Turret {
         );
         this.init();
     }
-    init() {
+
+    public init() {
         this.container.x = this.game.app.renderer.width / 2;
         this.container.y = this.game.app.renderer.height / 2;
         this.container.rotation = -0.25 * Math.PI;
@@ -34,16 +36,19 @@ export default class Turret {
         this.game.graphics.turretCeiling.anchor.set(0.5);
         this.game.graphics.turretCeiling.alpha = 1;
     }
-    update(delta: number) {
+
+    public update(delta: number) {
         this.openingUpdate();
         this.game.cannon.update(delta);
     }
-    reinit() {
+
+    public reinit() {
         this.wedges.forEach((wedge) => {
             wedge.health = wedge.maxHealth;
         });
     }
-    openingUpdate() {
+
+    private openingUpdate() {
         if (
             this.game.frameCount >= 60 &&
             this.game.graphics.turretCeiling.alpha > 0
@@ -56,12 +61,14 @@ export default class Turret {
             }
         }
     }
-    getFullWedges() {
+
+    public getFullWedges() {
         return this.wedges.filter(
             (wedge) => wedge.health >= wedge.maxHealth && !wedge.willBeShot
         );
     }
-    getDamagedWedges() {
+
+    public getDamagedWedges() {
         return this.wedges.filter((wedge) => {
             return (
                 wedge.health < wedge.maxHealth &&

@@ -5,14 +5,17 @@ export default class KeyboardObserver {
     constructor() {
         this.init();
     }
-    init() {
+
+    public init() {
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
     }
-    reinit() {
+
+    public reinit() {
         this.key = NaN;
         this.code = NaN;
     }
-    handleKeyPress(e: KeyboardEvent) {
+
+    private handleKeyPress(e: KeyboardEvent) {
         if (e.which >= 65 && e.which <= 90) {
             this.key = parseInt(e.key);
             this.code = e.which;
