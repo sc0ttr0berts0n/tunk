@@ -30,6 +30,10 @@ export default class Boss {
         this.maxLetterTileWidth = this.getMaxLetterTileWidth();
     }
 
+    reinit() {
+        this.activeKillPhrase.forEach((letter) => letter.reinit());
+    }
+
     public update(delta: number) {
         this.activeKillPhrase.forEach((letter) => letter.update(delta));
     }
@@ -54,8 +58,8 @@ export default class Boss {
 class LetterTile {
     private game: Game;
     private boss: Boss;
-    private letter: string;
-    private id: number;
+    public letter: string;
+    public id: number;
     private container = new PIXI.Container();
     public letterEl: PIXI.Text;
     private padding: number = 2;
@@ -72,23 +76,41 @@ class LetterTile {
         this.initLetter();
     }
 
+    public reinit() {
+        this.letterEl.text = this.letter;
+    }
+
     public update(delta: number) {
         const wedge = this.game.turret.getWedgeByLetter(this.letter);
         if (wedge) {
-            const wedgeIsDamaged = wedge.health < wedge.maxHealth;
-            if (wedgeIsDamaged) {
-                this.letterEl.visible = false;
+            if (wedge.isDamaged()) {
+                if (this.game.frameCount % 5 === 0) {
+                    this.letterEl.text = String.fromCharCode(
+                        65 + Math.floor(Math.random() * 26)
+                    );
+                }
+                this.letterEl.alpha = 0.3;
             } else {
-                this.letterEl.visible = true;
+                this.letterEl.text = this.letter;
+                this.letterEl.alpha = 1;
             }
         }
+        // make blink
+        // if (this.game.frameCount % 30 === 0) {
+        //     this.letterEl.style.fill = '#ffffff';
+        // } else if (this.game.frameCount % 30 === 6) {
+        //     this.letterEl.style.fill = '#ff5050';
+        // }
+
+        // random letter
     }
 
     private initLetter() {
         const letterStyle = new PIXI.TextStyle();
         letterStyle.fill = '#ff5050';
+        letterStyle.fontSize = 25;
         letterStyle.stroke = '#282228';
-        letterStyle.strokeThickness = 10;
+        letterStyle.strokeThickness = (10 / 28) * letterStyle.fontSize;
         letterStyle.fontFamily = 'Arial';
         letterStyle.fontWeight = 'bold';
         this.letterEl = new PIXI.Text(this.letter, letterStyle);

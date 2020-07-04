@@ -8,6 +8,8 @@ export default class Turret {
     public container: PIXI.Container;
     public radius: number = 256;
     public wedges: Array<Wedge>;
+    public history: string[] = [];
+    public historyLimit: number = 20;
 
     constructor(game: Game, wedgeCount: number) {
         this.game = game;
@@ -40,12 +42,14 @@ export default class Turret {
     public update(delta: number) {
         this.openingUpdate();
         this.game.cannon.update(delta);
+        this.limitHistory();
     }
 
     public reinit() {
         this.wedges.forEach((wedge) => {
             wedge.health = wedge.maxHealth;
         });
+        this.history = [];
     }
 
     private openingUpdate() {
@@ -76,6 +80,17 @@ export default class Turret {
                 this.game.player.pos.y !== wedge.pos.y
             );
         });
+    }
+
+    pushLetterToHistory(letter: string) {
+        this.history.push(letter);
+    }
+
+    limitHistory() {
+        while (this.history.length > this.historyLimit) {
+            this.history.shift();
+            console.log(this.history);
+        }
     }
 
     public getWedgeByLetter(letter: string): Wedge | undefined {

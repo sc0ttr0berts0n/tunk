@@ -201,10 +201,9 @@ export default class Wedge {
     }
 
     private updateWallDamage() {
-        this.wall.texture =
-            this.health < this.maxHealth
-                ? this.game.graphics.damagedTexture
-                : this.game.graphics.fullTexture;
+        this.wall.texture = this.isDamaged()
+            ? this.game.graphics.damagedTexture
+            : this.game.graphics.fullTexture;
     }
 
     public setHealth(amt = 0) {
@@ -212,9 +211,16 @@ export default class Wedge {
     }
 
     public addHealth(n: number) {
-        this.health += n;
-        if (this.health > this.maxHealth) {
-            this.health = this.maxHealth;
+        if (this.health < this.maxHealth) {
+            this.health += n;
+            if (this.health >= this.maxHealth) {
+                this.health = this.maxHealth;
+                this.turret.pushLetterToHistory(this.letter);
+            }
         }
+    }
+
+    public isDamaged() {
+        return this.health < this.maxHealth;
     }
 }

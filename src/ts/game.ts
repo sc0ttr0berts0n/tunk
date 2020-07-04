@@ -28,7 +28,7 @@ export default class Game {
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
     private damageChance: number = 0.008;
-    private shootHoleChance: number = 0.0125;
+    private shootHoleChance: number = 0.01;
     public frameCount: number = 0;
     private lastRestart: number = 0;
     private reduceMotion: boolean = false;
@@ -108,6 +108,7 @@ export default class Game {
         this.kb.reinit();
         this.player.reinit();
         this.turret.reinit();
+        this.boss.reinit();
         this.scoreManager.reinit();
         this.endGameOverlay.reinit();
         this.audio.bgm.stop();
