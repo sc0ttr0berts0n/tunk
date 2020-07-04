@@ -59,6 +59,7 @@ class LetterTile {
     private container = new PIXI.Container();
     public letterEl: PIXI.Text;
     private padding: number = 2;
+
     constructor(game: Game, boss: Boss, letter: string, id: number) {
         this.game = game;
         this.boss = boss;
