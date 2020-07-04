@@ -7,7 +7,7 @@ export default class Player {
     public pos: Vec2 = { x: 0, y: 0 };
     private orientation: Vec2 = { x: 0, y: 0 };
     private targetPos: Vec2 = { x: 0, y: 0 };
-    private targetWedge: Wedge;
+    public targetWedge: Wedge;
     public alive: boolean = true;
     private lastAlive: boolean = true;
     private lastIsMoving: boolean = false;
@@ -37,7 +37,9 @@ export default class Player {
             this.pos.y + this.game.app.renderer.height / 2;
         this.game.graphics.playerBlood.rotation =
             this.bloodRot + -this.game.graphics.player.rotation;
-        this.checkRepairing();
+        if (this.isAtTarget()) {
+            this.repair();
+        }
         if (!this.alive) {
             this.game.graphics.playerBlood.visible = true;
         }
@@ -101,14 +103,16 @@ export default class Player {
         }
     }
 
-    private checkRepairing() {
-        if (
+    public isAtTarget() {
+        return (
             this.targetWedge &&
             this.pos.x === this.targetPos.x &&
             this.pos.y === this.targetPos.y
-        ) {
-            this.targetWedge.addHealth(2);
-        }
+        );
+    }
+
+    private repair() {
+        this.targetWedge.addHealth(2);
     }
 
     private findDestination() {

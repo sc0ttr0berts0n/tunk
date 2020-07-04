@@ -82,14 +82,19 @@ export default class Turret {
         });
     }
 
-    pushLetterToHistory(letter: string) {
-        this.history.push(letter);
+    pushLetterToHistory(currentLetter: string) {
+        const mostRecentLetter = this.history[this.history.length - 1];
+        if (mostRecentLetter !== currentLetter) {
+            this.history.push(currentLetter);
+            if (this.game.boss.active) {
+                this.game.boss.validVisitedLetters = this.game.boss.getValidVisitedLetters();
+            }
+        }
     }
 
     limitHistory() {
         while (this.history.length > this.historyLimit) {
             this.history.shift();
-            console.log(this.history);
         }
     }
 

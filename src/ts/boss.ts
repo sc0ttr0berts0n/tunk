@@ -9,6 +9,8 @@ export default class Boss {
     private container = new PIXI.Container();
     public killPhraseContainer = new PIXI.Container();
     private pos: Vec2;
+    public active = true;
+    public validVisitedLetters: number = 0;
     constructor(game: Game, killPhrases: string[]) {
         this.game = game;
         this.killPhrases = killPhrases;
@@ -30,12 +32,13 @@ export default class Boss {
         this.maxLetterTileWidth = this.getMaxLetterTileWidth();
     }
 
-    reinit() {
-        this.activeKillPhrase.forEach((letter) => letter.reinit());
-    }
-
     public update(delta: number) {
         this.activeKillPhrase.forEach((letter) => letter.update(delta));
+    }
+
+    reinit() {
+        this.activeKillPhrase.forEach((letter) => letter.reinit());
+        this.validVisitedLetters = 0;
     }
 
     getNewKillPhrase() {
@@ -44,6 +47,46 @@ export default class Boss {
             (letter, index) =>
                 new LetterTile(this.game, this, letter.toUpperCase(), index)
         );
+    }
+
+    getValidVisitedLetters() {
+        const historyCount = this.activeKillPhrase.length;
+        const history = this.game.turret.history.slice(-historyCount);
+        const phrase = this.activeKillPhrase.map((letter) => letter.letter);
+        const startLetterIndexes = history
+            .map((ltr, index) => {
+                return ltr === phrase[0] ? index : -1;
+            })
+            .filter((index) => index >= 0);
+        const candidateArray = startLetterIndexes.map((index) =>
+            history.slice(index)
+        );
+        if (candidateArray.length) {
+            const count = Math.max(
+                ...candidateArray.map((arr) => {
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i] !== phrase[i]) {
+                            return 0;
+                        }
+                    }
+                    return arr.length;
+                })
+            );
+            return count;
+        } else {
+            return 0;
+        }
+
+        // const arr1 = ['D', 'L', 'F', 'E', 'D', 'E', 'X'];
+        // const arr2 = ['I', 'L', 'F', 'E', 'F', 'D', 'E'];
+        // const arr3 = ['D', 'E', 'S', 'T', 'R', 'O', 'Y'];
+    }
+
+    firstDamangedLetterIndex() {
+        const phrase = this.activeKillPhrase.map((el) => el.letter);
+        return phrase.findIndex((letter) => {
+            return this.game.turret.getWedgeByLetter(letter).isDamaged();
+        });
     }
 
     getMaxLetterTileWidth() {
@@ -81,7 +124,15 @@ class LetterTile {
     }
 
     public update(delta: number) {
+        const firstDamangedLetterIndex = this.boss.firstDamangedLetterIndex();
         const wedge = this.game.turret.getWedgeByLetter(this.letter);
+        const damagedInputs =
+            firstDamangedLetterIndex >= 0 &&
+            firstDamangedLetterIndex + 1 <= this.boss.validVisitedLetters;
+        const isTyped = this.id + 1 <= this.boss.validVisitedLetters;
+        const isNextToBeTyped = damagedInputs
+            ? this.id === 0
+            : this.id === this.boss.validVisitedLetters;
         if (wedge) {
             if (wedge.isDamaged()) {
                 if (this.game.frameCount % 5 === 0) {
@@ -89,25 +140,38 @@ class LetterTile {
                         65 + Math.floor(Math.random() * 26)
                     );
                 }
-                this.letterEl.alpha = 0.3;
+                if (isNextToBeTyped) {
+                    this.letterEl.alpha = 0.6;
+                } else {
+                    this.letterEl.alpha = 0.3;
+                }
             } else {
                 this.letterEl.text = this.letter;
                 this.letterEl.alpha = 1;
             }
-        }
-        // make blink
-        // if (this.game.frameCount % 30 === 0) {
-        //     this.letterEl.style.fill = '#ffffff';
-        // } else if (this.game.frameCount % 30 === 6) {
-        //     this.letterEl.style.fill = '#ff5050';
-        // }
 
-        // random letter
+            if (isNextToBeTyped) {
+                // make blink
+                if (this.game.frameCount % 30 === 0) {
+                    this.letterEl.style.fill = '#cccccc';
+                } else if (this.game.frameCount % 30 === 5) {
+                    this.letterEl.style.fill = '#ff5050';
+                }
+            } else if (damagedInputs) {
+                this.letterEl.style.fill = '#cccccc';
+            } else {
+                if (isTyped) {
+                    this.letterEl.style.fill = '#ff5050';
+                } else {
+                    this.letterEl.style.fill = '#cccccc';
+                }
+            }
+        }
     }
 
     private initLetter() {
         const letterStyle = new PIXI.TextStyle();
-        letterStyle.fill = '#ff5050';
+        letterStyle.fill = '#cccccc';
         letterStyle.fontSize = 25;
         letterStyle.stroke = '#282228';
         letterStyle.strokeThickness = (10 / 28) * letterStyle.fontSize;

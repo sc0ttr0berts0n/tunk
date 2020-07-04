@@ -13,6 +13,7 @@ export default class Wedge {
     public id: number;
     public wedgeCount: number;
     public maxHealth = 60;
+    public repaired = true;
     public health = this.maxHealth;
     private healthBar = new PIXI.Graphics();
     public letter: string;
@@ -67,6 +68,9 @@ export default class Wedge {
         this.updateHealthBar();
         this.updateCautionFloor(delta);
         this.updateOutsideLight();
+        if (this.playerIsPresent()) {
+            this.turret.pushLetterToHistory(this.letter);
+        }
     }
 
     public reinit() {
@@ -208,16 +212,30 @@ export default class Wedge {
 
     public setHealth(amt = 0) {
         this.health = amt;
+        if (amt < this.maxHealth) {
+            this.repaired = false;
+        }
+    }
+
+    public playerIsPresent() {
+        return (
+            this.game.player.isAtTarget() &&
+            this.game.player.targetWedge === this
+        );
     }
 
     public addHealth(n: number) {
-        if (this.health < this.maxHealth) {
+        if (!this.repaired && this.health < this.maxHealth) {
             this.health += n;
             if (this.health >= this.maxHealth) {
                 this.health = this.maxHealth;
-                this.turret.pushLetterToHistory(this.letter);
+                this.setRepaired();
             }
         }
+    }
+
+    public setRepaired() {
+        this.repaired = true;
     }
 
     public isDamaged() {
