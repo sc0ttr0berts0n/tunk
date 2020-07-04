@@ -7,7 +7,7 @@ export default class Turret {
     private wedgeCount: number;
     public container: PIXI.Container;
     public radius: number = 256;
-    public wedges: Wedge[];
+    public wedges: Array<Wedge>;
 
     constructor(game: Game, wedgeCount: number) {
         this.game = game;
@@ -76,5 +76,9 @@ export default class Turret {
                 this.game.player.pos.y !== wedge.pos.y
             );
         });
+    }
+
+    public getWedgeByLetter(letter: string): Wedge | undefined {
+        return this.wedges.find((wedge: Wedge) => wedge.letter === letter);
     }
 }

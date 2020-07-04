@@ -15,7 +15,7 @@ export default class Wedge {
     public maxHealth = 60;
     public health = this.maxHealth;
     private healthBar = new PIXI.Graphics();
-    private letter: string;
+    public letter: string;
     public wall: PIXI.Sprite;
     private cautionFloorExpand: PIXI.Sprite;
     private cautionFloorBoundary: PIXI.Sprite;

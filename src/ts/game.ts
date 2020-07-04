@@ -7,6 +7,7 @@ import Player from './player';
 import Turret from './turret';
 import Cannon from './cannon';
 import Flak from './flak';
+import Boss from './boss';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
 
@@ -23,6 +24,7 @@ export default class Game {
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
+    public boss: Boss;
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
     private damageChance: number = 0.008;
@@ -58,6 +60,7 @@ export default class Game {
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
         this.graphics.placeAssets();
+        this.boss = new Boss(this, ['Destroy']);
         this.scoreManager.init();
         Howler.volume(0.2);
         this.audio.bgm.loop(true);
@@ -86,6 +89,7 @@ export default class Game {
                 this.scoreManager.update();
             }
             this.player.update(delta);
+            this.boss.update(delta);
             if (this.turret.wedges) {
                 this.turret.wedges.forEach((wedge) => wedge.update(delta));
             }

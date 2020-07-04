@@ -22,6 +22,7 @@ module.exports = {
     optimization: {
         minimize: true,
     },
+    target: 'web',
     devServer: {
         contentBase: path.join(__dirname, 'public'),
         compress: true,
