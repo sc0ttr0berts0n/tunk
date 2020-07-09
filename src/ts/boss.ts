@@ -4,13 +4,14 @@ import * as PIXI from 'pixi.js';
 export default class Boss {
     private game: Game;
     private killPhrases: string[];
-    private activeKillPhrase: LetterTile[];
+    public activeKillPhrase: LetterTile[];
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
     public killPhraseContainer = new PIXI.Container();
     private pos: Vec2;
     public active = true;
-    public validVisitedLetters: number = 0;
+    public validVisitedLetters: string[];
+    public validVisitedLetterCount: number;
     constructor(game: Game, killPhrases: string[]) {
         this.game = game;
         this.killPhrases = killPhrases;
@@ -38,7 +39,7 @@ export default class Boss {
 
     reinit() {
         this.activeKillPhrase.forEach((letter) => letter.reinit());
-        this.validVisitedLetters = 0;
+        this.validVisitedLetterCount = 0;
     }
 
     getNewKillPhrase() {
@@ -49,7 +50,7 @@ export default class Boss {
         );
     }
 
-    getValidVisitedLetters() {
+    public getValidVisitedLetterCount() {
         const historyCount = this.activeKillPhrase.length;
         const history = this.game.turret.history.slice(-historyCount);
         const phrase = this.activeKillPhrase.map((letter) => letter.letter);
@@ -82,7 +83,19 @@ export default class Boss {
         // const arr3 = ['D', 'E', 'S', 'T', 'R', 'O', 'Y'];
     }
 
-    firstDamangedLetterIndex() {
+    public setValidVisitedLetterCount(
+        value = this.getValidVisitedLetterCount()
+    ) {
+        this.validVisitedLetterCount = value;
+    }
+
+    private getValidVisitedLetters() {
+        const count = this.getValidVisitedLetterCount();
+        const letters = this.activeKillPhrase.map((ltr) => ltr.letter);
+        return letters.slice(0, count - 1);
+    }
+
+    firstDamagedLetterIndex() {
         const phrase = this.activeKillPhrase.map((el) => el.letter);
         return phrase.findIndex((letter) => {
             return this.game.turret.getWedgeByLetter(letter).isDamaged();
@@ -124,15 +137,15 @@ class LetterTile {
     }
 
     public update(delta: number) {
-        const firstDamangedLetterIndex = this.boss.firstDamangedLetterIndex();
+        const firstDamagedLetterIndex = this.boss.firstDamagedLetterIndex();
         const wedge = this.game.turret.getWedgeByLetter(this.letter);
         const damagedInputs =
-            firstDamangedLetterIndex >= 0 &&
-            firstDamangedLetterIndex + 1 <= this.boss.validVisitedLetters;
-        const isTyped = this.id + 1 <= this.boss.validVisitedLetters;
+            firstDamagedLetterIndex >= 0 &&
+            firstDamagedLetterIndex + 1 <= this.boss.validVisitedLetterCount;
+        const isTyped = this.id + 1 <= this.boss.validVisitedLetterCount;
         const isNextToBeTyped = damagedInputs
             ? this.id === 0
-            : this.id === this.boss.validVisitedLetters;
+            : this.id === this.boss.validVisitedLetterCount;
         if (wedge) {
             if (wedge.isDamaged()) {
                 if (this.game.frameCount % 5 === 0) {

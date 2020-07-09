@@ -48,6 +48,7 @@ export default class GraphicAssets {
         'assets/floor-warning-02.png'
     );
     public damagedWallLight = PIXI.Texture.from('assets/crack-light.png');
+    public misslePodLoaded = PIXI.Texture.from('assets/missile-pod-loaded.png');
 
     //FLAK
     public flakGraphic = PIXI.Texture.from('assets/da-flak.png');

@@ -29,6 +29,8 @@ export default class Wedge {
     public willBeShot = false;
     public isLethal = false;
     public scoreCheck = true;
+    public container = new PIXI.Container();
+    public misslePod: MisslePod;
     constructor(game: Game, turret: Turret, id: number, wedgeCount: number) {
         this.game = game;
         this.turret = turret;
@@ -51,6 +53,7 @@ export default class Wedge {
         this.outsideLight = new PIXI.Sprite(
             this.game.graphics.damagedWallLight
         );
+        this.misslePod = new MisslePod(game, this);
         this.init();
     }
 
@@ -68,6 +71,7 @@ export default class Wedge {
         this.updateHealthBar();
         this.updateCautionFloor(delta);
         this.updateOutsideLight();
+        this.misslePod.update();
         if (this.playerIsPresent()) {
             this.turret.pushLetterToHistory(this.letter);
         }
@@ -81,12 +85,13 @@ export default class Wedge {
     }
 
     private initWall() {
-        this.wall.rotation = this.rot + 0.5 * Math.PI; // for exact placement
-        this.wall.scale.set(1.05);
-        this.wall.x = this.pos.x;
-        this.wall.y = this.pos.y;
+        this.container.rotation = this.rot + 0.5 * Math.PI; // for exact placement
+        this.container.scale.set(1.05);
+        this.container.x = this.pos.x;
+        this.container.y = this.pos.y;
+        this.container.addChild(this.wall);
         this.wall.anchor.set(0.5);
-        this.game.graphics.turretFloor.addChild(this.wall);
+        this.game.graphics.turretFloor.addChild(this.container);
     }
 
     private initCautionFloor() {
@@ -240,5 +245,71 @@ export default class Wedge {
 
     public isDamaged() {
         return this.health < this.maxHealth;
+    }
+}
+
+class MisslePod {
+    private container = new PIXI.Container();
+    private el: PIXI.Sprite;
+    private wedge: Wedge;
+    private game: Game;
+    private readonly yOffArmed = -15;
+    private readonly yOffDisarmed = 40;
+    private pos: Vec2 = { x: 0, y: this.yOffDisarmed };
+    private readonly speed = 3;
+
+    constructor(game: Game, wedge: Wedge) {
+        this.game = game;
+        this.wedge = wedge;
+        this.el = new PIXI.Sprite(this.game.graphics.misslePodLoaded);
+        this.init();
+    }
+
+    init() {
+        this.el.anchor.set(0.5, 1);
+        this.el.y = this.pos.y;
+        this.container.addChild(this.el);
+        this.wedge.container.addChild(this.container);
+    }
+
+    update() {
+        const armed = this.isArmed();
+        const y = this.el.y;
+        if (armed) {
+            this.el.visible = true;
+            if (y > this.yOffArmed) {
+                this.el.y += -this.speed;
+            }
+        } else {
+            if (y < this.yOffDisarmed) {
+                this.el.y += this.speed;
+            } else {
+                this.el.visible = false;
+            }
+        }
+    }
+
+    isArmed() {
+        const boss = this.game.boss;
+
+        if (boss.active) {
+            const phrase = boss.activeKillPhrase.map((letter) => letter.letter);
+            const letterIndex = phrase.indexOf(this.wedge.letter);
+            if (letterIndex >= 0) {
+                const vistedLetterCount = boss.getValidVisitedLetterCount();
+                if (letterIndex < vistedLetterCount) {
+                    const firstDamagedLetterIndex =
+                        boss.firstDamagedLetterIndex() > 0
+                            ? boss.firstDamagedLetterIndex()
+                            : Infinity;
+                    const damagedInputs = firstDamagedLetterIndex >= 0;
+                    const damagedInputsBeforeCurrentLetter =
+                        firstDamagedLetterIndex < vistedLetterCount - 1;
+                    return !damagedInputsBeforeCurrentLetter;
+                }
+            }
+        }
+
+        return false;
     }
 }
