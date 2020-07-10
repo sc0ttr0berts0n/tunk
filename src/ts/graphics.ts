@@ -89,5 +89,8 @@ export default class GraphicAssets {
 
         //Turret Ceiling
         this.game.app.stage.addChild(this.turretCeiling);
+
+        // Killphrase UI
+        this.game.app.stage.addChild(this.game.boss.killPhrase.container);
     }
 }

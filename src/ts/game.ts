@@ -52,6 +52,7 @@ export default class Game {
         this.player = new Player(this);
         this.endGameOverlay = new EndGameOverlay(this, this.player);
         this.kb = new KeyboardObserver();
+        this.boss = new Boss(this);
         this.init();
     }
 
@@ -60,7 +61,6 @@ export default class Game {
         this.graphics.background.y = this.app.renderer.height / 2;
         this.graphics.background.anchor.set(0.5, 0.5);
         this.graphics.placeAssets();
-        this.boss = new Boss(this, ['Destroy']);
         this.scoreManager.init();
         Howler.volume(0.2);
         this.audio.bgm.loop(true);

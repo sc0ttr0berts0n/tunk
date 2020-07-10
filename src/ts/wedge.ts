@@ -35,7 +35,7 @@ export default class Wedge {
     public scoreCheck = true;
     public container = new PIXI.Container();
     public missilePod: MisslePod;
-    public missilePodArmingOrder: number[];
+    public missilePodArmingOrder: number[] = [];
     constructor(game: Game, turret: Turret, id: number, wedgeCount: number) {
         this.game = game;
         this.turret = turret;
@@ -59,7 +59,6 @@ export default class Wedge {
             this.game.graphics.damagedWallLight
         );
         this.missilePod = new MisslePod(game, this);
-        this.missilePodArmingOrder = [];
         this.init();
     }
 
@@ -94,6 +93,7 @@ export default class Wedge {
         this.isLethal = false;
         this.scoreCheck = true;
         this.health = this.maxHealth;
+        this.missilePodArmingOrder = [];
     }
 
     private initWall() {

@@ -96,6 +96,12 @@ export default class Turret {
     }
 
     public getWedgeByLetter(letter: string): Wedge | undefined {
-        return this.wedges.find((wedge: Wedge) => wedge.letter === letter);
+        const wedge = this.wedges.find(
+            (wedge: Wedge) => wedge.letter === letter
+        );
+        if (!wedge) {
+            throw new Error(`"${letter}" is not on the turret wedge list`);
+        }
+        return wedge;
     }
 }

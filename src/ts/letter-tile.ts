@@ -2,10 +2,12 @@ import * as PIXI from 'pixi.js';
 import Game from './game';
 import Boss from './boss';
 import Wedge from './wedge';
+import KillPhrase from './kill-phrase';
 
 export default class LetterTile {
     private game: Game;
     private boss: Boss;
+    public killPhrase: KillPhrase;
     public wedge: Wedge;
     public letter: string;
     public id: number;
@@ -13,9 +15,16 @@ export default class LetterTile {
     public letterEl: PIXI.Text;
     private padding: number = 2;
 
-    constructor(game: Game, boss: Boss, letter: string, id: number) {
+    constructor(
+        game: Game,
+        boss: Boss,
+        killPhrase: KillPhrase,
+        letter: string,
+        id: number
+    ) {
         this.game = game;
         this.boss = boss;
+        this.killPhrase = killPhrase;
         this.wedge = game.turret.getWedgeByLetter(letter);
         this.letter = letter;
         this.id = id;
@@ -24,7 +33,6 @@ export default class LetterTile {
 
     public init() {
         this.initLetter();
-        this.wedge.missilePodArmingOrder.push(this.id);
     }
 
     public reinit() {
@@ -81,12 +89,12 @@ export default class LetterTile {
         this.letterEl = new PIXI.Text(this.letter, letterStyle);
         this.letterEl.anchor.set(0.5);
         this.container.addChild(this.letterEl);
-        this.boss.killPhraseContainer.addChild(this.container);
+        this.killPhrase.container.addChild(this.container);
     }
 
     public placeLettersTile() {
         const offset =
-            this.boss.getMaxLetterTileWidth() * this.id +
+            this.killPhrase.getMaxTileWidth() * this.id +
             Math.max(0, this.id - 1) * this.padding;
         this.letterEl.x = offset;
     }

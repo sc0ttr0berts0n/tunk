@@ -1,11 +1,17 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
 import LetterTile from './letter-tile';
+import KillPhrase from './kill-phrase';
+
+interface Options {
+    killPhrases?: string[];
+}
 
 export default class Boss {
     private game: Game;
+    private options: Options;
     private killPhrases: string[];
-    public activeKillPhrase: LetterTile[];
+    public killPhrase: KillPhrase;
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
     public killPhraseContainer = new PIXI.Container();
@@ -14,49 +20,93 @@ export default class Boss {
     public validVisitedLetters: string[];
     public validVisitedLetterCount: number;
 
-    constructor(game: Game, killPhrases: string[]) {
+    constructor(game: Game, options?: Options) {
         this.game = game;
-        this.killPhrases = killPhrases;
+        this.killPhrases = options?.killPhrases ?? this.getRandomKillPhrases();
+        this.killPhrase = this.initKillPhrase();
         this.pos = { x: 192, y: 192 };
         this.init();
     }
 
     public init() {
-        if (this.killPhrases.length) {
-            this.activeKillPhrase = this.getNewKillPhrase();
-        }
-        this.getMaxLetterTileWidth();
-        this.activeKillPhrase.forEach((letter) => letter.placeLettersTile());
-        this.container.addChild(this.killPhraseContainer);
-        this.container.x = this.pos.x;
-        this.container.y = this.pos.y;
-
         this.game.app.stage.addChild(this.container);
-        this.maxLetterTileWidth = this.getMaxLetterTileWidth();
     }
 
     public update(delta: number) {
-        this.validVisitedLetterCount = this.getValidVisitedLetterCount();
-        this.activeKillPhrase.forEach((letter) => letter.update(delta));
+        if (this.active) {
+            this.validVisitedLetterCount = this.getValidVisitedLetterCount();
+            const _everyLetterArmed =
+                this.validVisitedLetterCount === this.killPhrase.length;
+
+            if (_everyLetterArmed) {
+                if (
+                    this.killPhrase.tiles.every(
+                        (tile) => !tile.wedge.isDamaged()
+                    )
+                ) {
+                    this.handleFullyArmedMissilePods();
+                }
+            }
+            if (this.killPhrase) {
+                this.killPhrase.update(delta);
+            }
+        }
     }
 
     public reinit() {
-        this.activeKillPhrase.forEach((letter) => letter.reinit());
+        this.killPhrase.tiles.forEach((letter) => letter.reinit());
         this.validVisitedLetterCount = 0;
     }
 
-    getNewKillPhrase() {
-        const killPhrase = this.killPhrases.shift().split('');
-        return killPhrase.map(
-            (letter, index) =>
-                new LetterTile(this.game, this, letter.toUpperCase(), index)
-        );
+    private initKillPhrase() {
+        const phrase = this.killPhrases.shift();
+        return new KillPhrase(this.game, this, phrase);
+    }
+
+    private getRandomKillPhrases(num: number = 0) {
+        const bossWords = [
+            'Destroy',
+            'Explode',
+            'Kerblamo',
+            'Gank',
+            'Target',
+            'Smack',
+        ];
+
+        // get a random index from the boss words
+        const _randomIndex = () => {
+            return Math.floor(Math.random() * bossWords.length);
+        };
+
+        // splice a random bossword out of the array
+        const _spliceBossWord = (i: number) => {
+            return bossWords.splice(i, 1)[0];
+        };
+
+        // fixes for edge cases
+
+        // num isnt selected, return random
+        if (num === 0) {
+            num = Math.ceil(Math.random() * bossWords.length);
+        }
+
+        // num is longer than there are keys for
+        if (num > bossWords.length) {
+            num = bossWords.length;
+        }
+
+        // fill array with random bosswords
+        const phraseArr = Array(num)
+            .fill(0)
+            .map((el) => _spliceBossWord(_randomIndex()));
+
+        return phraseArr;
     }
 
     private getValidVisitedLetterCount() {
-        const historyCount = this.activeKillPhrase.length;
+        const historyCount = this.killPhrase.length;
         const history = this.game.turret.history.slice(-historyCount);
-        const phrase = this.activeKillPhrase.map((letter) => letter.letter);
+        const phrase = this.killPhrase.phrase.split('');
         const startLetterIndexes = history
             .map((ltr, index) => {
                 return ltr === phrase[0] ? index : -1;
@@ -82,16 +132,36 @@ export default class Boss {
         }
     }
 
-    firstDamagedLetterIndex() {
-        return this.activeKillPhrase.findIndex((letter) => {
-            return letter.wedge.isDamaged();
+    private handleFullyArmedMissilePods() {
+        // fire ze missiles!
+        this.killPhrase.tiles.forEach((letter) => {
+            letter.wedge.missilePod.fireMissles(4);
+            letter.wedge.missilePod.isArmed = false;
         });
+
+        // reset valid visted letter count
+        this.validVisitedLetterCount = 0;
+        this.game.turret.history = [];
+
+        // if more killphrases, process it
+        if (this.killPhrases.length) {
+            this.setupNewKillPhrase();
+        } else {
+            // otherwise, handle "killing" of the boss
+            this.killPhrase.removePhrase();
+            this.active = false;
+            console.log('BOSS IS DED');
+        }
     }
 
-    getMaxLetterTileWidth() {
-        return Math.max(
-            ...this.activeKillPhrase.map((letter) => letter.letterEl.width)
-        );
+    private setupNewKillPhrase() {
+        this.killPhrase.newPhrase(this.killPhrases.shift());
+    }
+
+    firstDamagedLetterIndex() {
+        return this.killPhrase.tiles.findIndex((letter) => {
+            return letter.wedge.isDamaged();
+        });
     }
 
     renderKillPhrase() {}

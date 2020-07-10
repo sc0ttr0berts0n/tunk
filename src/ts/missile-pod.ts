@@ -7,7 +7,7 @@ export default class MisslePod {
     private el: PIXI.Sprite;
     private wedge: Wedge;
     private game: Game;
-    private letter: string;
+    private readonly letter: string;
     public readonly yOffArmed = -15;
     public readonly yOffDisarmed = 40;
     private pos: Vec2 = { x: 0, y: this.yOffDisarmed };
@@ -48,6 +48,12 @@ export default class MisslePod {
         this.render();
     }
 
+    reinit() {
+        this.isArmed = false;
+        this.isVisible = false;
+        this.pos.y = this.yOffDisarmed;
+    }
+
     private render() {
         this.el.y = this.pos.y;
         this.el.visible = this.isVisible;
@@ -55,8 +61,8 @@ export default class MisslePod {
 
     private canBeArmed() {
         const boss = this.game.boss;
-        const phrase = boss.activeKillPhrase.map((letter) => letter.letter);
-        const phraseIndex = phrase.indexOf(this.wedge.letter);
+        const phraseArr = boss.killPhrase.phrase.split('');
+        const phraseIndex = phraseArr.indexOf(this.wedge.letter);
         return phraseIndex > -1;
     }
 
@@ -68,7 +74,7 @@ export default class MisslePod {
 
         if (boss.active && this.canBeArmed() && hasBeenVisted) {
             const anyDamageBefore =
-                boss.activeKillPhrase
+                boss.killPhrase.tiles
                     .slice(0, vistedLetterCount - 1)
                     .filter((el) => el.wedge.isDamaged()).length > 0;
             if (!anyDamageBefore) {
@@ -76,5 +82,9 @@ export default class MisslePod {
             }
         }
         return false;
+    }
+
+    public fireMissles(num: number = 1) {
+        console.log(`Wedge "${this.letter}" Fired ${num} Missle(s)!`);
     }
 }
