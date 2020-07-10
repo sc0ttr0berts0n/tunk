@@ -86,9 +86,6 @@ export default class Turret {
         const mostRecentLetter = this.history[this.history.length - 1];
         if (mostRecentLetter !== currentLetter) {
             this.history.push(currentLetter);
-            if (this.game.boss.active) {
-                this.game.boss.validVisitedLetterCount = this.game.boss.getValidVisitedLetterCount();
-            }
         }
     }
 

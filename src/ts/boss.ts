@@ -1,5 +1,6 @@
-import Game from './game';
 import * as PIXI from 'pixi.js';
+import Game from './game';
+import LetterTile from './letter-tile';
 
 export default class Boss {
     private game: Game;
@@ -12,6 +13,7 @@ export default class Boss {
     public active = true;
     public validVisitedLetters: string[];
     public validVisitedLetterCount: number;
+
     constructor(game: Game, killPhrases: string[]) {
         this.game = game;
         this.killPhrases = killPhrases;
@@ -19,7 +21,7 @@ export default class Boss {
         this.init();
     }
 
-    init() {
+    public init() {
         if (this.killPhrases.length) {
             this.activeKillPhrase = this.getNewKillPhrase();
         }
@@ -34,10 +36,11 @@ export default class Boss {
     }
 
     public update(delta: number) {
+        this.validVisitedLetterCount = this.getValidVisitedLetterCount();
         this.activeKillPhrase.forEach((letter) => letter.update(delta));
     }
 
-    reinit() {
+    public reinit() {
         this.activeKillPhrase.forEach((letter) => letter.reinit());
         this.validVisitedLetterCount = 0;
     }
@@ -50,7 +53,7 @@ export default class Boss {
         );
     }
 
-    public getValidVisitedLetterCount() {
+    private getValidVisitedLetterCount() {
         const historyCount = this.activeKillPhrase.length;
         const history = this.game.turret.history.slice(-historyCount);
         const phrase = this.activeKillPhrase.map((letter) => letter.letter);
@@ -77,28 +80,11 @@ export default class Boss {
         } else {
             return 0;
         }
-
-        // const arr1 = ['D', 'L', 'F', 'E', 'D', 'E', 'X'];
-        // const arr2 = ['I', 'L', 'F', 'E', 'F', 'D', 'E'];
-        // const arr3 = ['D', 'E', 'S', 'T', 'R', 'O', 'Y'];
-    }
-
-    public setValidVisitedLetterCount(
-        value = this.getValidVisitedLetterCount()
-    ) {
-        this.validVisitedLetterCount = value;
-    }
-
-    private getValidVisitedLetters() {
-        const count = this.getValidVisitedLetterCount();
-        const letters = this.activeKillPhrase.map((ltr) => ltr.letter);
-        return letters.slice(0, count - 1);
     }
 
     firstDamagedLetterIndex() {
-        const phrase = this.activeKillPhrase.map((el) => el.letter);
-        return phrase.findIndex((letter) => {
-            return this.game.turret.getWedgeByLetter(letter).isDamaged();
+        return this.activeKillPhrase.findIndex((letter) => {
+            return letter.wedge.isDamaged();
         });
     }
 
@@ -109,97 +95,4 @@ export default class Boss {
     }
 
     renderKillPhrase() {}
-}
-
-class LetterTile {
-    private game: Game;
-    private boss: Boss;
-    public letter: string;
-    public id: number;
-    private container = new PIXI.Container();
-    public letterEl: PIXI.Text;
-    private padding: number = 2;
-
-    constructor(game: Game, boss: Boss, letter: string, id: number) {
-        this.game = game;
-        this.boss = boss;
-        this.letter = letter;
-        this.id = id;
-        this.init();
-    }
-
-    public init() {
-        this.initLetter();
-    }
-
-    public reinit() {
-        this.letterEl.text = this.letter;
-    }
-
-    public update(delta: number) {
-        const firstDamagedLetterIndex = this.boss.firstDamagedLetterIndex();
-        const wedge = this.game.turret.getWedgeByLetter(this.letter);
-        const damagedInputs =
-            firstDamagedLetterIndex >= 0 &&
-            firstDamagedLetterIndex + 1 <= this.boss.validVisitedLetterCount;
-        const isTyped = this.id + 1 <= this.boss.validVisitedLetterCount;
-        const isNextToBeTyped = damagedInputs
-            ? this.id === 0
-            : this.id === this.boss.validVisitedLetterCount;
-        if (wedge) {
-            if (wedge.isDamaged()) {
-                if (this.game.frameCount % 5 === 0) {
-                    this.letterEl.text = String.fromCharCode(
-                        65 + Math.floor(Math.random() * 26)
-                    );
-                }
-                if (isNextToBeTyped) {
-                    this.letterEl.alpha = 0.6;
-                } else {
-                    this.letterEl.alpha = 0.3;
-                }
-            } else {
-                this.letterEl.text = this.letter;
-                this.letterEl.alpha = 1;
-            }
-
-            if (isNextToBeTyped) {
-                // make blink
-                if (this.game.frameCount % 30 === 0) {
-                    this.letterEl.style.fill = '#cccccc';
-                } else if (this.game.frameCount % 30 === 5) {
-                    this.letterEl.style.fill = '#ff5050';
-                }
-            } else if (damagedInputs) {
-                this.letterEl.style.fill = '#cccccc';
-            } else {
-                if (isTyped) {
-                    this.letterEl.style.fill = '#ff5050';
-                } else {
-                    this.letterEl.style.fill = '#cccccc';
-                }
-            }
-        }
-    }
-
-    private initLetter() {
-        const letterStyle = new PIXI.TextStyle();
-        letterStyle.fill = '#cccccc';
-        letterStyle.fontSize = 25;
-        letterStyle.stroke = '#282228';
-        letterStyle.strokeThickness = (10 / 28) * letterStyle.fontSize;
-        letterStyle.fontFamily = 'Arial';
-        letterStyle.fontWeight = 'bold';
-        this.letterEl = new PIXI.Text(this.letter, letterStyle);
-        this.letterEl.anchor.set(0.5);
-        this.container.addChild(this.letterEl);
-        this.boss.killPhraseContainer.addChild(this.container);
-    }
-
-    public placeLettersTile() {
-        const offset =
-            this.boss.getMaxLetterTileWidth() * this.id +
-            Math.max(0, this.id - 1) * this.padding;
-        this.letterEl.x = offset;
-    }
 }

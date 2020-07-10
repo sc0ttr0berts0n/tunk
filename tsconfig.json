@@ -4,6 +4,7 @@
         "allowJs": true,
         "noImplicitAny": true,
         "target": "es6",
+        "lib": ["dom", "es7"],
         "sourceMap": true,
         "outDir": "./public/js/",
         "types": ["pixi.js"]

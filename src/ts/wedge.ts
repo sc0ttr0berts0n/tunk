@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
 import Turret from './turret';
+import MisslePod from './missile-pod';
 
 interface Vec2 {
     x: number;
@@ -17,6 +18,7 @@ export default class Wedge {
     public health = this.maxHealth;
     private healthBar = new PIXI.Graphics();
     public letter: string;
+    public letterEl: PIXI.Text;
     public wall: PIXI.Sprite;
     private cautionFloorExpand: PIXI.Sprite;
     private cautionFloorBoundary: PIXI.Sprite;
@@ -25,12 +27,15 @@ export default class Wedge {
     public pos: Vec2;
     public playerPos: Vec2;
     public healthBarYOffset = -26;
-    public letterYOffset = -50;
+    public letterYOffsetArmed = -105;
+    public letterYOffsetDisarmed = -50;
+    private letterPos: Vec2 = { x: 0, y: this.letterYOffsetDisarmed };
     public willBeShot = false;
     public isLethal = false;
     public scoreCheck = true;
     public container = new PIXI.Container();
-    public misslePod: MisslePod;
+    public missilePod: MisslePod;
+    public missilePodArmingOrder: number[];
     constructor(game: Game, turret: Turret, id: number, wedgeCount: number) {
         this.game = game;
         this.turret = turret;
@@ -53,7 +58,8 @@ export default class Wedge {
         this.outsideLight = new PIXI.Sprite(
             this.game.graphics.damagedWallLight
         );
-        this.misslePod = new MisslePod(game, this);
+        this.missilePod = new MisslePod(game, this);
+        this.missilePodArmingOrder = [];
         this.init();
     }
 
@@ -71,10 +77,16 @@ export default class Wedge {
         this.updateHealthBar();
         this.updateCautionFloor(delta);
         this.updateOutsideLight();
-        this.misslePod.update();
+        this.missilePod.update();
         if (this.playerIsPresent()) {
             this.turret.pushLetterToHistory(this.letter);
         }
+        this.updateLetters();
+        this.render();
+    }
+
+    private render() {
+        this.renderLetters();
     }
 
     public reinit() {
@@ -181,15 +193,15 @@ export default class Wedge {
     private initLetters() {
         const letterStyle = new PIXI.TextStyle();
         letterStyle.fill = '#ffffff';
-        letterStyle.stroke = '#282228';
+        letterStyle.stroke = '#000000';
         letterStyle.strokeThickness = 10;
         letterStyle.fontFamily = 'Arial';
         letterStyle.fontWeight = 'bold';
-        const letter = new PIXI.Text(this.letter, letterStyle);
-        letter.rotation = -this.wall.rotation;
-        letter.anchor.set(0.5);
-        letter.y = this.letterYOffset;
-        this.wall.addChild(letter);
+        this.letterEl = new PIXI.Text(this.letter, letterStyle);
+        this.letterEl.rotation = -this.wall.rotation;
+        this.letterEl.anchor.set(0.5);
+        this.letterPos.y = this.letterYOffsetDisarmed;
+        this.wall.addChild(this.letterEl);
     }
 
     private initHealthBar() {
@@ -198,6 +210,22 @@ export default class Wedge {
         this.healthBar.y = this.healthBarYOffset;
         this.healthBar.x = -(64 / 2);
         this.wall.addChild(this.healthBar);
+    }
+
+    private updateLetters() {
+        if (this.missilePod.isArmed) {
+            if (this.letterPos.y > this.letterYOffsetArmed) {
+                this.letterPos.y += -this.missilePod.speed;
+            }
+        } else {
+            if (this.letterPos.y < this.letterYOffsetDisarmed) {
+                this.letterPos.y += this.missilePod.speed;
+            }
+        }
+    }
+
+    private renderLetters() {
+        this.letterEl.y = this.letterPos.y;
     }
 
     private updateHealthBar() {
@@ -245,71 +273,5 @@ export default class Wedge {
 
     public isDamaged() {
         return this.health < this.maxHealth;
-    }
-}
-
-class MisslePod {
-    private container = new PIXI.Container();
-    private el: PIXI.Sprite;
-    private wedge: Wedge;
-    private game: Game;
-    private readonly yOffArmed = -15;
-    private readonly yOffDisarmed = 40;
-    private pos: Vec2 = { x: 0, y: this.yOffDisarmed };
-    private readonly speed = 3;
-
-    constructor(game: Game, wedge: Wedge) {
-        this.game = game;
-        this.wedge = wedge;
-        this.el = new PIXI.Sprite(this.game.graphics.misslePodLoaded);
-        this.init();
-    }
-
-    init() {
-        this.el.anchor.set(0.5, 1);
-        this.el.y = this.pos.y;
-        this.container.addChild(this.el);
-        this.wedge.container.addChild(this.container);
-    }
-
-    update() {
-        const armed = this.isArmed();
-        const y = this.el.y;
-        if (armed) {
-            this.el.visible = true;
-            if (y > this.yOffArmed) {
-                this.el.y += -this.speed;
-            }
-        } else {
-            if (y < this.yOffDisarmed) {
-                this.el.y += this.speed;
-            } else {
-                this.el.visible = false;
-            }
-        }
-    }
-
-    isArmed() {
-        const boss = this.game.boss;
-
-        if (boss.active) {
-            const phrase = boss.activeKillPhrase.map((letter) => letter.letter);
-            const letterIndex = phrase.indexOf(this.wedge.letter);
-            if (letterIndex >= 0) {
-                const vistedLetterCount = boss.getValidVisitedLetterCount();
-                if (letterIndex < vistedLetterCount) {
-                    const firstDamagedLetterIndex =
-                        boss.firstDamagedLetterIndex() > 0
-                            ? boss.firstDamagedLetterIndex()
-                            : Infinity;
-                    const damagedInputs = firstDamagedLetterIndex >= 0;
-                    const damagedInputsBeforeCurrentLetter =
-                        firstDamagedLetterIndex < vistedLetterCount - 1;
-                    return !damagedInputsBeforeCurrentLetter;
-                }
-            }
-        }
-
-        return false;
     }
 }
