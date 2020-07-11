@@ -1,8 +1,10 @@
 import * as PIXI from 'pixi.js';
+import Victor = require('victor');
 import Wedge from './wedge';
 import Game from './game';
+import Missile from './missile';
 
-export default class MisslePod {
+export default class MissilePod {
     private container = new PIXI.Container();
     private el: PIXI.Sprite;
     private wedge: Wedge;
@@ -10,10 +12,12 @@ export default class MisslePod {
     private readonly letter: string;
     public readonly yOffArmed = -15;
     public readonly yOffDisarmed = 40;
-    private pos: Vec2 = { x: 0, y: this.yOffDisarmed };
+    public pos: Vec2 = { x: 0, y: this.yOffDisarmed };
     private isVisible = false;
     public readonly speed = 3;
     public isArmed = false;
+    public missiles: Missile[] = [];
+    public missilesToFire = 0;
 
     constructor(game: Game, wedge: Wedge) {
         this.game = game;
@@ -44,6 +48,10 @@ export default class MisslePod {
             } else {
                 this.isVisible = false;
             }
+        }
+        const podFullyExtended = this.pos.y >= this.yOffArmed;
+        if (podFullyExtended && this.missilesToFire > 0) {
+            this.fireMissles(this.missilesToFire);
         }
         this.render();
     }
@@ -85,6 +93,27 @@ export default class MisslePod {
     }
 
     public fireMissles(num: number = 1) {
+        this.missilesToFire += -num;
+        if (this.missilesToFire < 0) {
+            this.missilesToFire = 0;
+        }
+        for (let i = 0; i < num; i++) {
+            const options = { initialVel: 5, thrustStartAge: 50 };
+            const missile = new Missile(
+                this.game,
+                this,
+                this.game.boss,
+                options
+            );
+            const delay = this.wedge.id * 10 + i * 25;
+            setTimeout(() => {
+                this.game.missiles.push(missile);
+            }, delay);
+        }
         console.log(`Wedge "${this.letter}" Fired ${num} Missle(s)!`);
+    }
+
+    getWorldPos() {
+        return new Victor(this.el.worldTransform.tx, this.el.worldTransform.ty);
     }
 }

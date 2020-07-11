@@ -8,6 +8,7 @@ import Turret from './turret';
 import Cannon from './cannon';
 import Flak from './flak';
 import Boss from './boss';
+import Missiles from './missile';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
 
@@ -21,12 +22,13 @@ export default class Game {
     private turretBodyRotation: number = Math.PI * 2;
     private backgroundTargetRot: number = 0;
     private backgroundNextMove: number = 0;
+    public boss: Boss;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
-    public boss: Boss;
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
+    public missiles: Missiles[] = [];
     private damageChance: number = 0.008;
     private shootHoleChance: number = 0.01;
     public frameCount: number = 0;
@@ -96,6 +98,12 @@ export default class Game {
             if (this.flaks.length) {
                 this.flaks.forEach((flak) => flak.update(delta));
                 this.flaks = this.flaks.filter((flak) => !flak.isDead);
+            }
+            if (this.missiles.length) {
+                this.missiles.forEach((missile) => missile.update());
+                this.missiles = this.missiles.filter(
+                    (missile) => !missile.isDead
+                );
             }
         }
         this.endGameOverlay.update();

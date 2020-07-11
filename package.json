@@ -5,8 +5,10 @@
     "private": true,
     "dependencies": {
         "@types/howler": "^2.2.1",
+        "@types/victor": "^1.1.0",
         "howler": "^2.2.0",
-        "pixi.js": "^5.3.0"
+        "pixi.js": "^5.3.0",
+        "victor": "^1.1.0"
     },
     "devDependencies": {
         "ts-loader": "^7.0.5",

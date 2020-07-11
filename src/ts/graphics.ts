@@ -4,6 +4,8 @@ import Game from './game';
 export default class GraphicAssets {
     private game: Game;
 
+    public skyContainer = new PIXI.Container();
+
     //BACKGROUND MAP
     public background = new PIXI.Sprite(PIXI.Texture.from('assets/da-map.png'));
 
@@ -53,9 +55,14 @@ export default class GraphicAssets {
     //FLAK
     public flakGraphic = PIXI.Texture.from('assets/da-flak.png');
 
+    public missile = PIXI.Texture.from('assets/missile.png');
+
     //EndGameOverlay
     public endGameOverlayBlack: PIXI.Graphics = new PIXI.Graphics();
     public endGameOverlayWhite: PIXI.Graphics = new PIXI.Graphics();
+
+    // Boss One
+    public bossOne = PIXI.Texture.from('assets/boss-one.png');
 
     constructor(game: Game) {
         this.game = game;
@@ -79,6 +86,12 @@ export default class GraphicAssets {
         this.game.turret.container.addChild(this.turretExterior);
         this.game.turret.container.addChild(this.turretFloor);
 
+        // Killphrase UI
+        this.game.app.stage.addChild(this.game.boss.killPhrase.container);
+
+        // Sky Container
+        this.game.app.stage.addChild(this.skyContainer);
+
         //End Game Overlay
         this.game.app.stage.addChild(this.endGameOverlayBlack);
         this.game.app.stage.addChild(this.endGameOverlayWhite);
@@ -89,8 +102,5 @@ export default class GraphicAssets {
 
         //Turret Ceiling
         this.game.app.stage.addChild(this.turretCeiling);
-
-        // Killphrase UI
-        this.game.app.stage.addChild(this.game.boss.killPhrase.container);
     }
 }

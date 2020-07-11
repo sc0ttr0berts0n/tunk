@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
+import Victor = require('victor');
 import Game from './game';
 import Turret from './turret';
-import MisslePod from './missile-pod';
+import MissilePod from './missile-pod';
 
 interface Vec2 {
     x: number;
@@ -34,7 +35,7 @@ export default class Wedge {
     public isLethal = false;
     public scoreCheck = true;
     public container = new PIXI.Container();
-    public missilePod: MisslePod;
+    public missilePod: MissilePod;
     public missilePodArmingOrder: number[] = [];
     constructor(game: Game, turret: Turret, id: number, wedgeCount: number) {
         this.game = game;
@@ -58,7 +59,7 @@ export default class Wedge {
         this.outsideLight = new PIXI.Sprite(
             this.game.graphics.damagedWallLight
         );
-        this.missilePod = new MisslePod(game, this);
+        this.missilePod = new MissilePod(game, this);
         this.init();
     }
 
@@ -273,5 +274,12 @@ export default class Wedge {
 
     public isDamaged() {
         return this.health < this.maxHealth;
+    }
+
+    getWorldPos() {
+        return new Victor(
+            this.wall.worldTransform.tx,
+            this.wall.worldTransform.ty
+        );
     }
 }

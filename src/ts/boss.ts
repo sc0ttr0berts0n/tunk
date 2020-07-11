@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
-import LetterTile from './letter-tile';
 import KillPhrase from './kill-phrase';
+import Victor = require('victor');
 
 interface Options {
     killPhrases?: string[];
@@ -15,21 +15,31 @@ export default class Boss {
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
     public killPhraseContainer = new PIXI.Container();
-    private pos: Vec2;
+    public pos: Vec2 = { x: 192, y: 192 };
+    private closestDist = -370;
+    private hoverDist = -40;
+    private hoverRate = 0.01;
     public active = true;
     public validVisitedLetters: string[];
     public validVisitedLetterCount: number;
+    public el: PIXI.Sprite;
 
     constructor(game: Game, options?: Options) {
         this.game = game;
+        this.el = new PIXI.Sprite(this.game.graphics.bossOne);
         this.killPhrases = options?.killPhrases ?? this.getRandomKillPhrases();
         this.killPhrase = this.initKillPhrase();
-        this.pos = { x: 192, y: 192 };
         this.init();
     }
 
     public init() {
-        this.game.app.stage.addChild(this.container);
+        this.container.x = this.game.app.renderer.width / 2;
+        this.container.y = this.game.app.renderer.height / 2;
+        this.container.rotation = -Math.PI * 0.25;
+        this.el.anchor.set(0.5);
+        this.el.y = this.closestDist;
+        this.container.addChild(this.el);
+        this.game.graphics.skyContainer.addChild(this.container);
     }
 
     public update(delta: number) {
@@ -51,6 +61,8 @@ export default class Boss {
                 this.killPhrase.update(delta);
             }
         }
+        this.updateBossShip();
+        this.render();
     }
 
     public reinit() {
@@ -58,9 +70,26 @@ export default class Boss {
         this.validVisitedLetterCount = 0;
     }
 
+    private updateBossShip() {
+        const offset =
+            this.closestDist -
+            Math.sin(this.game.frameCount * this.hoverRate) * this.hoverDist +
+            this.hoverDist / 2;
+
+        this.pos.y = offset;
+    }
+
     private initKillPhrase() {
         const phrase = this.killPhrases.shift();
         return new KillPhrase(this.game, this, phrase);
+    }
+
+    private render() {
+        this.renderBossShip();
+    }
+
+    private renderBossShip() {
+        this.el.y = this.pos.y;
     }
 
     private getRandomKillPhrases(num: number = 0) {
@@ -72,6 +101,8 @@ export default class Boss {
             'Target',
             'Smack',
         ];
+
+        // const bossWords = ['AB', 'CD', 'EF', 'GH', 'er'];
 
         // get a random index from the boss words
         const _randomIndex = () => {
@@ -135,7 +166,7 @@ export default class Boss {
     private handleFullyArmedMissilePods() {
         // fire ze missiles!
         this.killPhrase.tiles.forEach((letter) => {
-            letter.wedge.missilePod.fireMissles(4);
+            letter.wedge.missilePod.missilesToFire = 4;
             letter.wedge.missilePod.isArmed = false;
         });
 
@@ -164,5 +195,7 @@ export default class Boss {
         });
     }
 
-    renderKillPhrase() {}
+    public getWorldPos() {
+        return new Victor(this.el.worldTransform.tx, this.el.worldTransform.ty);
+    }
 }

@@ -1,3 +1,4 @@
+import Victor = require('victor');
 import Game from './game';
 import Wedge from './wedge';
 
@@ -122,5 +123,12 @@ export default class Player {
             this.targetPos = targetWedge.playerPos;
             this.targetWedge = targetWedge;
         }
+    }
+
+    getWorldPos() {
+        return new Victor(
+            this.game.graphics.player.worldTransform.tx,
+            this.game.graphics.player.worldTransform.ty
+        );
     }
 }
