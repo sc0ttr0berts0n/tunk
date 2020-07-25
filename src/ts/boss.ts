@@ -102,7 +102,7 @@ export default class Boss {
             'Smack',
         ];
 
-        // const bossWords = ['AB', 'CD', 'EF', 'GH', 'er'];
+        // const bossWords = ['AB', 'CD', 'EF', 'GF', 'er'];
 
         // get a random index from the boss words
         const _randomIndex = () => {

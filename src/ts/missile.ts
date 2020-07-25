@@ -25,7 +25,7 @@ export default class Missile {
     private vel: Victor;
     private acc = new Victor(0, 0);
     private friction = new Victor(0.98, 0.98);
-    private source: Boss | Player | Wedge | MissilePod;
+    private startPos: Victor;
     private target: Boss | Player | Wedge | MissilePod;
     private thrustStartAge: number;
     private thrustStrength: number;
@@ -34,42 +34,42 @@ export default class Missile {
     private birth: number;
     private age: number = 0;
     public isDead = false;
+    private initialVel: number;
     public lifespan: number;
     public options: MissileOptions;
     private shadowRotation = Math.random() * Math.PI * 4;
     private rotationLerp = 0.05;
     constructor(
         game: Game,
-        source: Boss | Player | Wedge | MissilePod,
+        startPos: Victor,
         target: Boss | Player | Wedge | MissilePod,
         options: MissileOptions
     ) {
         this.options = {
-            initialVel: 2,
+            initialVel: 5,
             thrustStartAge: 0,
-            thrustStrength: 0.001,
+            thrustStrength: 0.005,
             lifespan: 60 * 10,
         };
         Object.assign(this.options, options);
         this.game = game;
-        this.source = source;
-        this.pos = source.getWorldPos();
+        this.startPos = startPos;
+        this.pos = startPos;
+        console.log(this.pos);
         this.target = target;
         this.el = new PIXI.Sprite(this.game.graphics.missile);
-        this.vel = new Victor(
-            Math.random() * this.options.initialVel * 2 -
-                this.options.initialVel,
-            Math.random() * this.options.initialVel * 2 -
-                this.options.initialVel
-        );
         this.thrustStartAge = this.options.thrustStartAge;
         this.thrustStrength = this.options.thrustStrength;
+        this.initialVel = this.options.initialVel;
+        this.vel = this.getInitialVel();
         this.lifespan = this.options.lifespan;
         this.init();
     }
     init() {
         this.el.x = this.pos.x;
         this.el.y = this.pos.y;
+        this.el.rotation = Math.random() * Math.PI * 4 - Math.PI * 2;
+        this.el.anchor.set(0.5);
         this.game.graphics.skyContainer.addChild(this.el);
     }
     update() {
@@ -88,6 +88,18 @@ export default class Missile {
             this.game.graphics.player.worldTransform.tx,
             this.game.graphics.player.worldTransform.ty
         );
+    }
+
+    getInitialVel() {
+        const targetPos = this.target.getWorldPos();
+        const dist = targetPos.clone().subtract(this.pos);
+        const variance = new Victor(Math.random(), Math.random());
+        const unit = dist.normalize().multiply(variance);
+        const thrustStrength = new Victor(-this.initialVel, -this.initialVel);
+
+        // debugger;
+
+        return unit.multiply(thrustStrength);
     }
 
     flyAtTarget() {
