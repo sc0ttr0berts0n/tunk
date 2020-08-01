@@ -39,6 +39,7 @@ export default class Missile {
     public options: MissileOptions;
     private shadowRotation = Math.random() * Math.PI * 4;
     private rotationLerp = 0.05;
+    private killRange = 30;
     constructor(
         game: Game,
         startPos: Victor,
@@ -55,7 +56,6 @@ export default class Missile {
         this.game = game;
         this.startPos = startPos;
         this.pos = startPos;
-        console.log(this.pos);
         this.target = target;
         this.el = new PIXI.Sprite(this.game.graphics.missile);
         this.thrustStartAge = this.options.thrustStartAge;
@@ -76,10 +76,12 @@ export default class Missile {
         this.age++;
         if (this.age > this.lifespan) {
             this.isDead = true;
-            this.el.destroy();
         }
-        if (!this.isDead) {
+        if (this.isDead) {
+            this.handleDeath();
+        } else {
             this.flyAtTarget();
+            this.checkCollision();
         }
     }
 
@@ -96,8 +98,6 @@ export default class Missile {
         const variance = new Victor(Math.random(), Math.random());
         const unit = dist.normalize().multiply(variance);
         const thrustStrength = new Victor(-this.initialVel, -this.initialVel);
-
-        // debugger;
 
         return unit.multiply(thrustStrength);
     }
@@ -133,10 +133,24 @@ export default class Missile {
             this.shadowRotation;
         this.el.rotation = this.shadowRotation;
 
-        if (this.age === 200) {
-            // debugger;
-        }
         // store last postition
         this.lastWorldPos = worldPos.clone();
+    }
+
+    handleDeath() {
+        this.el.destroy();
+    }
+
+    checkCollision() {
+        const targetPos = this.target.getWorldPos();
+        const dist = targetPos.clone().subtract(this.pos).magnitude();
+        if (dist < 50) {
+            this.isDead = true;
+            this.handleDeath();
+            this.handleCollision();
+        }
+    }
+    handleCollision() {
+        console.log('collided');
     }
 }

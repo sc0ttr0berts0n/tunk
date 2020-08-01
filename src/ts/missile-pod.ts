@@ -110,7 +110,6 @@ export default class MissilePod {
                 this.game.missiles.push(missile);
             }, delay);
         }
-        console.log(`Wedge "${this.letter}" Fired ${num} Missle(s)!`);
     }
 
     getWorldPos() {
