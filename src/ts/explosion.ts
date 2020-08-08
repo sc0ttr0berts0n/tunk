@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import Victor = require('victor');
 import Game from './game';
+import { Howl } from 'howler';
 
 interface ExplosionOptions {
     lifespan?: number;
@@ -19,6 +20,9 @@ export default class Explosion {
     public isDead = false;
     public lifespan: number;
     public options: ExplosionOptions;
+    public onDeathSound = new Howl({
+        src: ['/assets/audio/impact_sample2.mp3'],
+    });
     constructor(game: Game, startPos: Victor, options?: ExplosionOptions) {
         this.options = {
             lifespan: 20,
@@ -38,6 +42,7 @@ export default class Explosion {
         this.el.anchor.set(0.5);
         this.el.scale.set(0.66);
         this.game.graphics.skyContainer.addChild(this.el);
+        this.onDeathSound.play();
     }
     update() {
         this.age++;
