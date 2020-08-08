@@ -50,12 +50,18 @@ export default class GraphicAssets {
         'assets/floor-warning-02.png'
     );
     public damagedWallLight = PIXI.Texture.from('assets/crack-light.png');
-    public misslePodLoaded = PIXI.Texture.from('assets/missile-pod-loaded.png');
+    public missilePodLoaded = PIXI.Texture.from(
+        'assets/missile-pod-loaded.png'
+    );
 
     //FLAK
     public flakGraphic = PIXI.Texture.from('assets/da-flak.png');
 
+    // Missile
     public missile = PIXI.Texture.from('assets/missile.png');
+
+    // Explosion(s)
+    public explosion = PIXI.Texture.from('assets/da-blood.png');
 
     //EndGameOverlay
     public endGameOverlayBlack: PIXI.Graphics = new PIXI.Graphics();

@@ -5,6 +5,7 @@ import Boss from './boss';
 import Player from './player';
 import Wedge from './wedge';
 import MissilePod from './missile-pod';
+import Explosion from './explosion';
 
 interface Vec2 {
     x: number;
@@ -86,10 +87,7 @@ export default class Missile {
     }
 
     getWorldPos() {
-        return new Victor(
-            this.game.graphics.player.worldTransform.tx,
-            this.game.graphics.player.worldTransform.ty
-        );
+        return new Victor(this.el.worldTransform.tx, this.el.worldTransform.ty);
     }
 
     getInitialVel() {
@@ -151,6 +149,7 @@ export default class Missile {
         }
     }
     handleCollision() {
-        console.log('collided');
+        const explosion = new Explosion(this.game, this.lastWorldPos);
+        this.game.explosions.push(explosion);
     }
 }

@@ -23,7 +23,7 @@ export default class MissilePod {
         this.game = game;
         this.wedge = wedge;
         this.letter = wedge.letter;
-        this.el = new PIXI.Sprite(this.game.graphics.misslePodLoaded);
+        this.el = new PIXI.Sprite(this.game.graphics.missilePodLoaded);
         this.init();
     }
 
@@ -51,7 +51,7 @@ export default class MissilePod {
         }
         const podFullyExtended = this.pos.y >= this.yOffArmed;
         if (podFullyExtended && this.missilesToFire > 0) {
-            this.fireMissles(this.missilesToFire);
+            this.fireMissiles(this.missilesToFire);
         }
         this.render();
     }
@@ -92,7 +92,7 @@ export default class MissilePod {
         return false;
     }
 
-    public fireMissles(num: number = 1) {
+    public fireMissiles(num: number = 1) {
         this.missilesToFire += -num;
         if (this.missilesToFire < 0) {
             this.missilesToFire = 0;

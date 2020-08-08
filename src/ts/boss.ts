@@ -96,13 +96,13 @@ export default class Boss {
         const bossWords = [
             'Destroy',
             'Explode',
-            'Kerblamo',
-            'Gank',
+            'GrayMark',
+            'Skat',
             'Target',
-            'Smack',
+            'Retro',
         ];
 
-        // const bossWords = ['AB', 'CD', 'EF', 'GF', 'er'];
+        // const bossWords = ['AB', 'CD', 'EF', 'GF', 'ER'];
 
         // get a random index from the boss words
         const _randomIndex = () => {

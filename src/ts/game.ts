@@ -11,6 +11,7 @@ import Boss from './boss';
 import Missiles from './missile';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
+import Explosion from './explosion';
 
 export default class Game {
     private canvas: HTMLCanvasElement;
@@ -29,6 +30,7 @@ export default class Game {
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
     public missiles: Missiles[] = [];
+    public explosions: Explosion[] = [];
     private damageChance: number = 0.008;
     private shootHoleChance: number = 0.01;
     public frameCount: number = 0;
@@ -103,6 +105,12 @@ export default class Game {
                 this.missiles.forEach((missile) => missile.update());
                 this.missiles = this.missiles.filter(
                     (missile) => !missile.isDead
+                );
+            }
+            if (this.explosions.length) {
+                this.explosions.forEach((explosion) => explosion.update());
+                this.explosions = this.explosions.filter(
+                    (explosion) => !explosion.isDead
                 );
             }
         }
