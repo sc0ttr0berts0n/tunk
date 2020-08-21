@@ -6,6 +6,7 @@ import Player from './player';
 import Wedge from './wedge';
 import MissilePod from './missile-pod';
 import Explosion from './explosion';
+import { Howl } from 'howler';
 
 interface Vec2 {
     x: number;
@@ -41,6 +42,17 @@ export default class Missile {
     private shadowRotation = Math.random() * Math.PI * 4;
     private rotationLerp = 0.05;
     private killRange = 30;
+    public onStartSound = new Howl({
+        src: ['/assets/audio/missile-start.mp3'],
+    });
+    public onTravelSound = new Howl({
+        src: ['/assets/audio/missile-travel.mp3'],
+    });
+    public onDeathSound = new Howl({
+        src: ['/assets/audio/missile-death.mp3'],
+    });
+    public onTravelSoundHasPlayed = false;
+
     constructor(
         game: Game,
         startPos: Victor,
@@ -72,6 +84,7 @@ export default class Missile {
         this.el.rotation = Math.random() * Math.PI * 4 - Math.PI * 2;
         this.el.anchor.set(0.5);
         this.game.graphics.skyContainer.addChild(this.el);
+        this.onStartSound.play();
     }
     update() {
         this.age++;
@@ -114,6 +127,10 @@ export default class Missile {
         if (this.age > this.thrustStartAge) {
             // calc accel
             this.vel = this.vel.add(this.acc);
+            if (!this.onTravelSound.playing()) {
+                this.onTravelSound.play();
+                this.onTravelSoundHasPlayed = true;
+            }
         }
 
         // calc vel
@@ -136,6 +153,7 @@ export default class Missile {
     }
 
     handleDeath() {
+        this.onDeathSound.play();
         this.el.destroy();
     }
 
