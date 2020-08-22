@@ -1,14 +1,19 @@
-class Cannon {
-    constructor(game) {
+import * as PIXI from 'pixi.js';
+import Game from './game';
+
+export default class Cannon {
+    private game: Game;
+    public container = new PIXI.Container();
+    private cannonTargetX = 200;
+    private cannonTargetY = -120;
+    private nextShot = 4;
+
+    constructor(game: Game) {
         this.game = game;
-        this.container = new PIXI.Container();
-        this.cannonTargetX = 200;
-        this.cannonTargetY = -120;
-        this.nextShot = 4;
         this.init();
     }
 
-    init() {
+    public init() {
         this.game.graphics.cannonBarrelSmoke.anchor.set(0, 0.5);
         this.game.graphics.cannonBarrelSmoke.x = this.cannonTargetX + 0;
         this.game.graphics.cannonBarrelSmoke.y = this.cannonTargetY - -120;
@@ -38,7 +43,7 @@ class Cannon {
         this.game.graphics.barrel.rotation = 0.25 * Math.PI;
     }
 
-    update(delta) {
+    public update(delta: number) {
         if (this.game.frameCount > this.nextShot - 4) {
             this.game.graphics.cannonFire.alpha = 1;
             this.game.graphics.cannonSmoke.alpha += 0.3;

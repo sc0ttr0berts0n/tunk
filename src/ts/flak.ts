@@ -1,18 +1,36 @@
-class Flak {
-    constructor(game, target, angle, isLethal = true, speed = 20) {
+import * as PIXI from 'pixi.js';
+import Game from './game';
+import Wedge from './wedge';
+
+export default class Flak {
+    private game: Game;
+    private angle: number;
+    private container = new PIXI.Container();
+    private el: PIXI.Sprite;
+    public target: Wedge;
+    private speed: number;
+    public isLethal: boolean;
+    private yOff: number;
+    public isDead = false;
+
+    constructor(
+        game: Game,
+        target: Wedge,
+        angle: number,
+        isLethal = true,
+        speed = 20
+    ) {
         this.game = game;
-        this.angle = angle + 0.5 * Math.PI;
-        this.container = new PIXI.Container();
         this.el = new PIXI.Sprite(this.game.graphics.flakGraphic);
+        this.angle = angle + 0.5 * Math.PI;
         this.target = target;
         this.speed = speed;
         this.angle = angle + 0.5 * Math.PI;
-        this.isLethal = isLethal;
         this.yOff = -this.game.turret.radius - this.game.app.renderer.width * 4;
-        this.isDead = false;
+        this.isLethal = isLethal;
         this.init();
     }
-    init() {
+    public init() {
         this.container.rotation = this.angle;
         this.el.rotation = Math.PI * 0.5;
         this.el.anchor.set(1, 0.5);
@@ -27,7 +45,9 @@ class Flak {
             this.target.isLethal = true;
         }
     }
-    update(delta) {
+    public update(delta: number) {
+        // Todo: fork this into a few private methods
+
         this.el.y += this.speed;
         // calc player-flak distance
         const player = this.game.graphics.player.worldTransform;
@@ -94,7 +114,8 @@ class Flak {
             this.target.isLethal = false;
         }
     }
-    reinit() {
+
+    public reinit() {
         this.isLethal = false;
         this.isDead = true;
         this.el.alpha = 0;

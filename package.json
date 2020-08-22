@@ -1,0 +1,35 @@
+{
+    "name": "tunk",
+    "version": "2.0.0",
+    "description": "",
+    "private": true,
+    "dependencies": {
+        "@types/howler": "^2.2.1",
+        "howler": "^2.2.0",
+        "pixi.js": "^5.3.0"
+    },
+    "devDependencies": {
+        "ts-loader": "^7.0.5",
+        "typescript": "^3.9.6",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0"
+    },
+    "scripts": {
+        "watch": "webpack-dev-server",
+        "build": "npx webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sc0ttr0berts0n/tunk.git"
+    },
+    "keywords": [
+        "tunk"
+    ],
+    "author": "HyperFuel",
+    "license": "UNLICENSED",
+    "bugs": {
+        "url": "https://github.com/sc0ttr0berts0n/tunk/issues"
+    },
+    "homepage": "https://github.com/sc0ttr0berts0n/tunk#readme"
+}
