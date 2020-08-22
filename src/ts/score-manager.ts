@@ -47,11 +47,7 @@ export default class ScoreManager {
 
     public resetHighScore() {
         localStorage.setItem('tunk-high-score', '0');
-        if (this.game.player.alive) {
-            this.highScore = this.score;
-        } else {
-            this.highScore = 0;
-        }
+        this.highScore = 0;
         this.highScoreDomEl.textContent = this.highScore.toString();
     }
 
