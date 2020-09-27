@@ -26,7 +26,7 @@ export default class Missile {
     private lastWorldPos = new Victor(0, 0);
     private vel: Victor;
     private acc = new Victor(0, 0);
-    private friction = new Victor(0.98, 0.98);
+    private friction = new Victor(0.92, 0.92);
     private startPos: Victor;
     private target: Boss | Player | Wedge | MissilePod;
     private thrustStartAge: number;
@@ -60,10 +60,10 @@ export default class Missile {
         options: MissileOptions
     ) {
         this.options = {
-            initialVel: 5,
-            thrustStartAge: 0,
-            thrustStrength: 0.005,
-            lifespan: 60 * 10,
+            initialVel: 10,
+            thrustStartAge: 150,
+            thrustStrength: 0.05,
+            lifespan: 600,
         };
         Object.assign(this.options, options);
         this.game = game;

@@ -16,6 +16,14 @@ export default class Boss {
     private container = new PIXI.Container();
     public killPhraseContainer = new PIXI.Container();
     public pos: Vec2 = { x: 192, y: 192 };
+    public rot = -Math.PI / 4;
+    public targetRot = -Math.PI / 4;
+    public potentialRots = [
+        Math.PI / 2,
+        Math.PI,
+        (Math.PI / 2) * 3,
+        Math.PI * 2,
+    ];
     private closestDist = -370;
     private hoverDist = -40;
     private hoverRate = 0.01;
@@ -75,7 +83,14 @@ export default class Boss {
             this.closestDist -
             Math.sin(this.game.frameCount * this.hoverRate) * this.hoverDist +
             this.hoverDist / 2;
+        if (this.game.frameCount % (60 * 15) === 0) {
+            const newRotIndex = Math.floor(
+                Math.random() * this.potentialRots.length
+            );
 
+            this.targetRot = this.potentialRots[newRotIndex] - Math.PI / 4;
+        }
+        this.rot += (this.targetRot - this.rot) * 0.01;
         this.pos.y = offset;
     }
 
@@ -90,6 +105,7 @@ export default class Boss {
 
     private renderBossShip() {
         this.el.y = this.pos.y;
+        this.container.rotation = this.rot;
     }
 
     private getRandomKillPhrases(num: number = 0) {
