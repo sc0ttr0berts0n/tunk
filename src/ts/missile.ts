@@ -167,7 +167,12 @@ export default class Missile {
         }
     }
     handleCollision() {
+        // create explosion
         const explosion = new Explosion(this.game, this.lastWorldPos);
         this.game.explosions.push(explosion);
+
+        // damage boss
+        const dmg = 1 / this.game.boss.healthScore;
+        this.game.boss.health -= dmg;
     }
 }

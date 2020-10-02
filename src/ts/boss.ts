@@ -3,21 +3,15 @@ import Game from './game';
 import KillPhrase from './kill-phrase';
 import Victor = require('victor');
 
-interface Options {
-    killPhrases?: string[];
-}
-
 export default class Boss {
     private game: Game;
-    private options: Options;
-    private killPhrases: string[];
     public killPhrase: KillPhrase;
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
     public killPhraseContainer = new PIXI.Container();
     public pos: Vec2 = { x: 192, y: 192 };
-    public rot = -Math.PI / 4;
-    public targetRot = -Math.PI / 4;
+    public rot = Math.PI * 2 - Math.PI / 4;
+    public targetRot = Math.PI * 2 - Math.PI / 4;
     public potentialRots = [
         Math.PI / 2,
         Math.PI,
@@ -31,11 +25,13 @@ export default class Boss {
     public validVisitedLetters: string[];
     public validVisitedLetterCount: number;
     public el: PIXI.Sprite;
+    public health: number = 1.0;
+    public healthEl: PIXI.Text;
+    public healthScore = 80;
 
-    constructor(game: Game, options?: Options) {
+    constructor(game: Game) {
         this.game = game;
         this.el = new PIXI.Sprite(this.game.graphics.bossOne);
-        this.killPhrases = options?.killPhrases ?? this.getRandomKillPhrases();
         this.killPhrase = this.initKillPhrase();
         this.init();
     }
@@ -48,6 +44,21 @@ export default class Boss {
         this.el.y = this.closestDist;
         this.container.addChild(this.el);
         this.game.graphics.skyContainer.addChild(this.container);
+
+        // Todo: Permanant boss health solution
+        const letterStyle = new PIXI.TextStyle();
+        letterStyle.fill = '#cccccc';
+        letterStyle.fontSize = 25;
+        letterStyle.stroke = '#282228';
+        letterStyle.strokeThickness = (10 / 28) * letterStyle.fontSize;
+        letterStyle.fontFamily = 'Arial';
+        letterStyle.fontWeight = 'bold';
+        this.healthEl = new PIXI.Text(this.health.toString(), letterStyle);
+        this.healthEl.anchor.set(0.5);
+        this.healthEl.x = 0;
+        this.healthEl.y = -80;
+        this.el.addChild(this.healthEl);
+        // this.killPhrase.container.addChild(this.container);
     }
 
     public update(delta: number) {
@@ -92,10 +103,16 @@ export default class Boss {
         }
         this.rot += (this.targetRot - this.rot) * 0.01;
         this.pos.y = offset;
+
+        // Todo: Permanant letter update solution
+        this.healthEl.text = Math.floor(
+            this.health * this.healthScore
+        ).toString();
+        this.healthEl.rotation = -this.rot;
     }
 
     private initKillPhrase() {
-        const phrase = this.killPhrases.shift();
+        const phrase = this.getRandomKillPhrase();
         return new KillPhrase(this.game, this, phrase);
     }
 
@@ -108,8 +125,8 @@ export default class Boss {
         this.container.rotation = this.rot;
     }
 
-    private getRandomKillPhrases(num: number = 0) {
-        const bossWords = [
+    private getRandomKillPhrase() {
+        const phrases = [
             'Destroy',
             'Explode',
             'GrayMark',
@@ -118,36 +135,15 @@ export default class Boss {
             'Retro',
         ];
 
-        // const bossWords = ['AB', 'CD', 'EF', 'GF', 'ER'];
+        // const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
 
         // get a random index from the boss words
         const _randomIndex = () => {
-            return Math.floor(Math.random() * bossWords.length);
+            return Math.floor(Math.random() * phrases.length);
         };
 
-        // splice a random bossword out of the array
-        const _spliceBossWord = (i: number) => {
-            return bossWords.splice(i, 1)[0];
-        };
-
-        // fixes for edge cases
-
-        // num isnt selected, return random
-        if (num === 0) {
-            num = Math.ceil(Math.random() * bossWords.length);
-        }
-
-        // num is longer than there are keys for
-        if (num > bossWords.length) {
-            num = bossWords.length;
-        }
-
-        // fill array with random bosswords
-        const phraseArr = Array(num)
-            .fill(0)
-            .map((el) => _spliceBossWord(_randomIndex()));
-
-        return phraseArr;
+        // fill array with random phrases
+        return phrases[_randomIndex()];
     }
 
     private getValidVisitedLetterCount() {
@@ -191,7 +187,7 @@ export default class Boss {
         this.game.turret.history = [];
 
         // if more killphrases, process it
-        if (this.killPhrases.length) {
+        if (this.health > 0) {
             this.setupNewKillPhrase();
         } else {
             // otherwise, handle "killing" of the boss
@@ -202,7 +198,7 @@ export default class Boss {
     }
 
     private setupNewKillPhrase() {
-        this.killPhrase.newPhrase(this.killPhrases.shift());
+        this.killPhrase.newPhrase(this.getRandomKillPhrase());
     }
 
     firstDamagedLetterIndex() {
