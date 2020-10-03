@@ -33,10 +33,11 @@ export default class Wedge {
     private letterPos: Vec2 = { x: 0, y: this.letterYOffsetDisarmed };
     public willBeShot = false;
     public isLethal = false;
+    public isVisited = false;
+    public isKillPhraseLetter = false;
     public scoreCheck = true;
     public container = new PIXI.Container();
     public missilePod: MissilePod;
-    public missilePodArmingOrder: number[] = [];
     constructor(game: Game, turret: Turret, id: number, wedgeCount: number) {
         this.game = game;
         this.turret = turret;
@@ -94,7 +95,6 @@ export default class Wedge {
         this.isLethal = false;
         this.scoreCheck = true;
         this.health = this.maxHealth;
-        this.missilePodArmingOrder = [];
     }
 
     private initWall() {

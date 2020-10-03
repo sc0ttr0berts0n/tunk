@@ -68,28 +68,21 @@ export default class MissilePod {
     }
 
     private canBeArmed() {
-        const boss = this.game.boss;
-        const phraseArr = boss.killPhrase.phrase.split('');
-        const phraseIndex = phraseArr.indexOf(this.wedge.letter);
-        return phraseIndex > -1;
+        return true;
     }
 
     private setIsArmed() {
         const boss = this.game.boss;
-        const vistedLetterCount = boss.validVisitedLetterCount;
-        const minIndexToVisit = Math.min(...this.wedge.missilePodArmingOrder);
-        const hasBeenVisted = minIndexToVisit < vistedLetterCount;
+        const wedge = this.wedge;
 
-        if (boss.active && this.canBeArmed() && hasBeenVisted) {
-            const anyDamageBefore =
-                boss.killPhrase.tiles
-                    .slice(0, vistedLetterCount - 1)
-                    .filter((el) => el.wedge.isDamaged()).length > 0;
-            if (!anyDamageBefore) {
-                return true;
-            }
+        if (
+            boss.active &&
+            wedge.isKillPhraseLetter &&
+            wedge.isVisited &&
+            wedge.health >= wedge.maxHealth
+        ) {
+            return true;
         }
-        return false;
     }
 
     public fireMissiles(num: number = 1) {

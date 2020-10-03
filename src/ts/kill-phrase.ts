@@ -12,6 +12,7 @@ export default class KillPhrase {
     public tiles: LetterTile[] = [];
     private maxLetterTileWidth: number;
     public container = new PIXI.Container();
+    public killNumber = Infinity;
     public pos: Vec2 = { x: 128, y: 1024 - 128 };
 
     constructor(game: Game, boss: Boss, phrase: string) {
@@ -41,7 +42,6 @@ export default class KillPhrase {
     }
 
     public removePhrase() {
-        this.tiles.forEach((tile) => (tile.wedge.missilePodArmingOrder = []));
         this.container.removeChildren();
         this.tiles = [];
     }
@@ -57,6 +57,14 @@ export default class KillPhrase {
         this.length = phraseArr.length;
         this.phrase = cleanPhrase;
 
+        this.killNumber = [...new Set(phraseArr)].length;
+
+        this.game.turret.wedges.forEach((wedge) => {
+            wedge.isVisited = false;
+            wedge.missilePod.isArmed = false;
+            wedge.isKillPhraseLetter = false;
+        });
+
         this.tiles = phraseArr.map((ltr, index) => {
             return new LetterTile(
                 this.game,
@@ -65,10 +73,6 @@ export default class KillPhrase {
                 ltr.toUpperCase(),
                 index
             );
-        });
-
-        this.tiles.forEach((tile) => {
-            tile.wedge.missilePodArmingOrder.push(tile.id);
         });
 
         this.maxLetterTileWidth = this.getMaxTileWidth();

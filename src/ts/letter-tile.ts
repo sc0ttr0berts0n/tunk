@@ -90,6 +90,10 @@ export default class LetterTile {
         this.letterEl.anchor.set(0.5);
         this.container.addChild(this.letterEl);
         this.killPhrase.container.addChild(this.container);
+
+        // register letters as kill phrase letters
+        const wedge = this.game.turret.getWedgeByLetter(this.letter);
+        wedge.isKillPhraseLetter = true;
     }
 
     public placeLettersTile() {

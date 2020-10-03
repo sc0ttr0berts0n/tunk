@@ -40,6 +40,7 @@ export default class Player {
             this.bloodRot + -this.game.graphics.player.rotation;
         if (this.isAtTarget()) {
             this.repair();
+            this.targetWedge.isVisited = true;
         }
         if (!this.alive) {
             this.game.graphics.playerBlood.visible = true;

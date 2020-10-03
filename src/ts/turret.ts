@@ -82,6 +82,12 @@ export default class Turret {
         });
     }
 
+    public getArmedWedges() {
+        return this.wedges.filter((wedge) => {
+            return wedge.missilePod.isArmed;
+        });
+    }
+
     pushLetterToHistory(currentLetter: string) {
         const mostRecentLetter = this.history[this.history.length - 1];
         if (mostRecentLetter !== currentLetter) {

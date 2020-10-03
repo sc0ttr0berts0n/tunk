@@ -22,7 +22,6 @@ export default class Boss {
     private hoverDist = -40;
     private hoverRate = 0.01;
     public active = true;
-    public validVisitedLetters: string[];
     public validVisitedLetterCount: number;
     public el: PIXI.Sprite;
     public health: number = 1.0;
@@ -65,12 +64,14 @@ export default class Boss {
         if (this.active) {
             this.validVisitedLetterCount = this.getValidVisitedLetterCount();
             const _everyLetterArmed =
-                this.validVisitedLetterCount === this.killPhrase.length;
+                this.validVisitedLetterCount === this.killPhrase.killNumber;
 
             if (_everyLetterArmed) {
+                console.log('desssstroyh!');
+
                 if (
                     this.killPhrase.tiles.every(
-                        (tile) => !tile.wedge.isDamaged()
+                        (tile) => tile.wedge.missilePod.isArmed
                     )
                 ) {
                     this.handleFullyArmedMissilePods();
@@ -147,32 +148,9 @@ export default class Boss {
     }
 
     private getValidVisitedLetterCount() {
-        const historyCount = this.killPhrase.length;
-        const history = this.game.turret.history.slice(-historyCount);
-        const phrase = this.killPhrase.phrase.split('');
-        const startLetterIndexes = history
-            .map((ltr, index) => {
-                return ltr === phrase[0] ? index : -1;
-            })
-            .filter((index) => index >= 0);
-        const candidateArray = startLetterIndexes.map((index) =>
-            history.slice(index)
-        );
-        if (candidateArray.length) {
-            const count = Math.max(
-                ...candidateArray.map((arr) => {
-                    for (let i = 0; i < arr.length; i++) {
-                        if (arr[i] !== phrase[i]) {
-                            return 0;
-                        }
-                    }
-                    return arr.length;
-                })
-            );
-            return count;
-        } else {
-            return 0;
-        }
+        // Todo: Gut turret history feature
+        const armedWedgeCount = this.game.turret.getArmedWedges().length;
+        return armedWedgeCount ? armedWedgeCount : 0;
     }
 
     private handleFullyArmedMissilePods() {
