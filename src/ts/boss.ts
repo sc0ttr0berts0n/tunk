@@ -130,10 +130,18 @@ export default class Boss {
         const phrases = [
             'Destroy',
             'Explode',
-            'GrayMark',
+            'GrayMarker',
             'Skat',
             'Target',
             'Retro',
+            'Seeker',
+            'pewpew',
+            'kaboom',
+            'rockets',
+            'rip',
+            'tear',
+            'tunk',
+            'bonk',
         ];
 
         // const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
