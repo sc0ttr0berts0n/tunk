@@ -117,8 +117,8 @@ export default class Missile {
             // calc accel
             this.vel = this.vel.add(this.acc);
             if (this.game.boss.canPlayMissileTravelAudio) {
-                this.game.audio.missileTravel.play();
                 this.game.boss.canPlayMissileTravelAudio = false;
+                this.game.audio.missileTravel.play();
             }
         }
 
@@ -143,8 +143,8 @@ export default class Missile {
 
     handleDeath() {
         if (this.game.boss.canPlayMissileDestroyAudio) {
-            this.game.audio.missileDestroy.play();
             this.game.boss.canPlayMissileDestroyAudio = false;
+            this.game.audio.missileDestroy.play();
         }
         this.el.destroy();
     }
