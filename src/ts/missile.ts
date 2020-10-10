@@ -42,16 +42,6 @@ export default class Missile {
     private shadowRotation = Math.random() * Math.PI * 4;
     private rotationLerp = 0.05;
     private killRange = 30;
-    public onStartSound = new Howl({
-        src: ['/assets/audio/missile-start.mp3'],
-    });
-    public onTravelSound = new Howl({
-        src: ['/assets/audio/missile-travel.mp3'],
-    });
-    public onDeathSound = new Howl({
-        src: ['/assets/audio/missile-death.mp3'],
-    });
-    public onTravelSoundHasPlayed = false;
 
     constructor(
         game: Game,
@@ -84,7 +74,6 @@ export default class Missile {
         this.el.rotation = Math.random() * Math.PI * 4 - Math.PI * 2;
         this.el.anchor.set(0.5);
         this.game.graphics.skyContainer.addChild(this.el);
-        this.onStartSound.play();
     }
     update() {
         this.age++;
@@ -127,9 +116,9 @@ export default class Missile {
         if (this.age > this.thrustStartAge) {
             // calc accel
             this.vel = this.vel.add(this.acc);
-            if (!this.onTravelSound.playing()) {
-                this.onTravelSound.play();
-                this.onTravelSoundHasPlayed = true;
+            if (this.game.boss.canPlayMissileTravelAudio) {
+                this.game.audio.missileTravel.play();
+                this.game.boss.canPlayMissileTravelAudio = false;
             }
         }
 
@@ -153,7 +142,10 @@ export default class Missile {
     }
 
     handleDeath() {
-        this.onDeathSound.play();
+        if (this.game.boss.canPlayMissileDestroyAudio) {
+            this.game.audio.missileDestroy.play();
+            this.game.boss.canPlayMissileDestroyAudio = false;
+        }
         this.el.destroy();
     }
 

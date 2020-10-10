@@ -1,4 +1,4 @@
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 import Game from './game';
 
 export default class AudioAssets {
@@ -10,6 +10,8 @@ export default class AudioAssets {
     public moveArrive: Howl;
     public wallBreak: Howl;
     public explosion: Howl;
+    public missileTravel: Howl;
+    public missileDestroy: Howl;
 
     constructor(game: Game) {
         this.game = game;
@@ -20,5 +22,11 @@ export default class AudioAssets {
         this.moveArrive = new Howl({ src: ['/assets/audio/arrive.mp3'] });
         this.wallBreak = new Howl({ src: ['/assets/audio/wallbreak2.mp3'] });
         this.explosion = new Howl({ src: ['/assets/audio/impact_sample.mp3'] });
+        this.missileTravel = new Howl({
+            src: ['/assets/audio/missile-travel.mp3'],
+        });
+        this.missileDestroy = new Howl({
+            src: ['/assets/audio/missile-destroy.mp3'],
+        });
     }
 }

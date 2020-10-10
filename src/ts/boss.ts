@@ -27,6 +27,8 @@ export default class Boss {
     public health: number = 1.0;
     public healthEl: PIXI.Text;
     public healthScore = 80;
+    public canPlayMissileTravelAudio = true;
+    public canPlayMissileDestroyAudio = true;
 
     constructor(game: Game) {
         this.game = game;
@@ -128,20 +130,23 @@ export default class Boss {
 
     private getRandomKillPhrase() {
         const phrases = [
+            'GrayMarker',
             'Destroy',
             'Explode',
-            'GrayMarker',
-            'Skat',
+            'rockets',
             'Target',
-            'Retro',
             'Seeker',
             'pewpew',
             'kaboom',
-            'rockets',
-            'rip',
+            'blast',
+            'Retro',
+            'bomb',
+            'bang',
+            'Skat',
             'tear',
             'tunk',
             'bonk',
+            'rip',
         ];
 
         // const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
@@ -174,6 +179,8 @@ export default class Boss {
 
         // if more killphrases, process it
         if (this.health > 0) {
+            this.canPlayMissileTravelAudio = true;
+            this.canPlayMissileDestroyAudio = true;
             this.setupNewKillPhrase();
         } else {
             // otherwise, handle "killing" of the boss
