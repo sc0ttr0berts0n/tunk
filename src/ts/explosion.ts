@@ -19,6 +19,7 @@ export default class Explosion {
     private age: number = 0;
     public isDead = false;
     public lifespan: number;
+    public momentum = Math.random() * 0.4 - 0.2;
     public options: ExplosionOptions;
     constructor(game: Game, startPos: Victor, options?: ExplosionOptions) {
         this.options = {
@@ -42,6 +43,12 @@ export default class Explosion {
     }
     update() {
         this.age++;
+        this.el.rotation += this.momentum;
+        this.el.scale.x += this.momentum * 0.2;
+        this.el.scale.y += this.momentum * 0.2;
+        if (this.age > this.lifespan - 10) {
+            this.el.alpha -= 0.1;
+        }
         if (this.age > this.lifespan) {
             this.isDead = true;
         }
