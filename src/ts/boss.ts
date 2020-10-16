@@ -12,12 +12,6 @@ export default class Boss {
     public pos: Vec2 = { x: 192, y: 192 };
     public rot = Math.PI * 2 - Math.PI / 4;
     public targetRot = Math.PI * 2 - Math.PI / 4;
-    public potentialRots = [
-        Math.PI / 2,
-        Math.PI,
-        (Math.PI / 2) * 3,
-        Math.PI * 2,
-    ];
     private closestDist = -370;
     private hoverDist = -40;
     private hoverRate = 0.01;
@@ -98,11 +92,8 @@ export default class Boss {
             Math.sin(this.game.frameCount * this.hoverRate) * this.hoverDist +
             this.hoverDist / 2;
         if (this.game.frameCount % (60 * 15) === 0) {
-            const newRotIndex = Math.floor(
-                Math.random() * this.potentialRots.length
-            );
-
-            this.targetRot = this.potentialRots[newRotIndex] - Math.PI / 4;
+            const rot = ((Math.floor(Math.random() * 3) - 1) * Math.PI) / 2;
+            this.targetRot += rot;
         }
         this.rot += (this.targetRot - this.rot) * 0.01;
         this.pos.y = offset;
