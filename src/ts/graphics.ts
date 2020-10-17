@@ -69,6 +69,8 @@ export default class GraphicAssets {
 
     // Boss One
     public bossOne = PIXI.Texture.from('assets/boss-one.png');
+    public bossOneDamaged1 = PIXI.Texture.from('assets/boss-one-damaged-1.png');
+    public bossOneDamaged2 = PIXI.Texture.from('assets/boss-one-damaged-2.png');
 
     constructor(game: Game) {
         this.game = game;

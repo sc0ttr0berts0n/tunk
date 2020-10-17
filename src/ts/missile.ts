@@ -165,6 +165,6 @@ export default class Missile {
 
         // damage boss
         const dmg = 1 / this.game.boss.healthScore;
-        this.game.boss.health -= dmg;
+        this.game.boss.takeDamage(dmg);
     }
 }

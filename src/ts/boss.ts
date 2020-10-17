@@ -23,6 +23,7 @@ export default class Boss {
     public healthScore = 80;
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
+    public needsGraphicUpdate = false;
 
     constructor(game: Game) {
         this.game = game;
@@ -117,6 +118,17 @@ export default class Boss {
     private renderBossShip() {
         this.el.y = this.pos.y;
         this.container.rotation = this.rot;
+        if (this.needsGraphicUpdate) {
+            if (this.health < 1/3) {
+                this.el.texture = this.game.graphics.bossOneDamaged2;
+            } else if (this.health < 2/3) {
+                this.el.texture = this.game.graphics.bossOneDamaged1;
+            } else {
+                this.el.texture = this.game.graphics.bossOne;
+            }
+            this.needsGraphicUpdate = false;
+        }
+
     }
 
     private getRandomKillPhrase() {
@@ -193,5 +205,13 @@ export default class Boss {
 
     public getWorldPos() {
         return new Victor(this.el.worldTransform.tx, this.el.worldTransform.ty);
+    }
+
+    public takeDamage(dmg: number) {
+        this.health -= dmg;
+        if (this.health < 0) {
+            this.health = 0;
+        }
+        this.needsGraphicUpdate = true;
     }
 }
