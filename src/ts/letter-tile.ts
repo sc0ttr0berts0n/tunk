@@ -57,13 +57,13 @@ export default class LetterTile {
         if (wedgeIsArmed) {
             this.el.style.fill = '#ff5050';
         } else {
-            this.el.style.fill = '#cccccc';
+            this.el.style.fill = '#ffffff';
         }
     }
 
     private initLetter() {
         const textStyle = new PIXI.TextStyle();
-        textStyle.fill = '#cccccc';
+        textStyle.fill = '#ffffff';
         textStyle.fontSize = 24;
         textStyle.stroke = '#282228';
         textStyle.strokeThickness = 8;
