@@ -43,13 +43,19 @@ export default class Boss {
         this.container.addChild(this.el);
         this.game.graphics.skyContainer.addChild(this.container);
 
-        this.healthBar = new HealthBar(this.game, this.killPhrase, this, {
+        const healthBarOptions: HealthBarOptions = {
             width: 100,
             height: 10,
             chunkPadding: 0,
             chunkCount: 1,
             angledCapWidth: 0,
-        });
+        };
+        this.healthBar = new HealthBar(
+            this.game,
+            this.killPhrase,
+            this,
+            healthBarOptions
+        );
         this.healthBar.container.y = -80;
         this.healthBar.container.x = -50;
         this.healthBarContainer.addChild(this.healthBar.container);
@@ -77,6 +83,7 @@ export default class Boss {
                 this.killPhrase.update(delta);
             }
         }
+        this.healthBar.update();
         this.updateBossShip();
         this.render();
     }
