@@ -28,6 +28,8 @@ export default class Player {
     }
 
     public update(delta: number) {
+        const justDied = this.lastAlive && !this.alive;
+
         if (this.alive) {
             this.findDestination();
         }
@@ -36,14 +38,14 @@ export default class Player {
             this.pos.x + this.game.app.renderer.width / 2;
         this.game.graphics.player.y =
             this.pos.y + this.game.app.renderer.height / 2;
-        this.game.graphics.playerBlood.rotation =
-            this.bloodRot + -this.game.graphics.player.rotation;
         if (this.isAtTarget()) {
             this.repair();
             this.targetWedge.isVisited = true;
         }
-        if (!this.alive) {
+        if (justDied) {
             this.game.graphics.playerBlood.visible = true;
+            this.game.graphics.playerBlood.rotation =
+                this.bloodRot + -this.game.graphics.player.rotation;
         }
         this.playSounds();
         this.lastIsMoving = this.isMoving;
@@ -91,9 +93,9 @@ export default class Player {
     }
 
     private playSounds() {
+        const justDied = this.lastAlive && !this.alive;
         const isArriving = this.lastIsMoving && !this.isMoving;
         const isDeparting = !this.lastIsMoving && this.isMoving;
-        const justDied = this.lastAlive && !this.alive;
         if (isArriving) {
             // this.game.audio.moveArrive.play();
         } else if (isDeparting) {

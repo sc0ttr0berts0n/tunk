@@ -62,16 +62,16 @@ export default class LetterTile {
     }
 
     private initLetter() {
-        const letterStyle = new PIXI.TextStyle();
-        letterStyle.fill = '#cccccc';
-        letterStyle.fontSize = 24;
-        letterStyle.stroke = '#282228';
-        letterStyle.strokeThickness = 8;
-        letterStyle.miterLimit = 10;
-        letterStyle.lineJoin = 'bevel';
-        letterStyle.fontFamily = 'Arial';
-        letterStyle.fontWeight = 'bold';
-        this.el = new PIXI.Text(this.letter, letterStyle);
+        const textStyle = new PIXI.TextStyle();
+        textStyle.fill = '#cccccc';
+        textStyle.fontSize = 24;
+        textStyle.stroke = '#282228';
+        textStyle.strokeThickness = 8;
+        textStyle.miterLimit = 10;
+        textStyle.lineJoin = 'bevel';
+        textStyle.fontFamily = 'Arial';
+        textStyle.fontWeight = 'bold';
+        this.el = new PIXI.Text(this.letter, textStyle);
         this.el.anchor.set(0.5);
         this.container.addChild(this.el);
         this.killPhrase.phraseContainer.addChild(this.container);
