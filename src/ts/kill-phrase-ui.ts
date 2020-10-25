@@ -5,7 +5,7 @@ import LetterTile from './letter-tile';
 import { HealthBar } from './health-bar';
 import Victor = require('victor');
 
-export default class KillPhrase {
+export default class KillPhraseUI {
     private game: Game;
     private boss: Boss;
     public phrase: string;

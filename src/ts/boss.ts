@@ -1,15 +1,14 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
-import KillPhrase from './kill-phrase';
+import KillPhraseUI from './kill-phrase-ui';
 import Victor = require('victor');
 import { HealthBar, HealthBarOptions } from './health-bar';
 
 export default class Boss {
     private game: Game;
-    public killPhrase: KillPhrase;
+    public killPhraseUI: KillPhraseUI;
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
-    public killPhraseContainer = new PIXI.Container();
     public pos: Vec2 = { x: 192, y: 192 };
     public rot = Math.PI * 2 - Math.PI / 4;
     public targetRot = Math.PI * 2 - Math.PI / 4;
@@ -20,7 +19,6 @@ export default class Boss {
     public validVisitedLetterCount: number;
     public el: PIXI.Sprite;
     public health: number = 1.0;
-    public healthBarContainer = new PIXI.Container();
     public healthBar: HealthBar;
     public healthScore = 80;
     public canPlayMissileTravelAudio = true;
@@ -30,7 +28,7 @@ export default class Boss {
     constructor(game: Game) {
         this.game = game;
         this.el = new PIXI.Sprite(this.game.graphics.bossOne);
-        this.killPhrase = this.initKillPhrase();
+        this.killPhraseUI = this.initKillPhrase();
         this.init();
     }
 
@@ -52,31 +50,30 @@ export default class Boss {
         };
         this.healthBar = new HealthBar(this.game, this, healthBarOptions);
         // healthbar placement
-        this.healthBarContainer.y += 46;
-        this.healthBarContainer.x -= 40;
-        this.healthBarContainer.addChild(this.healthBar.container);
-        this.el.addChild(this.healthBarContainer);
+        this.healthBar.container.y += 46;
+        this.healthBar.container.x -= 40;
+        this.el.addChild(this.healthBar.container);
     }
 
     public update(delta: number) {
         if (this.active) {
             this.validVisitedLetterCount = this.getValidVisitedLetterCount();
             const _everyLetterArmed =
-                this.validVisitedLetterCount === this.killPhrase.killNumber;
+                this.validVisitedLetterCount === this.killPhraseUI.killNumber;
 
             if (_everyLetterArmed) {
                 console.log('desssstroyh!');
 
                 if (
-                    this.killPhrase.tiles.every(
+                    this.killPhraseUI.tiles.every(
                         (tile) => tile.wedge.missilePod.isArmed
                     )
                 ) {
                     this.handleFullyArmedMissilePods();
                 }
             }
-            if (this.killPhrase) {
-                this.killPhrase.update(delta);
+            if (this.killPhraseUI) {
+                this.killPhraseUI.update(delta);
             }
         }
         this.healthBar.update();
@@ -110,7 +107,7 @@ export default class Boss {
 
     private initKillPhrase() {
         const phrase = this.getRandomKillPhrase();
-        return new KillPhrase(this.game, this, phrase);
+        return new KillPhraseUI(this.game, this, phrase);
     }
 
     private render() {
@@ -172,7 +169,7 @@ export default class Boss {
 
     private handleFullyArmedMissilePods() {
         // fire ze missiles!
-        this.killPhrase.tiles.forEach((letter) => {
+        this.killPhraseUI.tiles.forEach((letter) => {
             letter.wedge.missilePod.missilesToFire = 4;
             letter.wedge.missilePod.isArmed = false;
         });
@@ -188,18 +185,18 @@ export default class Boss {
             this.setupNewKillPhrase();
         } else {
             // otherwise, handle "killing" of the boss
-            this.killPhrase.removePhrase();
+            this.killPhraseUI.removePhrase();
             this.active = false;
             console.log('BOSS IS DED');
         }
     }
 
     private setupNewKillPhrase() {
-        this.killPhrase.newPhrase(this.getRandomKillPhrase());
+        this.killPhraseUI.newPhrase(this.getRandomKillPhrase());
     }
 
     firstDamagedLetterIndex() {
-        return this.killPhrase.tiles.findIndex((letter) => {
+        return this.killPhraseUI.tiles.findIndex((letter) => {
             return letter.wedge.isDamaged();
         });
     }

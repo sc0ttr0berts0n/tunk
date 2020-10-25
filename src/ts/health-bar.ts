@@ -4,7 +4,7 @@ import Boss from './boss';
 import Wedge from './wedge';
 import HealthBarChunk from './health-bar-chunk';
 import Victor = require('victor');
-import KillPhrase from './kill-phrase';
+import KillPhraseUI from './kill-phrase-ui';
 
 export interface HealthBarOptions {
     width?: number;

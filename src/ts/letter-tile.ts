@@ -2,12 +2,12 @@ import * as PIXI from 'pixi.js';
 import Game from './game';
 import Boss from './boss';
 import Wedge from './wedge';
-import KillPhrase from './kill-phrase';
+import KillPhraseUI from './kill-phrase-ui';
 
 export default class LetterTile {
     private game: Game;
     private boss: Boss;
-    public killPhrase: KillPhrase;
+    public killPhrase: KillPhraseUI;
     public wedge: Wedge;
     public letter: string;
     public id: number;
@@ -18,7 +18,7 @@ export default class LetterTile {
     constructor(
         game: Game,
         boss: Boss,
-        killPhrase: KillPhrase,
+        killPhrase: KillPhraseUI,
         letter: string,
         id: number
     ) {
