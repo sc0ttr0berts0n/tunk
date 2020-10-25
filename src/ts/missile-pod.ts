@@ -91,17 +91,17 @@ export default class MissilePod {
             this.missilesToFire = 0;
         }
         for (let i = 0; i < num; i++) {
-            const options = { initialVel: 10, thrustStartAge: 60 };
+            const delay = this.wedge.id + i * 10 + 50;
+            const options = { initialVel: 20, thrustStartAge: delay };
             const missile = new Missile(
                 this.game,
                 this.wedge.getWorldPos(),
                 this.game.boss,
                 options
             );
-            const delay = this.wedge.id * 15 + i * 50;
-            setTimeout(() => {
-                this.game.missiles.push(missile);
-            }, delay);
+            this.game.missiles.push(missile);
+            // setTimeout(() => {
+            // }, delay);
         }
     }
 

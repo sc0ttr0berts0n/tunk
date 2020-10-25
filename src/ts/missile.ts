@@ -26,22 +26,19 @@ export default class Missile {
     private lastWorldPos = new Victor(0, 0);
     private vel: Victor;
     private acc = new Victor(0, 0);
-    private friction = new Victor(0.92, 0.92);
-    private startPos: Victor;
+    private friction = new Victor(0.94, 0.94);
     private target: Boss | Player | Wedge | MissilePod;
     private thrustStartAge: number;
     private thrustStrength: number;
-    private targetPos: Vec2;
     private el: PIXI.Sprite;
-    private birth: number;
     private age: number = 0;
     public isDead = false;
     private initialVel: number;
     public lifespan: number;
     public options: MissileOptions;
     private shadowRotation = Math.random() * Math.PI * 4;
-    private rotationLerp = 0.05;
-    private killRange = 30;
+    private rotationLerp = 0.04;
+    private killRange = 50;
 
     constructor(
         game: Game,
@@ -57,7 +54,6 @@ export default class Missile {
         };
         Object.assign(this.options, options);
         this.game = game;
-        this.startPos = startPos;
         this.pos = startPos;
         this.target = target;
         this.el = new PIXI.Sprite(this.game.graphics.missile);
@@ -152,7 +148,7 @@ export default class Missile {
     checkCollision() {
         const targetPos = this.target.getWorldPos();
         const dist = targetPos.clone().subtract(this.pos).magnitude();
-        if (dist < 50) {
+        if (dist < this.killRange) {
             this.isDead = true;
             this.handleDeath();
             this.handleCollision();
