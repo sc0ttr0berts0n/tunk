@@ -55,7 +55,7 @@ export class HealthBar {
         this.angledCaps = this.options.angledCaps;
         this.angledCapWidth = this.options.angledCapWidth;
         this.outline = this.options.outline;
-        this.pos = new Victor(-40, 35);
+        this.pos = new Victor(0, 0);
         this.chunks = new Array(this.chunkCount).fill(0).map((chunk, index) => {
             return new HealthBarChunk(this.game, this, index, this.pos);
         });
@@ -64,6 +64,9 @@ export class HealthBar {
 
     init() {
         this.container.position.set(this.pos.x, this.pos.y);
+        if (this.height > 10) {
+            console.log(this.container.worldTransform.tx);
+        }
     }
     update() {
         this.value = this.target.health;

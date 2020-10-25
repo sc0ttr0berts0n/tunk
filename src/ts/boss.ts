@@ -52,8 +52,8 @@ export default class Boss {
         };
         this.healthBar = new HealthBar(this.game, this, healthBarOptions);
         // healthbar placement
-        this.healthBarContainer.y += 10;
-        // this.healthBarContainer.x -= 1;
+        this.healthBarContainer.y += 46;
+        this.healthBarContainer.x -= 40;
         this.healthBarContainer.addChild(this.healthBar.container);
         this.el.addChild(this.healthBarContainer);
     }
@@ -85,8 +85,9 @@ export default class Boss {
     }
 
     public reinit() {
-        this.killPhrase.tiles.forEach((letter) => letter.reinit());
         this.validVisitedLetterCount = 0;
+        this.health = 1;
+        this.setupNewKillPhrase();
     }
 
     private updateBossShip() {

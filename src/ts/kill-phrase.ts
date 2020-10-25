@@ -33,7 +33,9 @@ export default class KillPhrase {
         this.newPhrase(this.phrase);
         this.container.position.set(this.pos.x, this.pos.y);
         this.container.addChild(this.phraseContainer);
-        this.container.addChild(this.container);
+        this.container.addChild(this.healthBar.container);
+        this.healthBar.container.x = -32;
+        this.healthBar.container.y = 32;
     }
 
     public update(delta: number) {

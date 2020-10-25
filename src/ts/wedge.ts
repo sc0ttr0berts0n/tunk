@@ -100,6 +100,7 @@ export default class Wedge {
     public reinit() {
         this.willBeShot = false;
         this.isLethal = false;
+        this.isVisited = false;
         this.scoreCheck = true;
         this.health = this.maxHealth;
     }
