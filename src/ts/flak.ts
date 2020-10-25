@@ -35,8 +35,10 @@ export default class Flak {
         this.el.rotation = Math.PI * 0.5;
         this.el.anchor.set(1, 0.5);
         this.el.y = this.yOff;
-        this.container.x = this.game.app.renderer.width / 2;
-        this.container.y = this.game.app.renderer.height / 2;
+        this.container.position.set(
+            this.game.app.renderer.width / 2,
+            this.game.app.renderer.height / 2
+        );
         this.container.addChild(this.el);
         this.game.app.stage.addChild(this.container);
 

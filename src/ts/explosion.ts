@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Victor = require('victor');
 import Game from './game';
-import { Howl } from 'howler';
 
 interface ExplosionOptions {
     lifespan?: number;
@@ -10,12 +9,7 @@ interface ExplosionOptions {
 export default class Explosion {
     private game: Game;
     private pos: Victor;
-    private lastWorldPos = new Victor(0, 0);
-    private vel: Victor;
-    private acc = new Victor(0, 0);
-    private startPos: Victor;
     private el: PIXI.Sprite;
-    private birth: number;
     private age: number = 0;
     public isDead = false;
     public lifespan: number;
@@ -27,7 +21,6 @@ export default class Explosion {
         };
         Object.assign(this.options, options);
         this.game = game;
-        this.startPos = startPos;
         this.pos = startPos;
         this.el = new PIXI.Sprite(this.game.graphics.explosion);
         this.lifespan = this.options.lifespan;

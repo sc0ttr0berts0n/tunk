@@ -41,11 +41,13 @@ export default class Game {
     private clearTitle: TimerHandler;
 
     constructor(canvas: HTMLCanvasElement) {
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.ROUND_PIXELS = true;
         this.canvas = canvas;
         this.app = new PIXI.Application({
             view: canvas,
-            width: 1024,
-            height: 1024,
+            width: 1200,
+            height: 1200,
             transparent: true,
         });
         this.scoreManager = new ScoreManager(this);

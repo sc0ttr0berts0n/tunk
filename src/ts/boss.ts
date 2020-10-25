@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import Game from './game';
 import KillPhrase from './kill-phrase';
 import Victor = require('victor');
+import { HealthBar, HealthBarOptions } from './health-bar';
 
 export default class Boss {
     private game: Game;
@@ -19,7 +20,8 @@ export default class Boss {
     public validVisitedLetterCount: number;
     public el: PIXI.Sprite;
     public health: number = 1.0;
-    public healthEl: PIXI.Text;
+    public healthBarContainer = new PIXI.Container();
+    public healthBar: HealthBar;
     public healthScore = 80;
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
@@ -41,20 +43,17 @@ export default class Boss {
         this.container.addChild(this.el);
         this.game.graphics.skyContainer.addChild(this.container);
 
-        // Todo: Permanant boss health solution
-        const letterStyle = new PIXI.TextStyle();
-        letterStyle.fill = '#cccccc';
-        letterStyle.fontSize = 25;
-        letterStyle.stroke = '#282228';
-        letterStyle.strokeThickness = (10 / 28) * letterStyle.fontSize;
-        letterStyle.fontFamily = 'Arial';
-        letterStyle.fontWeight = 'bold';
-        this.healthEl = new PIXI.Text(this.health.toString(), letterStyle);
-        this.healthEl.anchor.set(0.5);
-        this.healthEl.x = 0;
-        this.healthEl.y = -80;
-        this.el.addChild(this.healthEl);
-        // this.killPhrase.container.addChild(this.container);
+        this.healthBar = new HealthBar(this.game, this.killPhrase, this, {
+            width: 100,
+            height: 10,
+            chunkPadding: 0,
+            chunkCount: 1,
+            angledCapWidth: 0,
+        });
+        this.healthBar.container.y = -80;
+        this.healthBar.container.x = -50;
+        this.healthBarContainer.addChild(this.healthBar.container);
+        this.el.addChild(this.healthBarContainer);
     }
 
     public update(delta: number) {
@@ -99,11 +98,7 @@ export default class Boss {
         this.rot += (this.targetRot - this.rot) * 0.01;
         this.pos.y = offset;
 
-        // Todo: Permanant letter update solution
-        this.healthEl.text = Math.floor(
-            this.health * this.healthScore
-        ).toString();
-        this.healthEl.rotation = -this.rot;
+        // this.healthBar.container.rotation = -this.rot;
     }
 
     private initKillPhrase() {
@@ -119,16 +114,15 @@ export default class Boss {
         this.el.y = this.pos.y;
         this.container.rotation = this.rot;
         if (this.needsGraphicUpdate) {
-            if (this.health < 1/3) {
+            if (this.health < 1 / 3) {
                 this.el.texture = this.game.graphics.bossOneDamaged2;
-            } else if (this.health < 2/3) {
+            } else if (this.health < 2 / 3) {
                 this.el.texture = this.game.graphics.bossOneDamaged1;
             } else {
                 this.el.texture = this.game.graphics.bossOne;
             }
             this.needsGraphicUpdate = false;
         }
-
     }
 
     private getRandomKillPhrase() {

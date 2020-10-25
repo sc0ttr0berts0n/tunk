@@ -2,35 +2,40 @@ import * as PIXI from 'pixi.js';
 import Game from './game';
 import Boss from './boss';
 import LetterTile from './letter-tile';
-import init from './ui';
+import { HealthBar } from './health-bar';
+import Victor = require('victor');
 
 export default class KillPhrase {
     private game: Game;
     private boss: Boss;
     public phrase: string;
+    private healthBar: HealthBar;
     public length: number;
     public tiles: LetterTile[] = [];
-    private maxLetterTileWidth: number;
     public container = new PIXI.Container();
+    public phraseContainer = new PIXI.Container();
     public killNumber = Infinity;
-    public pos: Vec2 = { x: 128, y: 1024 - 128 };
+    public pos: Victor;
 
     constructor(game: Game, boss: Boss, phrase: string) {
         this.game = game;
         this.boss = boss;
         this.phrase = this.cleanPhrase(phrase);
         this.length = phrase.length;
+        this.pos = new Victor(200, this.game.app.renderer.height - 180);
+        this.healthBar = new HealthBar(this.game, this, this.boss);
         this.init();
     }
 
     public init() {
         this.newPhrase(this.phrase);
-        this.container.x = this.pos.x;
-        this.container.y = this.pos.y;
+        this.container.position.set(this.pos.x, this.pos.y);
+        this.container.addChild(this.phraseContainer);
     }
 
     public update(delta: number) {
         this.tiles.forEach((letter) => letter.update(delta));
+        this.healthBar.update();
     }
 
     private cleanPhrase(phrase: string) {
@@ -42,7 +47,7 @@ export default class KillPhrase {
     }
 
     public removePhrase() {
-        this.container.removeChildren();
+        this.phraseContainer.removeChildren();
         this.tiles = [];
     }
 
@@ -75,12 +80,11 @@ export default class KillPhrase {
             );
         });
 
-        this.maxLetterTileWidth = this.getMaxTileWidth();
         this.placeTiles();
     }
 
     public getMaxTileWidth() {
-        return Math.max(...this.tiles.map((ltr) => ltr.letterEl.width));
+        return Math.max(...this.tiles.map((ltr) => ltr.el.width));
     }
 
     public placeTiles() {

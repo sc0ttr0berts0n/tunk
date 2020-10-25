@@ -12,7 +12,7 @@ export default class LetterTile {
     public letter: string;
     public id: number;
     private container = new PIXI.Container();
-    public letterEl: PIXI.Text;
+    public el: PIXI.Text;
     private padding: number = 2;
 
     constructor(
@@ -36,60 +36,45 @@ export default class LetterTile {
     }
 
     public reinit() {
-        this.letterEl.text = this.letter;
+        this.el.text = this.letter;
     }
 
     public update(delta: number) {
-        const firstDamagedLetterIndex = this.boss.firstDamagedLetterIndex();
-        const damagedInputs =
-            firstDamagedLetterIndex >= 0 &&
-            firstDamagedLetterIndex + 1 <= this.boss.validVisitedLetterCount;
         const wedgeIsArmed = this.wedge.missilePod.isArmed;
-        const isNextToBeTyped = damagedInputs
-            ? this.id === 0
-            : this.id === this.boss.validVisitedLetterCount;
         if (this.wedge.isDamaged()) {
             if (this.game.frameCount % 5 === 0) {
-                this.letterEl.text = String.fromCharCode(
+                const randomLetter = String.fromCharCode(
                     65 + Math.floor(Math.random() * 26)
                 );
+                this.el.text = randomLetter;
             }
-            this.letterEl.alpha = isNextToBeTyped ? 0.6 : 0.3;
+            this.el.alpha = 0.3;
         } else {
-            this.letterEl.text = this.letter;
-            this.letterEl.alpha = 1;
+            this.el.text = this.letter;
+            this.el.alpha = 1;
         }
 
-        if (isNextToBeTyped) {
-            // make blink
-            if (this.game.frameCount % 30 === 0) {
-                this.letterEl.style.fill = '#cccccc';
-            } else if (this.game.frameCount % 30 === 5) {
-                this.letterEl.style.fill = '#ff5050';
-            }
-        } else if (damagedInputs) {
-            this.letterEl.style.fill = '#cccccc';
+        if (wedgeIsArmed) {
+            this.el.style.fill = '#ff5050';
         } else {
-            if (wedgeIsArmed) {
-                this.letterEl.style.fill = '#ff5050';
-            } else {
-                this.letterEl.style.fill = '#cccccc';
-            }
+            this.el.style.fill = '#cccccc';
         }
     }
 
     private initLetter() {
         const letterStyle = new PIXI.TextStyle();
         letterStyle.fill = '#cccccc';
-        letterStyle.fontSize = 25;
+        letterStyle.fontSize = 24;
         letterStyle.stroke = '#282228';
-        letterStyle.strokeThickness = (10 / 28) * letterStyle.fontSize;
+        letterStyle.strokeThickness = 8;
+        letterStyle.miterLimit = 10;
+        letterStyle.lineJoin = 'bevel';
         letterStyle.fontFamily = 'Arial';
         letterStyle.fontWeight = 'bold';
-        this.letterEl = new PIXI.Text(this.letter, letterStyle);
-        this.letterEl.anchor.set(0.5);
-        this.container.addChild(this.letterEl);
-        this.killPhrase.container.addChild(this.container);
+        this.el = new PIXI.Text(this.letter, letterStyle);
+        this.el.anchor.set(0.5);
+        this.container.addChild(this.el);
+        this.killPhrase.phraseContainer.addChild(this.container);
 
         // register letters as kill phrase letters
         const wedge = this.game.turret.getWedgeByLetter(this.letter);
@@ -100,6 +85,6 @@ export default class LetterTile {
         const offset =
             this.killPhrase.getMaxTileWidth() * this.id +
             Math.max(0, this.id - 1) * this.padding;
-        this.letterEl.x = offset;
+        this.el.x = offset;
     }
 }
