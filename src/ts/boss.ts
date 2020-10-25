@@ -85,8 +85,11 @@ export default class Boss {
     }
 
     public reinit() {
+        this.rot = Math.PI * 2 - Math.PI / 4;
+        this.targetRot = Math.PI * 2 - Math.PI / 4;
         this.validVisitedLetterCount = 0;
         this.health = 1;
+        this.el.texture = this.game.graphics.bossOne;
         this.setupNewKillPhrase();
     }
 
