@@ -50,12 +50,7 @@ export default class Boss {
             chunkCount: 10,
             angledCapWidth: 0,
         };
-        this.healthBar = new HealthBar(
-            this.game,
-            this.killPhrase,
-            this,
-            healthBarOptions
-        );
+        this.healthBar = new HealthBar(this.game, this, healthBarOptions);
         // healthbar placement
         this.healthBarContainer.y += 10;
         // this.healthBarContainer.x -= 1;

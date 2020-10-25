@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
 import Boss from './boss';
+import Wedge from './wedge';
 import HealthBarChunk from './health-bar-chunk';
 import Victor = require('victor');
 import KillPhrase from './kill-phrase';
@@ -18,10 +19,9 @@ export interface HealthBarOptions {
 
 export class HealthBar {
     private game: Game;
-    private killPhrase: KillPhrase;
     private options: HealthBarOptions;
     public container = new PIXI.Container();
-    public target: Boss;
+    public target: Boss | Wedge;
     public value: number;
     public width: number;
     public height: number;
@@ -34,14 +34,8 @@ export class HealthBar {
     private chunks: HealthBarChunk[];
     public pos: Victor;
 
-    constructor(
-        game: Game,
-        killPhrase: KillPhrase,
-        target: Boss,
-        options?: HealthBarOptions
-    ) {
+    constructor(game: Game, target: Boss | Wedge, options?: HealthBarOptions) {
         this.game = game;
-        this.killPhrase = killPhrase;
         this.target = target;
         this.options = {
             width: options?.width ?? 300,
@@ -70,7 +64,6 @@ export class HealthBar {
 
     init() {
         this.container.position.set(this.pos.x, this.pos.y);
-        this.killPhrase.container.addChild(this.container);
     }
     update() {
         this.value = this.target.health;

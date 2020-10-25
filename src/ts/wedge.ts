@@ -3,6 +3,7 @@ import Victor = require('victor');
 import Game from './game';
 import Turret from './turret';
 import MissilePod from './missile-pod';
+import { HealthBar, HealthBarOptions } from './health-bar';
 
 interface Vec2 {
     x: number;
@@ -17,7 +18,7 @@ export default class Wedge {
     public maxHealth = 1;
     public repaired = true;
     public health = this.maxHealth;
-    private healthBar = new PIXI.Graphics();
+    private healthBar: HealthBar;
     public letter: string;
     public letterEl: PIXI.Text;
     public wall: PIXI.Sprite;
@@ -44,6 +45,12 @@ export default class Wedge {
         this.id = id;
         this.letter = String.fromCharCode(65 + this.id);
         this.wedgeCount = wedgeCount;
+        this.healthBar = new HealthBar(this.game, this, {
+            width: 64,
+            height: 10,
+            chunkCount: 1,
+            angledCapWidth: 0,
+        });
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
         this.pos = {
             x: Math.cos(this.rot) * turret.radius,
@@ -206,11 +213,9 @@ export default class Wedge {
     }
 
     private initHealthBar() {
-        this.healthBar.beginFill(0xff0050);
-        this.healthBar.drawRect(0, 0, 64, 10);
-        this.healthBar.y = this.healthBarYOffset;
-        this.healthBar.x = -(64 / 2);
-        this.wall.addChild(this.healthBar);
+        this.healthBar.container.y = this.healthBarYOffset;
+        this.healthBar.container.x = -(this.healthBar.container.width / 2);
+        this.wall.addChild(this.healthBar.container);
     }
 
     private updateLetters() {
@@ -230,11 +235,11 @@ export default class Wedge {
     }
 
     private updateHealthBar() {
-        this.healthBar.scale.x = this.health / this.maxHealth;
+        this.healthBar.update();
         if (this.health === this.maxHealth) {
-            this.healthBar.visible = false;
+            this.healthBar.container.visible = false;
         } else {
-            this.healthBar.visible = true;
+            this.healthBar.container.visible = true;
         }
     }
 
