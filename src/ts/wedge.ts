@@ -72,11 +72,11 @@ export default class Wedge {
     }
 
     public init() {
-        this.initWall();
         this.initLetters();
         this.initHealthBar();
         this.initCautionFloor();
         this.initOutsideLight();
+        this.initWall();
     }
 
     public update(delta: number) {
@@ -153,18 +153,18 @@ export default class Wedge {
 
     private updateOutsideLight() {
         // show/hide light
-        if (this.health < 1) {
+        if (this.isDamaged()) {
             this.outsideLight.visible = true;
 
-            // outside light anims
-            if (this.outsideLight.alpha < 0.4) {
-                this.outsideLight.alpha = 0.41;
-            } else if (this.outsideLight.alpha > 0.6) {
-                this.outsideLight.alpha = 0.59;
-            } else {
-                this.outsideLight.alpha +=
-                    Math.sin(Math.random() - 0.5) * 0.005;
-            }
+            // clamp if it wanders
+            this.outsideLight.alpha = Math.max(
+                Math.min(this.outsideLight.alpha, 0.6),
+                0.4
+            );
+
+            // wiggle by sin function
+            const wiggleDistance = Math.sin(Math.random() - 0.5) * 0.0125;
+            this.outsideLight.alpha += wiggleDistance;
         } else {
             this.outsideLight.visible = false;
         }
