@@ -30,7 +30,7 @@ export default class Wedge {
     public playerPos: Vec2;
     public healthBarYOffset = -26;
     public letterYOffsetArmed = -105;
-    public letterYOffsetDisarmed = -50;
+    public letterYOffsetDisarmed = -55;
     private letterPos: Vec2 = { x: 0, y: this.letterYOffsetDisarmed };
     public willBeShot = false;
     public isLethal = false;
@@ -200,13 +200,16 @@ export default class Wedge {
     }
 
     private initLetters() {
-        const letterStyle = new PIXI.TextStyle();
-        letterStyle.fill = '#ffffff';
-        letterStyle.stroke = '#000000';
-        letterStyle.strokeThickness = 10;
-        letterStyle.fontFamily = 'Arial';
-        letterStyle.fontWeight = 'bold';
-        this.letterEl = new PIXI.Text(this.letter, letterStyle);
+        const textStyle = new PIXI.TextStyle();
+        textStyle.fill = '#ffffff';
+        textStyle.stroke = '#000000';
+        textStyle.strokeThickness = 10;
+        textStyle.fontSize = 30;
+        textStyle.fontFamily = 'Noto Sans';
+        textStyle.fontWeight = 'bold';
+        textStyle.miterLimit = 0;
+        textStyle.lineJoin = 'round';
+        this.letterEl = new PIXI.Text(this.letter, textStyle);
         this.letterEl.rotation = -this.wall.rotation;
         this.letterEl.anchor.set(0.5);
         this.letterPos.y = this.letterYOffsetDisarmed;

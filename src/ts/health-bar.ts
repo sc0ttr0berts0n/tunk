@@ -38,11 +38,11 @@ export class HealthBar {
         this.game = game;
         this.target = target;
         this.options = {
-            width: options?.width ?? 300,
+            width: options?.width ?? 340,
             height: options?.height ?? 22,
             color: options?.color ?? 0xff5050,
             chunkCount: options?.chunkCount ?? 3,
-            chunkPadding: options?.chunkPadding ?? 0,
+            chunkPadding: options?.chunkPadding ?? 4,
             angledCaps: options?.angledCaps ?? false,
             angledCapWidth: options?.angledCapWidth ?? 12,
             outline: options?.outline ?? false,

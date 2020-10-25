@@ -65,11 +65,11 @@ export default class LetterTile {
         const textStyle = new PIXI.TextStyle();
         textStyle.fill = '#ffffff';
         textStyle.fontSize = 24;
-        textStyle.stroke = '#282228';
+        textStyle.stroke = 0x0;
         textStyle.strokeThickness = 8;
-        textStyle.miterLimit = 10;
-        textStyle.lineJoin = 'bevel';
-        textStyle.fontFamily = 'Arial';
+        textStyle.miterLimit = 0;
+        textStyle.lineJoin = 'round';
+        textStyle.fontFamily = 'Noto Sans';
         textStyle.fontWeight = 'bold';
         this.el = new PIXI.Text(this.letter, textStyle);
         this.el.anchor.set(0.5);

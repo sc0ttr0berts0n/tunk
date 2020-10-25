@@ -12,9 +12,22 @@ declare global {
 import Game from './game';
 import ui from './ui';
 import audioUi from './audio-ui';
+import WebFont = require('webfontloader');
 
-const canvas = document.getElementById('game') as HTMLCanvasElement;
-const game = new Game(canvas);
-window.game = game;
+const startGame = () => {
+    const canvas = document.getElementById('game') as HTMLCanvasElement;
+    const game = new Game(canvas);
+    window.game = game;
+};
+
+WebFont.load({
+    google: {
+        families: ['Noto Sans:700'],
+    },
+    active: function () {
+        startGame();
+    },
+});
+
 ui();
 audioUi();

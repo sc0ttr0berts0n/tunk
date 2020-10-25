@@ -22,7 +22,7 @@ export default class KillPhrase {
         this.boss = boss;
         this.phrase = this.cleanPhrase(phrase);
         this.length = phrase.length;
-        this.pos = new Victor(200, this.game.app.renderer.height - 180);
+        this.pos = new Victor(200, this.game.app.renderer.height - 164);
         this.healthBar = new HealthBar(this.game, this.boss, {
             outline: true,
         });
@@ -34,8 +34,8 @@ export default class KillPhrase {
         this.container.position.set(this.pos.x, this.pos.y);
         this.container.addChild(this.phraseContainer);
         this.container.addChild(this.healthBar.container);
-        this.healthBar.container.x = -32;
-        this.healthBar.container.y = 32;
+        this.healthBar.container.x = -28;
+        this.healthBar.container.y = 36;
     }
 
     public update(delta: number) {

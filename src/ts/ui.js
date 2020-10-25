@@ -97,6 +97,7 @@ export default function init() {
         } else {
             removeTitleScreen();
         }
+        console.log('hi, loaded');
     });
 
     // show debug on ```` key press
