@@ -114,7 +114,7 @@ export default class Player {
     }
 
     private repair() {
-        this.targetWedge.addHealth(2);
+        this.targetWedge.addHealth(1 / 60);
     }
 
     private findDestination() {

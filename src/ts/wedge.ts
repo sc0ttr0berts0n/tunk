@@ -14,7 +14,7 @@ export default class Wedge {
     private turret: Turret;
     public id: number;
     public wedgeCount: number;
-    public maxHealth = 60;
+    public maxHealth = 1;
     public repaired = true;
     public health = this.maxHealth;
     private healthBar = new PIXI.Graphics();
@@ -146,7 +146,7 @@ export default class Wedge {
 
     private updateOutsideLight() {
         // show/hide light
-        if (this.health < 60) {
+        if (this.health < 1) {
             this.outsideLight.visible = true;
 
             // outside light anims
