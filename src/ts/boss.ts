@@ -44,10 +44,10 @@ export default class Boss {
         this.game.graphics.skyContainer.addChild(this.container);
 
         const healthBarOptions: HealthBarOptions = {
-            width: 100,
-            height: 10,
-            chunkPadding: 0,
-            chunkCount: 1,
+            width: 92,
+            height: 4,
+            chunkPadding: 4,
+            chunkCount: 10,
             angledCapWidth: 0,
         };
         this.healthBar = new HealthBar(
@@ -56,8 +56,9 @@ export default class Boss {
             this,
             healthBarOptions
         );
-        this.healthBar.container.y = -80;
-        this.healthBar.container.x = -50;
+        // healthbar placement
+        this.healthBarContainer.y += 10;
+        // this.healthBarContainer.x -= 1;
         this.healthBarContainer.addChild(this.healthBar.container);
         this.el.addChild(this.healthBarContainer);
     }

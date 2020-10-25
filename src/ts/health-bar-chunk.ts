@@ -10,6 +10,7 @@ export default class HealthBarChunk {
     private barElGraphics = new PIXI.Graphics();
     public barEl: PIXI.Sprite;
     public barElMask = new PIXI.Graphics();
+    public barElOutline = new PIXI.Graphics();
     private pos: Victor;
     private order: number;
     private width: number;
@@ -60,6 +61,24 @@ export default class HealthBarChunk {
         ]);
         this.barElMask.endFill();
         this.container.addChild(this.barElMask);
+
+        if (this.healthBar.outline) {
+            // make outline
+            this.barElOutline.beginFill(0x0, 0);
+            this.barElOutline.lineStyle(4, 0x0, 1, 1);
+            this.barElOutline.drawPolygon([
+                this.pos.x + this.healthBar.angledCapWidth,
+                -this.healthBar.height / 2,
+                this.pos.x + this.barEl.width,
+                -this.healthBar.height / 2,
+                this.pos.x + this.barEl.width - this.healthBar.angledCapWidth,
+                this.healthBar.height / 2,
+                this.pos.x,
+                this.healthBar.height / 2,
+            ]);
+            this.barElOutline.endFill();
+            this.container.addChild(this.barElOutline);
+        }
 
         // associate mask with Bar El
         this.barEl.mask = this.barElMask;

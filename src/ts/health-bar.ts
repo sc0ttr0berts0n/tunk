@@ -13,6 +13,7 @@ export interface HealthBarOptions {
     chunkPadding?: number;
     angledCaps?: boolean;
     angledCapWidth?: number;
+    outline?: boolean;
 }
 
 export class HealthBar {
@@ -29,6 +30,7 @@ export class HealthBar {
     public chunkPadding: number;
     public angledCaps: boolean;
     public angledCapWidth: number;
+    public outline: boolean;
     private chunks: HealthBarChunk[];
     public pos: Victor;
 
@@ -49,6 +51,7 @@ export class HealthBar {
             chunkPadding: options?.chunkPadding ?? 0,
             angledCaps: options?.angledCaps ?? false,
             angledCapWidth: options?.angledCapWidth ?? 12,
+            outline: options?.outline ?? false,
         };
         this.width = this.options.width;
         this.height = this.options.height;
@@ -57,6 +60,7 @@ export class HealthBar {
         this.chunkPadding = this.options.chunkPadding;
         this.angledCaps = this.options.angledCaps;
         this.angledCapWidth = this.options.angledCapWidth;
+        this.outline = this.options.outline;
         this.pos = new Victor(-40, 35);
         this.chunks = new Array(this.chunkCount).fill(0).map((chunk, index) => {
             return new HealthBarChunk(this.game, this, index, this.pos);

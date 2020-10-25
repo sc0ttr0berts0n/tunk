@@ -23,7 +23,9 @@ export default class KillPhrase {
         this.phrase = this.cleanPhrase(phrase);
         this.length = phrase.length;
         this.pos = new Victor(200, this.game.app.renderer.height - 180);
-        this.healthBar = new HealthBar(this.game, this, this.boss);
+        this.healthBar = new HealthBar(this.game, this, this.boss, {
+            outline: true,
+        });
         this.init();
     }
 
