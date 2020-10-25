@@ -64,9 +64,6 @@ export class HealthBar {
 
     init() {
         this.container.position.set(this.pos.x, this.pos.y);
-        if (this.height > 10) {
-            console.log(this.container.worldTransform.tx);
-        }
     }
     update() {
         this.value = this.target.health;
