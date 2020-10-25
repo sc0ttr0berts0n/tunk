@@ -5,7 +5,7 @@ import Boss from './boss';
 import Player from './player';
 import Wedge from './wedge';
 import MissilePod from './missile-pod';
-import Explosion from './explosion';
+import { Explosion, ExplosionOptions } from './explosion';
 import { Howl } from 'howler';
 
 interface Vec2 {

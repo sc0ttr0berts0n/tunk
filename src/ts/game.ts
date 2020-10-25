@@ -11,7 +11,7 @@ import Boss from './boss';
 import Missiles from './missile';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
-import Explosion from './explosion';
+import { Explosion, ExplosionOptions } from './explosion';
 
 export default class Game {
     private canvas: HTMLCanvasElement;

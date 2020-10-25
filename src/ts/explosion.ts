@@ -2,27 +2,38 @@ import * as PIXI from 'pixi.js';
 import Victor = require('victor');
 import Game from './game';
 
-interface ExplosionOptions {
+export interface ExplosionOptions {
     lifespan?: number;
+    sprite?: PIXI.Sprite;
+    vel?: Victor;
 }
 
-export default class Explosion {
+export class Explosion {
     private game: Game;
     private pos: Victor;
+    private vel: Victor;
+    private rot = 0;
+    private scale = 1;
+    private alpha = 1;
+    private age = 0;
     private el: PIXI.Sprite;
-    private age: number = 0;
     public isDead = false;
     public lifespan: number;
     public momentum = Math.random() * 0.4 - 0.2;
     public options: ExplosionOptions;
     constructor(game: Game, startPos: Victor, options?: ExplosionOptions) {
+        this.game = game;
         this.options = {
-            lifespan: 20,
+            lifespan: options?.lifespan ?? 20,
+            sprite:
+                options?.sprite ??
+                new PIXI.Sprite(this.game.graphics.explosion),
+            vel: options?.vel ?? new Victor(0, 0),
         };
         Object.assign(this.options, options);
-        this.game = game;
         this.pos = startPos;
-        this.el = new PIXI.Sprite(this.game.graphics.explosion);
+        this.vel = this.options.vel;
+        this.el = this.options.sprite;
         this.lifespan = this.options.lifespan;
         this.init();
     }
@@ -36,11 +47,11 @@ export default class Explosion {
     }
     update() {
         this.age++;
-        this.el.rotation += this.momentum;
-        this.el.scale.x += this.momentum * 0.2;
-        this.el.scale.y += this.momentum * 0.2;
+        this.pos.add(this.vel);
+        this.rot += this.momentum;
+        this.scale += this.momentum * 0.2;
         if (this.age > this.lifespan - 10) {
-            this.el.alpha -= 0.1;
+            this.alpha -= 0.1;
         }
         if (this.age > this.lifespan) {
             this.isDead = true;
@@ -48,7 +59,15 @@ export default class Explosion {
         if (this.isDead) {
             this.el.destroy();
         } else {
+            this.render();
         }
+    }
+
+    render() {
+        this.el.position.set(this.pos.x, this.pos.y);
+        this.el.rotation = this.rot;
+        this.el.scale.set(this.scale);
+        this.el.alpha = this.alpha;
     }
 
     getWorldPos() {

@@ -62,6 +62,7 @@ export default class GraphicAssets {
 
     // Explosion(s)
     public explosion = PIXI.Texture.from('assets/da-boom.png');
+    public explosionBlue = PIXI.Texture.from('assets/da-boom-blue.png');
 
     //EndGameOverlay
     public endGameOverlayBlack: PIXI.Graphics = new PIXI.Graphics();
