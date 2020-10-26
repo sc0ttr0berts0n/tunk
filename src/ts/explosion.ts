@@ -6,6 +6,7 @@ export interface ExplosionOptions {
     lifespan?: number;
     sprite?: PIXI.Sprite;
     vel?: Victor;
+    momentum?: number;
 }
 
 export class Explosion {
@@ -16,10 +17,10 @@ export class Explosion {
     private scale = 1;
     private alpha = 1;
     private age = 0;
+    private momentum: number;
     private el: PIXI.Sprite;
     public isDead = false;
     public lifespan: number;
-    public momentum = Math.random() * 0.4 - 0.2;
     public options: ExplosionOptions;
     constructor(game: Game, startPos: Victor, options?: ExplosionOptions) {
         this.game = game;
@@ -29,12 +30,14 @@ export class Explosion {
                 options?.sprite ??
                 new PIXI.Sprite(this.game.graphics.explosion),
             vel: options?.vel ?? new Victor(0, 0),
+            momentum: options?.momentum ?? Math.random() * 0.4 - 0.2,
         };
         Object.assign(this.options, options);
         this.pos = startPos;
         this.vel = this.options.vel;
         this.el = this.options.sprite;
         this.lifespan = this.options.lifespan;
+        this.momentum = this.options.momentum;
         this.init();
     }
     init() {

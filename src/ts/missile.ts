@@ -133,6 +133,15 @@ export default class Missile {
             this.shadowRotation;
         this.el.rotation = this.shadowRotation;
 
+        // send puff of smoke
+        this.game.explosions.push(
+            new Explosion(this.game, this.pos.clone(), {
+                lifespan: 60,
+                sprite: new PIXI.Sprite(this.game.graphics.smoke),
+                momentum: Math.random() * 0.3 - 0.15,
+            })
+        );
+
         // store last postition
         this.lastWorldPos = worldPos.clone();
     }
