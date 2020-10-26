@@ -134,11 +134,13 @@ export default class Missile {
         this.el.rotation = this.shadowRotation;
 
         // send puff of smoke
+        const vel = this.vel.clone().multiply(new Victor(0.05, 0.05));
         this.game.explosions.push(
             new Explosion(this.game, this.pos.clone(), {
-                lifespan: 60,
+                lifespan: 40,
                 sprite: new PIXI.Sprite(this.game.graphics.smoke),
                 momentum: Math.random() * 0.3 - 0.15,
+                vel: vel,
             })
         );
 
