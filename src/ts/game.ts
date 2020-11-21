@@ -26,6 +26,7 @@ export default class Game {
     private backgroundNextMove: number = 0;
     public boss: Boss | null;
     public bossSpawned = false;
+    private readonly BOSS_SPAWN_SCORE = 0;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
@@ -34,8 +35,8 @@ export default class Game {
     public missiles: Missiles[] = [];
     public explosions: Explosion[] = [];
     public killPhraseUI: KillPhraseUI | null;
-    private damageChance: number = 0.008;
-    private shootHoleChance: number = 0.01;
+    private readonly SHOOT_WALL_CHANCE: number = 0.008;
+    private readonly SHOOT_HOLE_CHANCE: number = 0.01;
     public frameCount: number = 0;
     private lastRestart: number = 0;
     private reduceMotion: boolean = false;
@@ -59,8 +60,8 @@ export default class Game {
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
-        this.boss = new Boss(this);
-        this.killPhraseUI = new KillPhraseUI(this);
+        this.boss = null;
+        this.killPhraseUI = null;
         this.endGameOverlay = new EndGameOverlay(this, this.player);
         this.kb = new KeyboardObserver();
         this.init();
@@ -125,6 +126,15 @@ export default class Game {
                     (explosion) => !explosion.isDead
                 );
             }
+
+            // conditions to spawn boss
+            if (
+                this.scoreManager.score >= this.BOSS_SPAWN_SCORE &&
+                !this.bossSpawned
+            ) {
+                this.bossSpawned = true;
+                this.spawnBoss();
+            }
         }
         this.endGameOverlay.update();
     }
@@ -136,7 +146,9 @@ export default class Game {
         this.kb.reinit();
         this.player.reinit();
         this.turret.reinit();
-        this.boss.reinit();
+        if (this.boss) {
+            this.boss.reinit();
+        }
         if (this.killPhraseUI) {
             this.killPhraseUI.reinit();
         }
@@ -170,7 +182,7 @@ export default class Game {
     }
     private shootFlakAtWalls() {
         if (this.frameCount - this.lastRestart >= 180) {
-            if (Math.random() < this.damageChance) {
+            if (Math.random() < this.SHOOT_WALL_CHANCE) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
                     // odds of doing damage depend on how many walls remain
@@ -193,7 +205,7 @@ export default class Game {
         }
     }
     private shootFlakAtHoles() {
-        if (Math.random() < this.shootHoleChance) {
+        if (Math.random() < this.SHOOT_HOLE_CHANCE) {
             const wedges = this.turret.getDamagedWedges();
             if (wedges.length > 1) {
                 const wedge = wedges[Math.floor(Math.random() * wedges.length)];
@@ -204,6 +216,11 @@ export default class Game {
                 this.flaks.push(new Flak(this, oppositeWedge, wedge.rot));
             }
         }
+    }
+
+    public spawnBoss() {
+        this.boss = new Boss(this);
+        this.killPhraseUI = new KillPhraseUI(this);
     }
 
     public resetHighScore() {

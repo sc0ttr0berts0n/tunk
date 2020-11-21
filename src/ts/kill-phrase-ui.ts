@@ -31,6 +31,7 @@ export default class KillPhraseUI {
         this.newPhrase(this.phrase);
         this.container.position.set(this.pos.x, this.pos.y);
         this.container.addChild(this.phraseContainer);
+        this.game.app.stage.addChild(this.container);
         this.initHealthBar();
     }
 

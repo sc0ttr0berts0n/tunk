@@ -67,16 +67,12 @@ export default class MissilePod {
         this.el.visible = this.isVisible;
     }
 
-    private canBeArmed() {
-        return true;
-    }
-
     private setIsArmed() {
         const boss = this.game.boss;
         const wedge = this.wedge;
 
         if (
-            boss.active &&
+            boss?.active &&
             wedge.isKillPhraseLetter &&
             wedge.isVisited &&
             wedge.health >= wedge.maxHealth
