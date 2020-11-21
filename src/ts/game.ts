@@ -21,7 +21,7 @@ export default class Game {
     public graphics: GraphicAssets;
     public audio: AudioAssets;
     private flaks: Flak[] = [];
-    private turretBodyRotation: number = Math.PI * 2;
+    public turretBodyRotation: number = Math.PI * 2;
     private backgroundTargetRot: number = 0;
     private backgroundNextMove: number = 0;
     public boss: Boss | null;

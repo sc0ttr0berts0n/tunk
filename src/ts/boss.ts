@@ -98,7 +98,9 @@ export default class Boss {
             const rot = ((Math.floor(Math.random() * 3) - 1) * Math.PI) / 2;
             this.targetRot += rot;
         }
-        this.rot += (this.targetRot - this.rot) * 0.01;
+        const backgroundRelTargetRot =
+            this.game.turretBodyRotation + this.targetRot;
+        this.rot += (backgroundRelTargetRot - this.rot) * 0.01;
         this.pos.y = offset;
 
         // this.healthBar.container.rotation = -this.rot;
