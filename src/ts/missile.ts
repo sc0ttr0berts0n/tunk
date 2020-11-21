@@ -143,6 +143,7 @@ export default class Missile {
                 sprite: new PIXI.Sprite(this.game.graphics.smoke),
                 momentum: Math.random() * 0.3 - 0.15,
                 vel: vel,
+                parentContainer: this.game.graphics.missileSmokeContainer,
             })
         );
 

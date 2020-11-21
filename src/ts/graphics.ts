@@ -5,6 +5,8 @@ export default class GraphicAssets {
     private game: Game;
 
     public skyContainer = new PIXI.Container();
+    public missileContainer = new PIXI.Container();
+    public missileSmokeContainer = new PIXI.Container();
 
     //BACKGROUND MAP
     public background = new PIXI.Sprite(PIXI.Texture.from('assets/da-map.png'));
@@ -98,6 +100,8 @@ export default class GraphicAssets {
 
         // Sky Container
         this.game.app.stage.addChild(this.skyContainer);
+        this.skyContainer.addChild(this.missileSmokeContainer);
+        this.skyContainer.addChild(this.missileContainer);
 
         //End Game Overlay
         this.game.app.stage.addChild(this.endGameOverlayBlack);

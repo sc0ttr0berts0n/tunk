@@ -7,6 +7,7 @@ export interface ExplosionOptions {
     sprite?: PIXI.Sprite;
     vel?: Victor;
     momentum?: number;
+    parentContainer?: PIXI.Container;
 }
 
 export class Explosion {
@@ -31,6 +32,8 @@ export class Explosion {
                 new PIXI.Sprite(this.game.graphics.explosion),
             vel: options?.vel ?? new Victor(0, 0),
             momentum: options?.momentum ?? Math.random() * 0.4 - 0.2,
+            parentContainer:
+                options?.parentContainer ?? this.game.graphics.skyContainer,
         };
         Object.assign(this.options, options);
         this.pos = startPos;
@@ -46,7 +49,7 @@ export class Explosion {
         this.el.rotation = Math.random() * Math.PI * 4 - Math.PI * 2;
         this.el.anchor.set(0.5);
         this.el.scale.set(0.66);
-        this.game.graphics.skyContainer.addChild(this.el);
+        this.options.parentContainer.addChild(this.el);
     }
     update() {
         this.age++;
