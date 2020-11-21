@@ -112,10 +112,12 @@ export default class Missile {
         if (this.age > this.thrustStartAge) {
             // calc accel
             this.vel = this.vel.add(this.acc);
-            if (this.game.boss.canPlayMissileTravelAudio) {
-                this.game.boss.canPlayMissileTravelAudio = false;
-                this.game.audio.missileTravel.play();
-            }
+        }
+
+        // play missle travel sounds at age 1
+        if (this.game.boss.canPlayMissileTravelAudio) {
+            this.game.boss.canPlayMissileTravelAudio = false;
+            this.game.audio.missileTravel.play();
         }
 
         // calc vel
@@ -172,6 +174,7 @@ export default class Missile {
 
         // damage boss
         const dmg = 1 / this.game.boss.healthScore;
+        // const dmg = 1 / 4;
         this.game.boss.takeDamage(dmg);
     }
 }

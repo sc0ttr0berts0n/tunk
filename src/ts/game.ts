@@ -12,6 +12,7 @@ import Missiles from './missile';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
 import { Explosion, ExplosionOptions } from './explosion';
+import KillPhraseUI from './kill-phrase-ui';
 
 export default class Game {
     private canvas: HTMLCanvasElement;
@@ -23,7 +24,8 @@ export default class Game {
     private turretBodyRotation: number = Math.PI * 2;
     private backgroundTargetRot: number = 0;
     private backgroundNextMove: number = 0;
-    public boss: Boss;
+    public boss: Boss | null;
+    public bossSpawned = false;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
@@ -31,6 +33,7 @@ export default class Game {
     public kb: KeyboardObserver;
     public missiles: Missiles[] = [];
     public explosions: Explosion[] = [];
+    public killPhraseUI: KillPhraseUI | null;
     private damageChance: number = 0.008;
     private shootHoleChance: number = 0.01;
     public frameCount: number = 0;
@@ -56,9 +59,10 @@ export default class Game {
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
+        this.boss = new Boss(this);
+        this.killPhraseUI = new KillPhraseUI(this);
         this.endGameOverlay = new EndGameOverlay(this, this.player);
         this.kb = new KeyboardObserver();
-        this.boss = new Boss(this);
         this.init();
     }
 
@@ -95,7 +99,13 @@ export default class Game {
                 this.scoreManager.update();
             }
             this.player.update(delta);
-            this.boss.update(delta);
+            if (this.boss) {
+                this.boss.update(delta);
+            }
+            if (this.killPhraseUI) {
+                this.killPhraseUI.update(delta);
+            }
+
             if (this.turret.wedges) {
                 this.turret.wedges.forEach((wedge) => wedge.update(delta));
             }
@@ -127,6 +137,9 @@ export default class Game {
         this.player.reinit();
         this.turret.reinit();
         this.boss.reinit();
+        if (this.killPhraseUI) {
+            this.killPhraseUI.reinit();
+        }
         this.scoreManager.reinit();
         this.endGameOverlay.reinit();
         this.audio.bgm.stop();

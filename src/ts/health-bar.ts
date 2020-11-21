@@ -33,6 +33,7 @@ export class HealthBar {
     public outline: boolean;
     private chunks: HealthBarChunk[];
     public pos: Victor;
+    public isDestroyed = false;
 
     constructor(game: Game, target: Boss | Wedge, options?: HealthBarOptions) {
         this.game = game;
@@ -68,5 +69,10 @@ export class HealthBar {
     update() {
         this.value = this.target.health;
         this.chunks.forEach((chunk) => chunk.update());
+    }
+    cleanAndDestroy() {
+        this.chunks.forEach((chunk) => chunk.container.destroy());
+        this.container.destroy();
+        this.isDestroyed = true;
     }
 }

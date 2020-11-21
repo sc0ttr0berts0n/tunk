@@ -97,7 +97,7 @@ export default class GraphicAssets {
         this.game.turret.container.addChild(this.turretFloor);
 
         // Killphrase UI
-        this.game.app.stage.addChild(this.game.boss.killPhraseUI.container);
+        this.game.app.stage.addChild(this.game.killPhraseUI.container);
 
         // Sky Container
         this.game.app.stage.addChild(this.skyContainer);

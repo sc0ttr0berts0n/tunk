@@ -6,7 +6,6 @@ import { HealthBar, HealthBarOptions } from './health-bar';
 
 export default class Boss {
     private game: Game;
-    public killPhraseUI: KillPhraseUI;
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
     public pos: Vec2 = { x: 192, y: 192 };
@@ -19,7 +18,7 @@ export default class Boss {
     public validVisitedLetterCount: number;
     public el: PIXI.Sprite;
     public health: number = 1.0;
-    public healthBar: HealthBar;
+    public onBossHealthBar: HealthBar;
     public healthScore = 80;
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
@@ -28,7 +27,6 @@ export default class Boss {
     constructor(game: Game) {
         this.game = game;
         this.el = new PIXI.Sprite(this.game.graphics.bossOne);
-        this.killPhraseUI = this.initKillPhrase();
         this.init();
     }
 
@@ -48,35 +46,37 @@ export default class Boss {
             chunkCount: 10,
             angledCapWidth: 0,
         };
-        this.healthBar = new HealthBar(this.game, this, healthBarOptions);
+        this.onBossHealthBar = new HealthBar(this.game, this, healthBarOptions);
         // healthbar placement
-        this.healthBar.container.y += 46;
-        this.healthBar.container.x -= 40;
-        this.el.addChild(this.healthBar.container);
+        this.onBossHealthBar.container.y += 46;
+        this.onBossHealthBar.container.x -= 40;
+        this.el.addChild(this.onBossHealthBar.container);
     }
 
     public update(delta: number) {
         if (this.active) {
             this.validVisitedLetterCount = this.getValidVisitedLetterCount();
             const _everyLetterArmed =
-                this.validVisitedLetterCount === this.killPhraseUI.killNumber;
+                this.validVisitedLetterCount ===
+                this.game.killPhraseUI.killNumber;
 
             if (_everyLetterArmed) {
                 console.log('desssstroyh!');
 
                 if (
-                    this.killPhraseUI.tiles.every(
+                    this.game.killPhraseUI.tiles.every(
                         (tile) => tile.wedge.missilePod.isArmed
                     )
                 ) {
                     this.handleFullyArmedMissilePods();
                 }
             }
-            if (this.killPhraseUI) {
-                this.killPhraseUI.update(delta);
+
+            if (this.health <= 0) {
+                this.endBoss();
             }
         }
-        this.healthBar.update();
+        this.onBossHealthBar.update();
         this.updateBossShip();
         this.render();
     }
@@ -87,7 +87,6 @@ export default class Boss {
         this.validVisitedLetterCount = 0;
         this.health = 1;
         this.el.texture = this.game.graphics.bossOne;
-        this.setupNewKillPhrase();
     }
 
     private updateBossShip() {
@@ -103,11 +102,6 @@ export default class Boss {
         this.pos.y = offset;
 
         // this.healthBar.container.rotation = -this.rot;
-    }
-
-    private initKillPhrase() {
-        const phrase = this.getRandomKillPhrase();
-        return new KillPhraseUI(this.game, this, phrase);
     }
 
     private render() {
@@ -129,38 +123,6 @@ export default class Boss {
         }
     }
 
-    private getRandomKillPhrase() {
-        const phrases = [
-            'GrayMarker',
-            'Destroy',
-            'Explode',
-            'rockets',
-            'Target',
-            'Seeker',
-            'pewpew',
-            'kaboom',
-            'blast',
-            'Retro',
-            'bomb',
-            'bang',
-            'Skat',
-            'tear',
-            'tunk',
-            'bonk',
-            'rip',
-        ];
-
-        // const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
-
-        // get a random index from the boss words
-        const _randomIndex = () => {
-            return Math.floor(Math.random() * phrases.length);
-        };
-
-        // fill array with random phrases
-        return phrases[_randomIndex()];
-    }
-
     private getValidVisitedLetterCount() {
         // Todo: Gut turret history feature
         const armedWedgeCount = this.game.turret.getArmedWedges().length;
@@ -169,7 +131,7 @@ export default class Boss {
 
     private handleFullyArmedMissilePods() {
         // fire ze missiles!
-        this.killPhraseUI.tiles.forEach((letter) => {
+        this.game.killPhraseUI.tiles.forEach((letter) => {
             letter.wedge.missilePod.missilesToFire = 4;
             letter.wedge.missilePod.isArmed = false;
         });
@@ -182,21 +144,19 @@ export default class Boss {
         if (this.health > 0) {
             this.canPlayMissileTravelAudio = true;
             this.canPlayMissileDestroyAudio = true;
-            this.setupNewKillPhrase();
-        } else {
-            // otherwise, handle "killing" of the boss
-            this.killPhraseUI.removePhrase();
-            this.active = false;
-            console.log('BOSS IS DED');
+            this.game.killPhraseUI.setupNewKillPhrase();
         }
     }
 
-    private setupNewKillPhrase() {
-        this.killPhraseUI.newPhrase(this.getRandomKillPhrase());
+    private endBoss() {
+        // otherwise, handle "killing" of the boss
+        this.game.killPhraseUI.cleanAndDestroy();
+        this.active = false;
+        console.log('BOSS IS DED');
     }
 
     firstDamagedLetterIndex() {
-        return this.killPhraseUI.tiles.findIndex((letter) => {
+        return this.game.killPhraseUI.tiles.findIndex((letter) => {
             return letter.wedge.isDamaged();
         });
     }

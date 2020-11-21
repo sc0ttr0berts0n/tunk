@@ -7,7 +7,6 @@ import Victor = require('victor');
 
 export default class KillPhraseUI {
     private game: Game;
-    private boss: Boss;
     public phrase: string;
     private healthBar: HealthBar;
     public length: number;
@@ -17,13 +16,12 @@ export default class KillPhraseUI {
     public killNumber = Infinity;
     public pos: Victor;
 
-    constructor(game: Game, boss: Boss, phrase: string) {
+    constructor(game: Game) {
         this.game = game;
-        this.boss = boss;
-        this.phrase = this.cleanPhrase(phrase);
-        this.length = phrase.length;
+        this.phrase = this.getRandomKillPhrase();
+        this.length = this.phrase.length;
         this.pos = new Victor(200, this.game.app.renderer.height - 164);
-        this.healthBar = new HealthBar(this.game, this.boss, {
+        this.healthBar = new HealthBar(this.game, game.boss, {
             outline: true,
         });
         this.init();
@@ -33,14 +31,71 @@ export default class KillPhraseUI {
         this.newPhrase(this.phrase);
         this.container.position.set(this.pos.x, this.pos.y);
         this.container.addChild(this.phraseContainer);
-        this.container.addChild(this.healthBar.container);
-        this.healthBar.container.x = -28;
-        this.healthBar.container.y = 36;
+        this.initHealthBar();
     }
 
     public update(delta: number) {
         this.tiles.forEach((letter) => letter.update(delta));
         this.healthBar.update();
+    }
+
+    public reinit() {
+        if (this.healthBar.isDestroyed) {
+            this.healthBar = new HealthBar(this.game, this.game.boss, {
+                outline: true,
+            });
+            this.initHealthBar();
+        }
+        this.setupNewKillPhrase();
+    }
+
+    public initKillPhrase() {
+        return new KillPhraseUI(this.game);
+    }
+
+    private getRandomKillPhrase() {
+        const phrases = [
+            'GrayMarker',
+            'Destroy',
+            'Explode',
+            'rockets',
+            'missile',
+            'victory',
+            'Target',
+            'Seeker',
+            'pewpew',
+            'kaboom',
+            'blast',
+            'Retro',
+            'crash',
+            'bomb',
+            'bang',
+            'Skat',
+            'tear',
+            'tunk',
+            'bonk',
+            'rip',
+        ];
+
+        // const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
+
+        // get a random index from the boss words
+        const _randomIndex = () => {
+            return Math.floor(Math.random() * phrases.length);
+        };
+
+        // fill array with random phrases
+        return phrases[_randomIndex()];
+    }
+
+    public initHealthBar() {
+        this.healthBar.container.x = -28;
+        this.healthBar.container.y = 36;
+        this.container.addChild(this.healthBar.container);
+    }
+
+    public setupNewKillPhrase() {
+        this.newPhrase(this.getRandomKillPhrase());
     }
 
     private cleanPhrase(phrase: string) {
@@ -78,7 +133,7 @@ export default class KillPhraseUI {
         this.tiles = phraseArr.map((ltr, index) => {
             return new LetterTile(
                 this.game,
-                this.boss,
+                this.game.boss,
                 this,
                 ltr.toUpperCase(),
                 index
@@ -94,5 +149,10 @@ export default class KillPhraseUI {
 
     public placeTiles() {
         this.tiles.forEach((letter) => letter.placeLettersTile());
+    }
+
+    cleanAndDestroy() {
+        this.removePhrase();
+        this.healthBar.cleanAndDestroy();
     }
 }
