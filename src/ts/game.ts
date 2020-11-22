@@ -26,7 +26,8 @@ export default class Game {
     private backgroundNextMove: number = 0;
     public boss: Boss | null;
     public bossSpawned = false;
-    public BOSS_SPAWN_SCORE = 5;
+    public nextBossScore = 5;
+    public readonly BOSS_SPAWN_SCORE_INITIAL = 5;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
@@ -64,6 +65,7 @@ export default class Game {
         this.killPhraseUI = null;
         this.endGameOverlay = new EndGameOverlay(this, this.player);
         this.kb = new KeyboardObserver();
+        this.nextBossScore = this.BOSS_SPAWN_SCORE_INITIAL;
         this.init();
     }
 
@@ -103,12 +105,7 @@ export default class Game {
             if (this.boss) {
                 this.boss.update(delta);
                 if (!this.boss.alive) {
-                    this.boss.cleanAndDestroy();
-                    this.killPhraseUI.cleanAndDestroy();
-                    this.boss = null;
-                    this.killPhraseUI = null;
-                    this.BOSS_SPAWN_SCORE = this.scoreManager.score + 5;
-                    this.bossSpawned = false;
+                    this.cleanAndDestroyBossAndKillPhraseUI();
                 }
             }
             if (this.killPhraseUI) {
@@ -137,7 +134,7 @@ export default class Game {
 
             // conditions to spawn boss
             if (
-                this.scoreManager.score >= this.BOSS_SPAWN_SCORE &&
+                this.scoreManager.score >= this.nextBossScore &&
                 !this.bossSpawned
             ) {
                 this.bossSpawned = true;
@@ -155,8 +152,9 @@ export default class Game {
         this.player.reinit();
         this.turret.reinit();
         if (this.boss) {
-            this.boss.reinit();
+            this.cleanAndDestroyBossAndKillPhraseUI();
         }
+        this.nextBossScore = this.BOSS_SPAWN_SCORE_INITIAL;
         if (this.killPhraseUI) {
             this.killPhraseUI.reinit();
         }
@@ -234,5 +232,14 @@ export default class Game {
     public resetHighScore() {
         // used so the UI can reset the high score
         this.scoreManager.resetHighScore();
+    }
+
+    public cleanAndDestroyBossAndKillPhraseUI() {
+        this.boss.cleanAndDestroy();
+        this.killPhraseUI.cleanAndDestroy();
+        this.boss = null;
+        this.killPhraseUI = null;
+        this.nextBossScore = this.scoreManager.score + 5;
+        this.bossSpawned = false;
     }
 }

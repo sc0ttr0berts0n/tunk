@@ -59,7 +59,7 @@ export default class Flak {
         const xDistPlayerFlak = player.tx - flak.tx;
         const yDistPlayerFlak = player.ty - flak.ty;
         const hypotPlayerFlak = Math.sqrt(
-            Math.pow(xDistPlayerFlak, 2) + Math.pow(yDistPlayerFlak, 2)
+            xDistPlayerFlak ** 2 + yDistPlayerFlak ** 2
         );
 
         // kill 'em
