@@ -17,6 +17,9 @@ export default class AudioAssets {
         src: ['/assets/audio/missile-destroy.mp3'],
     });
 
+    public canPlayMissileTravelAudio = true;
+    public canPlayMissileDestroyAudio = true;
+
     constructor(game: Game) {
         this.game = game;
     }

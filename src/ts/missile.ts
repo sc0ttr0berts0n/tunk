@@ -115,8 +115,8 @@ export default class Missile {
         }
 
         // play missle travel sounds at age 1
-        if (this.game.boss.canPlayMissileTravelAudio) {
-            this.game.boss.canPlayMissileTravelAudio = false;
+        if (this.game.audio.canPlayMissileTravelAudio) {
+            this.game.audio.canPlayMissileTravelAudio = false;
             this.game.audio.missileTravel.play();
         }
 
@@ -152,8 +152,8 @@ export default class Missile {
     }
 
     handleDeath() {
-        if (this.game.boss.canPlayMissileDestroyAudio) {
-            this.game.boss.canPlayMissileDestroyAudio = false;
+        if (this.game.audio.canPlayMissileDestroyAudio) {
+            this.game.audio.canPlayMissileDestroyAudio = false;
             this.game.audio.missileDestroy.play();
         }
         this.el.destroy();
@@ -173,9 +173,11 @@ export default class Missile {
         const explosion = new Explosion(this.game, this.lastWorldPos);
         this.game.explosions.push(explosion);
 
-        // damage boss
-        const dmg = 1 / this.game.boss.healthScore;
-        // const dmg = 1 / 4;
-        this.game.boss.takeDamage(dmg);
+        if (this.game.boss) {
+            // damage boss
+            const dmg = 1 / this.game.boss.healthScore;
+            // const dmg = 1 / 4;
+            this.game.boss.takeDamage(dmg);
+        }
     }
 }

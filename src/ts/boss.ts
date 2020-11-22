@@ -14,15 +14,15 @@ export default class Boss {
     private closestDist = -370;
     private hoverDist = -40;
     private hoverRate = 0.01;
-    public active = true;
+    public alive = true;
     public validVisitedLetterCount: number;
     public el: PIXI.Sprite;
     public health: number = 1.0;
-    public onBossHealthBar: HealthBar;
-    public healthScore = 80;
+    public healthBar: HealthBar;
+    public healthScore = 5;
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
-    public needsGraphicUpdate = false;
+    public needsTextureUpdate = false;
 
     constructor(game: Game) {
         this.game = game;
@@ -46,15 +46,15 @@ export default class Boss {
             chunkCount: 10,
             angledCapWidth: 0,
         };
-        this.onBossHealthBar = new HealthBar(this.game, this, healthBarOptions);
+        this.healthBar = new HealthBar(this.game, this, healthBarOptions);
         // healthbar placement
-        this.onBossHealthBar.container.y += 46;
-        this.onBossHealthBar.container.x -= 40;
-        this.el.addChild(this.onBossHealthBar.container);
+        this.healthBar.container.y += 46;
+        this.healthBar.container.x -= 40;
+        this.el.addChild(this.healthBar.container);
     }
 
     public update(delta: number) {
-        if (this.active) {
+        if (this.alive) {
             this.validVisitedLetterCount = this.getValidVisitedLetterCount();
             const _everyLetterArmed =
                 this.validVisitedLetterCount ===
@@ -75,10 +75,10 @@ export default class Boss {
             if (this.health <= 0) {
                 this.endBoss();
             }
+            this.updateBossShip();
+            this.render();
         }
-        this.onBossHealthBar.update();
-        this.updateBossShip();
-        this.render();
+        this.healthBar.update();
     }
 
     public reinit() {
@@ -113,7 +113,7 @@ export default class Boss {
     private renderBossShip() {
         this.el.y = this.pos.y;
         this.container.rotation = this.rot;
-        if (this.needsGraphicUpdate) {
+        if (this.needsTextureUpdate) {
             if (this.health < 1 / 3) {
                 this.el.texture = this.game.graphics.bossOneDamaged2;
             } else if (this.health < 2 / 3) {
@@ -121,7 +121,7 @@ export default class Boss {
             } else {
                 this.el.texture = this.game.graphics.bossOne;
             }
-            this.needsGraphicUpdate = false;
+            this.needsTextureUpdate = false;
         }
     }
 
@@ -151,10 +151,12 @@ export default class Boss {
     }
 
     private endBoss() {
-        // otherwise, handle "killing" of the boss
-        this.game.killPhraseUI.cleanAndDestroy();
-        this.active = false;
-        console.log('BOSS IS DED');
+        this.alive = false;
+    }
+
+    public cleanAndDestroy() {
+        this.container.destroy();
+        this.healthBar.container.destroy();
     }
 
     firstDamagedLetterIndex() {
@@ -172,6 +174,6 @@ export default class Boss {
         if (this.health < 0) {
             this.health = 0;
         }
-        this.needsGraphicUpdate = true;
+        this.needsTextureUpdate = true;
     }
 }

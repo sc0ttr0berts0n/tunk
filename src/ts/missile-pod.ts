@@ -72,7 +72,7 @@ export default class MissilePod {
         const wedge = this.wedge;
 
         if (
-            boss?.active &&
+            boss?.alive &&
             wedge.isKillPhraseLetter &&
             wedge.isVisited &&
             wedge.health >= wedge.maxHealth

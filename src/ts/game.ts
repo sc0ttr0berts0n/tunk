@@ -26,7 +26,7 @@ export default class Game {
     private backgroundNextMove: number = 0;
     public boss: Boss | null;
     public bossSpawned = false;
-    private readonly BOSS_SPAWN_SCORE = 0;
+    public BOSS_SPAWN_SCORE = 5;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
@@ -102,6 +102,14 @@ export default class Game {
             this.player.update(delta);
             if (this.boss) {
                 this.boss.update(delta);
+                if (!this.boss.alive) {
+                    this.boss.cleanAndDestroy();
+                    this.killPhraseUI.cleanAndDestroy();
+                    this.boss = null;
+                    this.killPhraseUI = null;
+                    this.BOSS_SPAWN_SCORE = this.scoreManager.score + 5;
+                    this.bossSpawned = false;
+                }
             }
             if (this.killPhraseUI) {
                 this.killPhraseUI.update(delta);

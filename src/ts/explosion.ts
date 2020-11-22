@@ -22,7 +22,7 @@ export class Explosion {
     private el: PIXI.Sprite;
     public isDead = false;
     public lifespan: number;
-    public options: ExplosionOptions;
+    private options: ExplosionOptions;
     constructor(game: Game, startPos: Victor, options?: ExplosionOptions) {
         this.game = game;
         this.options = {
