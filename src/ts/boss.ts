@@ -19,7 +19,7 @@ export default class Boss {
     public el: PIXI.Sprite;
     public health: number = 1.0;
     public healthBar: HealthBar;
-    public healthScore = 5;
+    public healthScore = 80;
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
     public needsTextureUpdate = false;

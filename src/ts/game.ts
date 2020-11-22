@@ -88,7 +88,9 @@ export default class Game {
             if (this.player.alive) {
                 this.updateTurret(delta);
 
-                this.shootFlakAtWalls();
+                if (!this.boss) {
+                    this.shootFlakAtWalls();
+                }
 
                 if (
                     this.scoreManager.score >= 3 ||
