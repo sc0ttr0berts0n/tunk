@@ -7,7 +7,9 @@ export default class Turret {
     private wedgeCount: number;
     public container: PIXI.Container;
     public radius: number = 256;
-    public wedges: Wedge[];
+    public wedges: Array<Wedge>;
+    public history: string[] = [];
+    public historyLimit: number = 20;
 
     constructor(game: Game, wedgeCount: number) {
         this.game = game;
@@ -40,12 +42,14 @@ export default class Turret {
     public update(delta: number) {
         this.openingUpdate();
         this.game.cannon.update(delta);
+        this.limitHistory();
     }
 
     public reinit() {
         this.wedges.forEach((wedge) => {
             wedge.health = wedge.maxHealth;
         });
+        this.history = [];
     }
 
     private openingUpdate() {
@@ -68,6 +72,15 @@ export default class Turret {
         );
     }
 
+    public getRandomFullWedge() {
+        const wedges = this.getFullWedges();
+        if (wedges) {
+            return wedges[Math.floor(Math.random() * wedges.length)];
+        } else {
+            return this.wedges[0];
+        }
+    }
+
     public getDamagedWedges() {
         return this.wedges.filter((wedge) => {
             return (
@@ -76,5 +89,47 @@ export default class Turret {
                 this.game.player.pos.y !== wedge.pos.y
             );
         });
+    }
+
+    public getArmedWedges() {
+        return this.wedges.filter((wedge) => {
+            return wedge.missilePod.isArmed;
+        });
+    }
+
+    public destroyWall(target: Wedge) {
+        target.setHealth();
+    }
+
+    public destroyWallAndNeighbors(target: Wedge, power: number = 1) {
+        const len = this.wedges.length;
+        const firstIndex = (target.id - power + 1 + len) % len;
+        const wallsCount = power * 2 - 1;
+        new Array(wallsCount).fill(0).forEach((wedge, index) => {
+            this.destroyWall(this.wedges[(firstIndex + index) % len]);
+        });
+    }
+
+    pushLetterToHistory(currentLetter: string) {
+        const mostRecentLetter = this.history[this.history.length - 1];
+        if (mostRecentLetter !== currentLetter) {
+            this.history.push(currentLetter);
+        }
+    }
+
+    limitHistory() {
+        while (this.history.length > this.historyLimit) {
+            this.history.shift();
+        }
+    }
+
+    public getWedgeByLetter(letter: string): Wedge | undefined {
+        const wedge = this.wedges.find(
+            (wedge: Wedge) => wedge.letter === letter
+        );
+        if (!wedge) {
+            throw new Error(`"${letter}" is not on the turret wedge list`);
+        }
+        return wedge;
     }
 }

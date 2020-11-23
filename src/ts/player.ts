@@ -1,3 +1,4 @@
+import Victor = require('victor');
 import Game from './game';
 import Wedge from './wedge';
 
@@ -7,7 +8,7 @@ export default class Player {
     public pos: Vec2 = { x: 0, y: 0 };
     private orientation: Vec2 = { x: 0, y: 0 };
     private targetPos: Vec2 = { x: 0, y: 0 };
-    private targetWedge: Wedge;
+    public targetWedge: Wedge;
     public alive: boolean = true;
     private lastAlive: boolean = true;
     private lastIsMoving: boolean = false;
@@ -27,6 +28,8 @@ export default class Player {
     }
 
     public update(delta: number) {
+        const justDied = this.lastAlive && !this.alive;
+
         if (this.alive) {
             this.findDestination();
         }
@@ -35,11 +38,14 @@ export default class Player {
             this.pos.x + this.game.app.renderer.width / 2;
         this.game.graphics.player.y =
             this.pos.y + this.game.app.renderer.height / 2;
-        this.game.graphics.playerBlood.rotation =
-            this.bloodRot + -this.game.graphics.player.rotation;
-        this.checkRepairing();
-        if (!this.alive) {
+        if (this.isAtTarget()) {
+            this.repair();
+            this.targetWedge.isVisited = true;
+        }
+        if (justDied) {
             this.game.graphics.playerBlood.visible = true;
+            this.game.graphics.playerBlood.rotation =
+                this.bloodRot + -this.game.graphics.player.rotation;
         }
         this.playSounds();
         this.lastIsMoving = this.isMoving;
@@ -87,9 +93,9 @@ export default class Player {
     }
 
     private playSounds() {
+        const justDied = this.lastAlive && !this.alive;
         const isArriving = this.lastIsMoving && !this.isMoving;
         const isDeparting = !this.lastIsMoving && this.isMoving;
-        const justDied = this.lastAlive && !this.alive;
         if (isArriving) {
             // this.game.audio.moveArrive.play();
         } else if (isDeparting) {
@@ -101,14 +107,16 @@ export default class Player {
         }
     }
 
-    private checkRepairing() {
-        if (
+    public isAtTarget() {
+        return (
             this.targetWedge &&
             this.pos.x === this.targetPos.x &&
             this.pos.y === this.targetPos.y
-        ) {
-            this.targetWedge.addHealth(2);
-        }
+        );
+    }
+
+    private repair() {
+        this.targetWedge.addHealth(1 / 60);
     }
 
     private findDestination() {
@@ -118,5 +126,12 @@ export default class Player {
             this.targetPos = targetWedge.playerPos;
             this.targetWedge = targetWedge;
         }
+    }
+
+    getWorldPos() {
+        return new Victor(
+            this.game.graphics.player.worldTransform.tx,
+            this.game.graphics.player.worldTransform.ty
+        );
     }
 }

@@ -21,7 +21,12 @@ export default class EndGameOverlay {
 
     private initBlack() {
         this.game.graphics.endGameOverlayBlack.beginFill(0x000000);
-        this.game.graphics.endGameOverlayBlack.drawRect(0, 0, 1024, 1024);
+        this.game.graphics.endGameOverlayBlack.drawRect(
+            0,
+            0,
+            this.game.app.renderer.width,
+            this.game.app.renderer.height
+        );
         this.game.graphics.endGameOverlayBlack.blendMode =
             PIXI.BLEND_MODES.MULTIPLY;
         this.game.graphics.endGameOverlayBlack.alpha = 0;
@@ -29,7 +34,12 @@ export default class EndGameOverlay {
 
     private initWhite() {
         this.game.graphics.endGameOverlayWhite.beginFill(0xfffff5);
-        this.game.graphics.endGameOverlayWhite.drawRect(0, 0, 1024, 1024);
+        this.game.graphics.endGameOverlayWhite.drawRect(
+            0,
+            0,
+            this.game.app.renderer.width,
+            this.game.app.renderer.height
+        );
         this.game.graphics.endGameOverlayWhite.alpha = 0;
     }
 

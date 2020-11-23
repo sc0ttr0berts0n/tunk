@@ -4,6 +4,10 @@ import Game from './game';
 export default class GraphicAssets {
     private game: Game;
 
+    public skyContainer = new PIXI.Container();
+    public missileContainer = new PIXI.Container();
+    public missileSmokeContainer = new PIXI.Container();
+
     //BACKGROUND MAP
     public background = new PIXI.Sprite(PIXI.Texture.from('assets/da-map.png'));
 
@@ -48,13 +52,32 @@ export default class GraphicAssets {
         'assets/floor-warning-02.png'
     );
     public damagedWallLight = PIXI.Texture.from('assets/crack-light.png');
+    public missilePodLoaded = PIXI.Texture.from(
+        'assets/missile-pod-loaded.png'
+    );
 
     //FLAK
     public flakGraphic = PIXI.Texture.from('assets/da-flak.png');
 
+    // Missile
+    public missile = PIXI.Texture.from('assets/missile.png');
+
+    // Mine
+    public mine = PIXI.Texture.from('assets/da-mine.png');
+
+    // Explosion(s)
+    public explosion = PIXI.Texture.from('assets/da-boom.png');
+    public explosionBlue = PIXI.Texture.from('assets/da-boom-blue.png');
+    public smoke = PIXI.Texture.from('assets/smoke.png');
+
     //EndGameOverlay
     public endGameOverlayBlack: PIXI.Graphics = new PIXI.Graphics();
     public endGameOverlayWhite: PIXI.Graphics = new PIXI.Graphics();
+
+    // Boss One
+    public bossOne = PIXI.Texture.from('assets/boss-one.png');
+    public bossOneDamaged1 = PIXI.Texture.from('assets/boss-one-damaged-1.png');
+    public bossOneDamaged2 = PIXI.Texture.from('assets/boss-one-damaged-2.png');
 
     constructor(game: Game) {
         this.game = game;
@@ -77,6 +100,11 @@ export default class GraphicAssets {
         //Turret objects
         this.game.turret.container.addChild(this.turretExterior);
         this.game.turret.container.addChild(this.turretFloor);
+
+        // Sky Container
+        this.game.app.stage.addChild(this.skyContainer);
+        this.skyContainer.addChild(this.missileSmokeContainer);
+        this.skyContainer.addChild(this.missileContainer);
 
         //End Game Overlay
         this.game.app.stage.addChild(this.endGameOverlayBlack);

@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: './src/ts/index.ts',
-    devtool: 'cheap-source-map',
+    devtool: 'eval-cheap-module-source-map',
     module: {
         rules: [
             {
@@ -22,6 +22,7 @@ module.exports = {
     optimization: {
         minimize: true,
     },
+    target: 'web',
     devServer: {
         contentBase: path.join(__dirname, 'public'),
         compress: true,

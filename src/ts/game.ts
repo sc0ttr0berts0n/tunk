@@ -7,8 +7,12 @@ import Player from './player';
 import Turret from './turret';
 import Cannon from './cannon';
 import Flak from './flak';
+import Boss from './boss';
+import { Missile } from './missile';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
+import { Explosion, ExplosionOptions } from './explosion';
+import KillPhraseUI from './kill-phrase-ui';
 
 export default class Game {
     private canvas: HTMLCanvasElement;
@@ -17,16 +21,23 @@ export default class Game {
     public graphics: GraphicAssets;
     public audio: AudioAssets;
     private flaks: Flak[] = [];
-    private turretBodyRotation: number = Math.PI * 2;
+    public turretBodyRotation: number = Math.PI * 2;
     private backgroundTargetRot: number = 0;
     private backgroundNextMove: number = 0;
+    public boss: Boss | null;
+    public bossSpawned = false;
+    public nextBossScore = 5;
+    public readonly BOSS_SPAWN_SCORE_INITIAL = 0;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
-    private damageChance: number = 0.008;
-    private shootHoleChance: number = 0.0125;
+    public missiles: Missile[] = [];
+    public explosions: Explosion[] = [];
+    public killPhraseUI: KillPhraseUI | null;
+    private readonly SHOOT_WALL_CHANCE: number = 0.008;
+    private readonly SHOOT_HOLE_CHANCE: number = 0.01;
     public frameCount: number = 0;
     private lastRestart: number = 0;
     private reduceMotion: boolean = false;
@@ -35,11 +46,13 @@ export default class Game {
     private clearTitle: TimerHandler;
 
     constructor(canvas: HTMLCanvasElement) {
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.ROUND_PIXELS = true;
         this.canvas = canvas;
         this.app = new PIXI.Application({
             view: canvas,
-            width: 1024,
-            height: 1024,
+            width: 1200,
+            height: 1200,
             transparent: true,
         });
         this.scoreManager = new ScoreManager(this);
@@ -48,8 +61,11 @@ export default class Game {
         this.turret = new Turret(this, 26);
         this.cannon = new Cannon(this);
         this.player = new Player(this);
+        this.boss = null;
+        this.killPhraseUI = null;
         this.endGameOverlay = new EndGameOverlay(this, this.player);
         this.kb = new KeyboardObserver();
+        this.nextBossScore = this.BOSS_SPAWN_SCORE_INITIAL;
         this.init();
     }
 
@@ -72,7 +88,9 @@ export default class Game {
             if (this.player.alive) {
                 this.updateTurret(delta);
 
-                this.shootFlakAtWalls();
+                if (!this.boss) {
+                    this.shootFlakAtWalls();
+                }
 
                 if (
                     this.scoreManager.score >= 3 ||
@@ -86,12 +104,43 @@ export default class Game {
                 this.scoreManager.update();
             }
             this.player.update(delta);
+            if (this.boss) {
+                this.boss.update(delta);
+                if (!this.boss.alive) {
+                    this.cleanAndDestroyBossAndKillPhraseUI();
+                }
+            }
+            if (this.killPhraseUI) {
+                this.killPhraseUI.update(delta);
+            }
+
             if (this.turret.wedges) {
                 this.turret.wedges.forEach((wedge) => wedge.update(delta));
             }
             if (this.flaks.length) {
                 this.flaks.forEach((flak) => flak.update(delta));
                 this.flaks = this.flaks.filter((flak) => !flak.isDead);
+            }
+            if (this.missiles.length) {
+                this.missiles.forEach((missile) => missile.update());
+                this.missiles = this.missiles.filter(
+                    (missile) => !missile.isDead
+                );
+            }
+            if (this.explosions.length) {
+                this.explosions.forEach((explosion) => explosion.update());
+                this.explosions = this.explosions.filter(
+                    (explosion) => !explosion.isDead
+                );
+            }
+
+            // conditions to spawn boss
+            if (
+                this.scoreManager.score >= this.nextBossScore &&
+                !this.bossSpawned
+            ) {
+                this.bossSpawned = true;
+                this.spawnBoss();
             }
         }
         this.endGameOverlay.update();
@@ -104,6 +153,13 @@ export default class Game {
         this.kb.reinit();
         this.player.reinit();
         this.turret.reinit();
+        if (this.boss) {
+            this.cleanAndDestroyBossAndKillPhraseUI();
+        }
+        this.nextBossScore = this.BOSS_SPAWN_SCORE_INITIAL;
+        if (this.killPhraseUI) {
+            this.killPhraseUI.reinit();
+        }
         this.scoreManager.reinit();
         this.endGameOverlay.reinit();
         this.audio.bgm.stop();
@@ -134,7 +190,7 @@ export default class Game {
     }
     private shootFlakAtWalls() {
         if (this.frameCount - this.lastRestart >= 180) {
-            if (Math.random() < this.damageChance) {
+            if (Math.random() < this.SHOOT_WALL_CHANCE) {
                 const wedges = this.turret.getFullWedges();
                 if (wedges.length > 0) {
                     // odds of doing damage depend on how many walls remain
@@ -157,7 +213,7 @@ export default class Game {
         }
     }
     private shootFlakAtHoles() {
-        if (Math.random() < this.shootHoleChance) {
+        if (Math.random() < this.SHOOT_HOLE_CHANCE) {
             const wedges = this.turret.getDamagedWedges();
             if (wedges.length > 1) {
                 const wedge = wedges[Math.floor(Math.random() * wedges.length)];
@@ -170,8 +226,22 @@ export default class Game {
         }
     }
 
+    public spawnBoss() {
+        this.boss = new Boss(this);
+        this.killPhraseUI = new KillPhraseUI(this);
+    }
+
     public resetHighScore() {
         // used so the UI can reset the high score
         this.scoreManager.resetHighScore();
+    }
+
+    public cleanAndDestroyBossAndKillPhraseUI() {
+        this.boss.cleanAndDestroy();
+        this.killPhraseUI.cleanAndDestroy();
+        this.boss = null;
+        this.killPhraseUI = null;
+        this.nextBossScore = this.scoreManager.score + 5;
+        this.bossSpawned = false;
     }
 }

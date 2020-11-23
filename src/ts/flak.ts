@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
 import Wedge from './wedge';
+import Victor = require('victor');
 
 export default class Flak {
     private game: Game;
@@ -35,8 +36,10 @@ export default class Flak {
         this.el.rotation = Math.PI * 0.5;
         this.el.anchor.set(1, 0.5);
         this.el.y = this.yOff;
-        this.container.x = this.game.app.renderer.width / 2;
-        this.container.y = this.game.app.renderer.height / 2;
+        this.container.position.set(
+            this.game.app.renderer.width / 2,
+            this.game.app.renderer.height / 2
+        );
         this.container.addChild(this.el);
         this.game.app.stage.addChild(this.container);
 
@@ -55,7 +58,7 @@ export default class Flak {
         const xDistPlayerFlak = player.tx - flak.tx;
         const yDistPlayerFlak = player.ty - flak.ty;
         const hypotPlayerFlak = Math.sqrt(
-            Math.pow(xDistPlayerFlak, 2) + Math.pow(yDistPlayerFlak, 2)
+            xDistPlayerFlak ** 2 + yDistPlayerFlak ** 2
         );
 
         // kill 'em
@@ -89,7 +92,7 @@ export default class Flak {
             this.isDead = true;
             this.container.visible = false;
             this.container.destroy();
-            this.target.setHealth();
+            this.game.turret.destroyWall(this.target);
             this.target.willBeShot = false;
             if (this.isLethal) {
                 this.target.isLethal = false;
@@ -113,6 +116,10 @@ export default class Flak {
             this.target.willBeShot = false;
             this.target.isLethal = false;
         }
+    }
+
+    public getWorldPos() {
+        return new Victor(this.el.worldTransform.tx, this.el.worldTransform.ty);
     }
 
     public reinit() {
