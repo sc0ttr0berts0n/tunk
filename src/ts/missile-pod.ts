@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import Victor = require('victor');
 import Wedge from './wedge';
 import Game from './game';
-import Missile from './missile';
+import { Missile } from './missile';
 
 export default class MissilePod {
     private container = new PIXI.Container();
@@ -99,8 +99,6 @@ export default class MissilePod {
                 options
             );
             this.game.missiles.push(missile);
-            // setTimeout(() => {
-            // }, delay);
         }
     }
 

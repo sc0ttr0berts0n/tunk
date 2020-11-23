@@ -3,7 +3,8 @@ import Game from './game';
 import KillPhraseUI from './kill-phrase-ui';
 import Victor = require('victor');
 import { HealthBar, HealthBarOptions } from './health-bar';
-import Missile from './missile';
+import { Missile, MissileOptions } from './missile';
+import { Explosion, ExplosionOptions } from './explosion';
 
 export default class Boss {
     private game: Game;
@@ -20,7 +21,7 @@ export default class Boss {
     public el: PIXI.Sprite;
     public health: number = 1.0;
     public healthBar: HealthBar;
-    public healthScore = 80;
+    public healthScore = 20;
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
     public needsTextureUpdate = false;
@@ -77,7 +78,9 @@ export default class Boss {
 
             if (this.health < 2 / 3 && !this.twoThirdMissleShot) {
                 this.twoThirdMissleShot = true;
-                this.shootMissileAtNearestWedge();
+                setTimeout(() => {
+                    this.deployMineToNearestWedge();
+                }, 2000);
             }
 
             if (this.health <= 0) {
@@ -131,27 +134,66 @@ export default class Boss {
         }
     }
 
-    private shootMissileAtNearestWedge() {
-        const tau = Math.PI * 2;
-        const bossAngle = (this.rot % tau) / tau;
-        const targetIndex = Math.floor(
-            bossAngle * this.game.turret.wedges.length
-        );
-        const target = this.game.turret.wedges[targetIndex];
-        const options = {
+    private deployMineToNearestWedge() {
+        const wedge = this.game.turret.getRandomFullWedge();
+
+        // configure stationary mine
+        const stationaryMineOptions: MissileOptions = {
+            sprite: new PIXI.Sprite(this.game.graphics.mine),
+            initialVel: 0,
+            lifespan: 180,
+            thrustStartAge: 180,
             onDeath: () => {
-                this.game.turret.destroyWallAndNeighbors(target, 3);
+                this.game.turret.destroyWallAndNeighbors(wedge, 3);
+
+                const explosionOptions: ExplosionOptions = {
+                    scale: 2,
+                };
+                this.game.explosions.push(
+                    new Explosion(
+                        this.game,
+                        wedge.getWorldPos(),
+                        explosionOptions
+                    )
+                );
             },
+        };
+        stationaryMineOptions.sprite.position.x = Math.cos(wedge.rot) * 100;
+        stationaryMineOptions.sprite.position.y = Math.sin(wedge.rot) * 100;
+        stationaryMineOptions.sprite.anchor.set(0.5, 1);
+        stationaryMineOptions.sprite.rotation = wedge.rot + Math.PI;
+
+        // configure moving mine
+        const movingMineOptions: MissileOptions = {
+            sprite: new PIXI.Sprite(this.game.graphics.mine),
             initialVel: 15,
             thrustStartAge: 80,
+            onDeath: () => {
+                const startPos = wedge
+                    .getWorldPos()
+                    .add(
+                        new Victor(
+                            Math.cos(wedge.rot) * 35,
+                            Math.sin(wedge.rot) * 35
+                        )
+                    );
+
+                const stationaryMine = new Missile(
+                    this.game,
+                    startPos,
+                    null,
+                    stationaryMineOptions
+                );
+                this.game.missiles.push(stationaryMine);
+            },
         };
-        const missile = new Missile(
+        const movingMine = new Missile(
             this.game,
             this.getWorldPos(),
-            target,
-            options
+            wedge,
+            movingMineOptions
         );
-        this.game.missiles.push(missile);
+        this.game.missiles.push(movingMine);
     }
 
     private getValidVisitedLetterCount() {

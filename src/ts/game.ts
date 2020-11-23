@@ -8,7 +8,7 @@ import Turret from './turret';
 import Cannon from './cannon';
 import Flak from './flak';
 import Boss from './boss';
-import Missiles from './missile';
+import { Missile } from './missile';
 import EndGameOverlay from './endgame-overlay';
 import KeyboardObserver from './keyboard-observer';
 import { Explosion, ExplosionOptions } from './explosion';
@@ -33,7 +33,7 @@ export default class Game {
     public player: Player;
     private endGameOverlay: EndGameOverlay;
     public kb: KeyboardObserver;
-    public missiles: Missiles[] = [];
+    public missiles: Missile[] = [];
     public explosions: Explosion[] = [];
     public killPhraseUI: KillPhraseUI | null;
     private readonly SHOOT_WALL_CHANCE: number = 0.008;

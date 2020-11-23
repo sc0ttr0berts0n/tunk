@@ -55,30 +55,30 @@ export default class KillPhraseUI {
     }
 
     private getRandomKillPhrase() {
-        const phrases = [
-            'GrayMarker',
-            'Destroy',
-            'Explode',
-            'rockets',
-            'missile',
-            'victory',
-            'Target',
-            'Seeker',
-            'pewpew',
-            'kaboom',
-            'blast',
-            'Retro',
-            'crash',
-            'bomb',
-            'bang',
-            'Skat',
-            'tear',
-            'tunk',
-            'bonk',
-            'rip',
-        ];
+        // const phrases = [
+        //     'GrayMarker',
+        //     'Destroy',
+        //     'Explode',
+        //     'rockets',
+        //     'missile',
+        //     'victory',
+        //     'Target',
+        //     'Seeker',
+        //     'pewpew',
+        //     'kaboom',
+        //     'blast',
+        //     'Retro',
+        //     'crash',
+        //     'bomb',
+        //     'bang',
+        //     'Skat',
+        //     'tear',
+        //     'tunk',
+        //     'bonk',
+        //     'rip',
+        // ];
 
-        // const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
+        const phrases = ['AB', 'CD', 'EF', 'GF', 'ER'];
 
         // get a random index from the boss words
         const _randomIndex = () => {

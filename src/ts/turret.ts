@@ -72,6 +72,15 @@ export default class Turret {
         );
     }
 
+    public getRandomFullWedge() {
+        const wedges = this.getFullWedges();
+        if (wedges) {
+            return wedges[Math.floor(Math.random() * wedges.length)];
+        } else {
+            return this.wedges[0];
+        }
+    }
+
     public getDamagedWedges() {
         return this.wedges.filter((wedge) => {
             return (

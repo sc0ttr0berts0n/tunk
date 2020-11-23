@@ -27,7 +27,7 @@ export default class Wedge {
     private cautionFloorBoundary: PIXI.Sprite;
     private outsideLight: PIXI.Sprite;
     public rot: number;
-    public pos: Vec2;
+    public pos: Victor;
     public playerPos: Vec2;
     public healthBarYOffset = -26;
     public letterYOffsetArmed = -105;
@@ -53,10 +53,10 @@ export default class Wedge {
             angledCapWidth: 0,
         });
         this.rot = (id * (2 * Math.PI)) / wedgeCount - 0.5 * Math.PI;
-        this.pos = {
-            x: Math.cos(this.rot) * turret.radius,
-            y: Math.sin(this.rot) * turret.radius,
-        };
+        this.pos = new Victor(
+            Math.cos(this.rot) * turret.radius,
+            Math.sin(this.rot) * turret.radius
+        );
         this.playerPos = { x: this.pos.x * 0.76, y: this.pos.y * 0.76 };
         this.wall = new PIXI.Sprite(this.game.graphics.fullTexture);
         this.cautionFloorExpand = new PIXI.Sprite(

@@ -62,6 +62,9 @@ export default class GraphicAssets {
     // Missile
     public missile = PIXI.Texture.from('assets/missile.png');
 
+    // Mine
+    public mine = PIXI.Texture.from('assets/da-mine.png');
+
     // Explosion(s)
     public explosion = PIXI.Texture.from('assets/da-boom.png');
     public explosionBlue = PIXI.Texture.from('assets/da-boom-blue.png');

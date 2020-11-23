@@ -13,7 +13,8 @@ interface Vec2 {
     y: number;
 }
 
-interface MissileOptions {
+export interface MissileOptions {
+    sprite?: PIXI.Sprite;
     initialVel?: number;
     thrustStartAge?: number;
     thrustStrength?: number;
@@ -21,14 +22,14 @@ interface MissileOptions {
     onDeath?: Function | null;
 }
 
-export default class Missile {
+export class Missile {
     private game: Game;
-    private pos: Victor;
+    public pos: Victor;
     private lastWorldPos = new Victor(0, 0);
     private vel: Victor;
     private acc = new Victor(0, 0);
-    private friction = new Victor(0.94, 0.94);
-    private target: Boss | Player | Wedge | MissilePod;
+    private friction = new Victor(0.97, 0.97);
+    private target: Boss | Player | Wedge | MissilePod | null;
     private thrustStartAge: number;
     private thrustStrength: number;
     private el: PIXI.Sprite;
@@ -48,31 +49,26 @@ export default class Missile {
         target: Boss | Player | Wedge | MissilePod,
         options?: MissileOptions
     ) {
-        this.options = {
-            initialVel: 10,
-            thrustStartAge: 150,
-            thrustStrength: 1.5,
-            lifespan: 600,
-            onDeath: null,
-        };
-        Object.assign(this.options, options);
         this.game = game;
         this.pos = startPos;
         this.target = target;
-        this.el = new PIXI.Sprite(this.game.graphics.missile);
-        this.thrustStartAge = this.options.thrustStartAge;
-        this.thrustStrength = this.options.thrustStrength;
-        this.onDeath = this.options.onDeath;
-        this.initialVel = this.options.initialVel;
+        this.el = options?.sprite ?? new PIXI.Sprite(game.graphics.missile);
+        this.thrustStartAge = options?.thrustStartAge ?? 150;
+        this.thrustStrength = options?.thrustStrength ?? 1.5;
+        this.onDeath = options?.onDeath ?? null;
+        this.initialVel = options?.initialVel ?? 5;
+        this.lifespan = options?.lifespan ?? 600;
         this.vel = this.getInitialVel();
-        this.lifespan = this.options.lifespan;
         this.init();
     }
     init() {
         this.el.x = this.pos.x;
         this.el.y = this.pos.y;
-        this.el.rotation = Math.random() * Math.PI * 4 - Math.PI * 2;
         this.el.anchor.set(0.5);
+        if (this.lifespan === 180) {
+            console.log(this.el.worldVisible);
+            console.log(this.el.worldTransform.tx, this.el.worldTransform.ty);
+        }
         this.game.graphics.skyContainer.addChild(this.el);
     }
     update() {
@@ -83,8 +79,10 @@ export default class Missile {
         if (this.isDead) {
             this.handleDeath();
         } else {
-            this.flyAtTarget();
-            this.checkCollision();
+            if (this.target) {
+                this.flyAtTarget();
+                this.checkCollision();
+            }
         }
     }
 
@@ -93,7 +91,7 @@ export default class Missile {
     }
 
     getInitialVel() {
-        const targetPos = this.target.getWorldPos();
+        const targetPos = this.target?.getWorldPos() ?? new Victor(0, 0);
         const dist = targetPos.clone().subtract(this.pos);
         const variance = new Victor(Math.random(), Math.random());
         const unit = dist.normalize().multiply(variance);
@@ -156,8 +154,8 @@ export default class Missile {
             this.game.audio.canPlayMissileDestroyAudio = false;
             this.game.audio.missileDestroy.play();
         }
-        if (this.options.onDeath) {
-            this.options.onDeath();
+        if (this.onDeath) {
+            this.onDeath();
         }
         this.el.destroy();
     }
