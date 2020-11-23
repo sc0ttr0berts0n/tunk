@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Game from './game';
 import Wedge from './wedge';
-import { Explosion, ExplosionOptions } from './explosion';
 import Victor = require('victor');
 
 export default class Flak {
@@ -93,7 +92,7 @@ export default class Flak {
             this.isDead = true;
             this.container.visible = false;
             this.container.destroy();
-            this.target.setHealth();
+            this.game.turret.destroyWall(this.target);
             this.target.willBeShot = false;
             if (this.isLethal) {
                 this.target.isLethal = false;
@@ -106,23 +105,6 @@ export default class Flak {
                 this.target.pos.y / 175
             );
             this.game.audio.wallBreak.play();
-
-            // create explosion
-            const center = new Victor(
-                this.game.app.renderer.width / 2,
-                this.game.app.renderer.height / 2
-            );
-            const pos = this.getWorldPos();
-            const angle = Math.atan2(center.y - pos.y, center.x - pos.x);
-            const vel = new Victor(5, 0).rotate(angle);
-            // debugger;
-            const explosionOptions: ExplosionOptions = {
-                lifespan: 20,
-                sprite: new PIXI.Sprite(this.game.graphics.explosionBlue),
-                vel: vel,
-            };
-            const explosion = new Explosion(this.game, pos, explosionOptions);
-            this.game.explosions.push(explosion);
         }
 
         if (flakFlewThroughTurret) {

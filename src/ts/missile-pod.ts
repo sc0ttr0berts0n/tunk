@@ -88,7 +88,10 @@ export default class MissilePod {
         }
         for (let i = 0; i < num; i++) {
             const delay = this.wedge.id + i * 10 + 50;
-            const options = { initialVel: 20, thrustStartAge: delay };
+            const options = {
+                initialVel: 20,
+                thrustStartAge: delay,
+            };
             const missile = new Missile(
                 this.game,
                 this.wedge.getWorldPos(),

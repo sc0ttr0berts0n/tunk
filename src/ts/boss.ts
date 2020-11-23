@@ -3,12 +3,13 @@ import Game from './game';
 import KillPhraseUI from './kill-phrase-ui';
 import Victor = require('victor');
 import { HealthBar, HealthBarOptions } from './health-bar';
+import Missile from './missile';
 
 export default class Boss {
     private game: Game;
     private maxLetterTileWidth: number;
     private container = new PIXI.Container();
-    public pos: Vec2 = { x: 192, y: 192 };
+    public pos = new Victor(192, 192);
     public rot = Math.PI * 2 - Math.PI / 4;
     public targetRot = Math.PI * 2 - Math.PI / 4;
     private closestDist = -370;
@@ -23,6 +24,8 @@ export default class Boss {
     public canPlayMissileTravelAudio = true;
     public canPlayMissileDestroyAudio = true;
     public needsTextureUpdate = false;
+    public oneThirdMissleShot = false;
+    public twoThirdMissleShot = false;
 
     constructor(game: Game) {
         this.game = game;
@@ -72,6 +75,11 @@ export default class Boss {
                 }
             }
 
+            if (this.health < 2 / 3 && !this.twoThirdMissleShot) {
+                this.twoThirdMissleShot = true;
+                this.shootMissileAtNearestWedge();
+            }
+
             if (this.health <= 0) {
                 this.endBoss();
             }
@@ -102,8 +110,6 @@ export default class Boss {
             this.game.turretBodyRotation + this.targetRot;
         this.rot += (backgroundRelTargetRot - this.rot) * 0.01;
         this.pos.y = offset;
-
-        // this.healthBar.container.rotation = -this.rot;
     }
 
     private render() {
@@ -123,6 +129,29 @@ export default class Boss {
             }
             this.needsTextureUpdate = false;
         }
+    }
+
+    private shootMissileAtNearestWedge() {
+        const tau = Math.PI * 2;
+        const bossAngle = (this.rot % tau) / tau;
+        const targetIndex = Math.floor(
+            bossAngle * this.game.turret.wedges.length
+        );
+        const target = this.game.turret.wedges[targetIndex];
+        const options = {
+            onDeath: () => {
+                this.game.turret.destroyWallAndNeighbors(target, 3);
+            },
+            initialVel: 15,
+            thrustStartAge: 80,
+        };
+        const missile = new Missile(
+            this.game,
+            this.getWorldPos(),
+            target,
+            options
+        );
+        this.game.missiles.push(missile);
     }
 
     private getValidVisitedLetterCount() {

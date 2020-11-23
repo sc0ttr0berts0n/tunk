@@ -4,6 +4,7 @@ import Game from './game';
 import Turret from './turret';
 import MissilePod from './missile-pod';
 import { HealthBar, HealthBarOptions } from './health-bar';
+import { Explosion, ExplosionOptions } from './explosion';
 
 interface Vec2 {
     x: number;
@@ -257,6 +258,7 @@ export default class Wedge {
         this.health = amt;
         if (amt < this.maxHealth) {
             this.repaired = false;
+            this.explodeWallAnimation();
         }
     }
 
@@ -283,6 +285,25 @@ export default class Wedge {
 
     public isDamaged() {
         return this.health < this.maxHealth;
+    }
+
+    private explodeWallAnimation() {
+        // create explosion
+        const center = new Victor(
+            this.game.app.renderer.width / 2,
+            this.game.app.renderer.height / 2
+        );
+        const pos = this.getWorldPos();
+        const angle = Math.atan2(center.y - pos.y, center.x - pos.x);
+        const vel = new Victor(5, 0).rotate(angle);
+        // debugger;
+        const explosionOptions: ExplosionOptions = {
+            lifespan: 20,
+            sprite: new PIXI.Sprite(this.game.graphics.explosionBlue),
+            vel: vel,
+        };
+        const explosion = new Explosion(this.game, pos, explosionOptions);
+        this.game.explosions.push(explosion);
     }
 
     getWorldPos() {

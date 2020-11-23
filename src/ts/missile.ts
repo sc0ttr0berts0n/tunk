@@ -18,6 +18,7 @@ interface MissileOptions {
     thrustStartAge?: number;
     thrustStrength?: number;
     lifespan?: number;
+    onDeath?: Function | null;
 }
 
 export default class Missile {
@@ -33,24 +34,26 @@ export default class Missile {
     private el: PIXI.Sprite;
     private age: number = 0;
     public isDead = false;
+    public onDeath: Function | null;
     private initialVel: number;
     public lifespan: number;
     public options: MissileOptions;
     private shadowRotation = Math.random() * Math.PI * 4;
     private rotationLerp = 0.04;
-    private killRange = 50;
+    private killRange = 25;
 
     constructor(
         game: Game,
         startPos: Victor,
         target: Boss | Player | Wedge | MissilePod,
-        options: MissileOptions
+        options?: MissileOptions
     ) {
         this.options = {
             initialVel: 10,
             thrustStartAge: 150,
-            thrustStrength: 0.05,
+            thrustStrength: 1.5,
             lifespan: 600,
+            onDeath: null,
         };
         Object.assign(this.options, options);
         this.game = game;
@@ -59,6 +62,7 @@ export default class Missile {
         this.el = new PIXI.Sprite(this.game.graphics.missile);
         this.thrustStartAge = this.options.thrustStartAge;
         this.thrustStrength = this.options.thrustStrength;
+        this.onDeath = this.options.onDeath;
         this.initialVel = this.options.initialVel;
         this.vel = this.getInitialVel();
         this.lifespan = this.options.lifespan;
@@ -104,11 +108,7 @@ export default class Missile {
         const unit = dist.normalize();
         const worldPos = this.getWorldPos();
 
-        const thrustStrength = new Victor(
-            this.thrustStrength,
-            this.thrustStrength
-        );
-        this.acc = this.acc.add(unit.multiply(thrustStrength));
+        this.acc = unit.multiplyScalar(this.thrustStrength);
         if (this.age > this.thrustStartAge) {
             // calc accel
             this.vel = this.vel.add(this.acc);
@@ -136,7 +136,7 @@ export default class Missile {
         this.el.rotation = this.shadowRotation;
 
         // send puff of smoke
-        const vel = this.vel.clone().multiply(new Victor(0.05, 0.05));
+        const vel = this.vel.clone().multiplyScalar(0.05);
         this.game.explosions.push(
             new Explosion(this.game, this.pos.clone(), {
                 lifespan: 40,
@@ -156,6 +156,9 @@ export default class Missile {
             this.game.audio.canPlayMissileDestroyAudio = false;
             this.game.audio.missileDestroy.play();
         }
+        if (this.options.onDeath) {
+            this.options.onDeath();
+        }
         this.el.destroy();
     }
 
@@ -170,7 +173,8 @@ export default class Missile {
     }
     handleCollision() {
         // create explosion
-        const explosion = new Explosion(this.game, this.lastWorldPos);
+        const options = { vel: this.vel.clone().multiplyScalar(0.1) };
+        const explosion = new Explosion(this.game, this.lastWorldPos, options);
         this.game.explosions.push(explosion);
 
         if (this.game.boss) {

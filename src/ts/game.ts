@@ -27,7 +27,7 @@ export default class Game {
     public boss: Boss | null;
     public bossSpawned = false;
     public nextBossScore = 5;
-    public readonly BOSS_SPAWN_SCORE_INITIAL = 30;
+    public readonly BOSS_SPAWN_SCORE_INITIAL = 0;
     public turret: Turret;
     public cannon: Cannon;
     public player: Player;

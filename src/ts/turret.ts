@@ -88,6 +88,19 @@ export default class Turret {
         });
     }
 
+    public destroyWall(target: Wedge) {
+        target.setHealth();
+    }
+
+    public destroyWallAndNeighbors(target: Wedge, power: number = 1) {
+        const len = this.wedges.length;
+        const firstIndex = (target.id - power + 1 + len) % len;
+        const wallsCount = power * 2 - 1;
+        new Array(wallsCount).fill(0).forEach((wedge, index) => {
+            this.destroyWall(this.wedges[(firstIndex + index) % len]);
+        });
+    }
+
     pushLetterToHistory(currentLetter: string) {
         const mostRecentLetter = this.history[this.history.length - 1];
         if (mostRecentLetter !== currentLetter) {
